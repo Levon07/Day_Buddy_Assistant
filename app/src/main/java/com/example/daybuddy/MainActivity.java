@@ -50,6 +50,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.io.IOException;
@@ -58,9 +60,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference TasksBase = database.getReference("tasks");
 
     MaterialButton pickTime;
     MaterialButton inputText;
@@ -72,12 +78,24 @@ public class MainActivity extends AppCompatActivity {
     String Task_text = "Task";
     RecyclerView tasks_recyclerview;
 
+    FirebaseUser mUser;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mUser = extras.getParcelable("auth");
+            //The key argument here must match that used in the other activity
+        }
 
 
 
@@ -198,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         TextView editText = view1.findViewById(R.id.Start_time_view);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
-                .setTitle("Title")
+                .setTitle("Add Task")
                 .setView(view1)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -212,7 +230,9 @@ public class MainActivity extends AppCompatActivity {
 
                         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
 
+
                         dialogInterface.dismiss();
+
                     }
                 }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
@@ -225,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void pickaPlace(View view){
 
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
+        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_places, null);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
-                .setTitle("Title")
+                .setTitle("Choose the Task Place")
                 .setView(view1)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -241,9 +261,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).create();
         alertDialog.show();
-
-//        Intent intent = new Intent(MainActivity.this, places.class);
-//        startActivity(intent);
     }
 
 }

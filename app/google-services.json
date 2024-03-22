@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "985663561793",
+    "project_id": "day-buddy",
+    "storage_bucket": "day-buddy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985663561793:android:0932099359d7ce4533e6c0",
+        "android_client_info": {
+          "package_name": "com.example.daybuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "985663561793-mfaupg63om0ha078cqg5sbb80g83ck3u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.daybuddy",
+            "certificate_hash": "ecf2a9d86d791b3a5fc833875d994ae02d86afce"
+          }
+        },
+        {
+          "client_id": "985663561793-u8vg5ndk4qh5hhv3rgvvvovmu7ugvpul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMY79sHlv_0FzYQSVayFSGUB6LEi45KvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985663561793-u8vg5ndk4qh5hhv3rgvvvovmu7ugvpul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
