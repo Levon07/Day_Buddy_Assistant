@@ -10,15 +10,16 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/day_buddy_icon1"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/day_buddy_icon1"
         android:supportsRtl="true"
         android:theme="@style/Theme.DayBuddy"
         tools:targetApi="31">
         <activity
-            android:name=".register"
-            android:exported="true">
+            android:name=".Splash_Screen"
+            android:exported="true"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,11 +27,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".register"
+            android:exported="false" />
+        <activity
             android:name=".places"
             android:exported="false" />
         <activity
             android:name=".LogIn"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true">
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -41,9 +47,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

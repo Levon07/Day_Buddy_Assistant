@@ -40,6 +40,11 @@ public class LogIn extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
+        if(mUser != null){
+            Intent intent = new Intent(LogIn.this, MainActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override

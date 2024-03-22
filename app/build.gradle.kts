@@ -51,4 +51,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("com.google.firebase:firebase-database:20.3.1")
 
+    implementation ("com.airbnb.android:lottie:3.7.0")
+
 }

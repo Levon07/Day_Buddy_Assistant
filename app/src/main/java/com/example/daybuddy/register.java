@@ -48,6 +48,8 @@ public class register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+
         SignUp = findViewById(R.id.SignUp);
         LogIn = findViewById(R.id.LogIn);
 
@@ -59,6 +61,11 @@ public class register extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         progressDialog = new ProgressDialog(this);
+
+        if(mUser != null){
+            Intent intent = new Intent(register.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

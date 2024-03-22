@@ -1,64 +1,28 @@
 package com.example.daybuddy;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewTreeViewModelKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,10 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
     String Et_Time = "00:00";
     String St_Time = "00:00";
+
+    int St_time_M = 0;
+    int Et_time_M = 0;
     String Task_text = "Task";
     RecyclerView tasks_recyclerview;
 
     FirebaseUser mUser;
+
+    TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model);
 
 
 
@@ -101,9 +70,11 @@ public class MainActivity extends AppCompatActivity {
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
 
-        Task_Model.add(new Task_Model(Task_text, "location", St_Time, Et_Time));
+        Task_Model.add(new Task_Model(Task_text, "location", St_Time, Et_Time, St_time_M, Et_time_M));
 
-        TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model);
+        tasks_adapter.notifyItemInserted(0);
+
+
 
         tasks_recyclerview.setAdapter(tasks_adapter);
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -139,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 if(M < 10) {
                     Minute = "0" + M;
                 }
+                St_time_M = H*60 + M;
+
 
                 St_Time = Hour + ":" + Minute;
                 ST_View.setText(St_Time);
@@ -176,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 if(M < 10) {
                     Minute = "0" + M;
                 }
+
+                Et_time_M = H*60 + M;
 
                 Et_Time = Hour + ":" + Minute;
                 ET_View.setText(Et_Time);
@@ -221,14 +196,23 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Task_Model.add(new Task_Model(Task_text,"location",St_Time,Et_Time));
 
-                        TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(MainActivity.this, Task_Model);
+                        if(St_time_M>=Et_time_M){
+                            Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                        } else if (Task_Model.get(Task_Model.size()-1).et_time_M > St_time_M) {
+                            Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Task_Model.add(new Task_Model(Task_text, "location", St_Time, Et_Time, St_time_M, Et_time_M));
 
-                        tasks_recyclerview.setAdapter(tasks_adapter);
-                        tasks_recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                            tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
 
-                        tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+//                        TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(MainActivity.this, Task_Model);
+//
+//                        tasks_recyclerview.setAdapter(tasks_adapter);
+//                        tasks_recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+//
+                            tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                        }
 
 
                         dialogInterface.dismiss();
@@ -261,6 +245,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).create();
         alertDialog.show();
+    }
+
+    public void signOut(View view){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(MainActivity.this, LogIn.class);
+        startActivity(intent);
     }
 
 }
