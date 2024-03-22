@@ -229,22 +229,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void pickaPlace(View view){
 
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_places, null);
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
-                .setTitle("Choose the Task Place")
-                .setView(view1)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+//        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_places, null);
+//        AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
+//                .setTitle("Choose the Task Place")
+//                .setView(view1)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                }).create();
+//        alertDialog.show();
+        Intent intent = new Intent(MainActivity.this, places.class);
+        startActivity(intent);
 
-                    }
-                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).create();
-        alertDialog.show();
     }
 
     public void signOut(View view){
