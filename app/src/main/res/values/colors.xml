@@ -6,4 +6,7 @@
     <color name="light_green">#A4D3C6</color>
     <color name="translucent">#00A4D3C6</color>
     <color name="dark_blue">#000422</color>
+    <color name="light_gray">#A6D8D8D8</color>
+    <color name="light_blue">#50A0FF</color>
+
 </resources>

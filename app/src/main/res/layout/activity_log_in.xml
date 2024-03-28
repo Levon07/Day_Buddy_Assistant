@@ -7,40 +7,66 @@
     tools:context=".LogIn">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="200dp">
+
 
         <EditText
             android:id="@+id/Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textEmailAddress" />
+            android:background="@drawable/edit_ext"
+            android:hint="  example@email.com"
+            android:inputType="textEmailAddress"
+            android:layout_margin="5dp"/>
 
         <EditText
             android:id="@+id/Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:background="@drawable/edit_ext"
+            android:hint="  Password"
+            android:inputType="textPassword"
+            android:layout_margin="5dp"/>
 
-        <Button
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/Login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="LogIn"
-            android:onClick="setLogIn"/>
+            android:layout_height="55dp"
+            android:text="Log In"
+            android:onClick="setLogIn"
+            android:backgroundTint="@color/dark_blue"
+            app:cornerRadius="8dp"
+            android:layout_margin="5dp"/>
 
-        <Button
+        <LinearLayout
             android:id="@+id/SignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SignUp"
-            android:onClick="SignUp"/>
+            android:orientation="horizontal"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have an account ? "/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Account"
+                android:onClick="SignUp"
+                android:textColor="@color/light_blue"
+                android:layout_marginStart="6dp"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,8 +42,8 @@ public class register extends AppCompatActivity {
     ProgressDialog progressDialog;
 
 
-    Button SignUp;
-    Button LogIn;
+    MaterialButton SignUp;
+    MaterialButton SendVerifyAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class register extends AppCompatActivity {
 
 
         SignUp = findViewById(R.id.SignUp);
-        LogIn = findViewById(R.id.LogIn);
 
         Email = findViewById(R.id.EmailAddress);
         Password  = findViewById(R.id.Password);
@@ -59,6 +60,8 @@ public class register extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+        SendVerifyAgain = findViewById(R.id.verifyEmail);
 
         progressDialog = new ProgressDialog(this);
 
@@ -156,5 +159,17 @@ public class register extends AppCompatActivity {
 
     public void sendEmail(View view){
         mAuth.getCurrentUser().sendEmailVerification();
+
+
+        Handler handler = new Handler();
+
+        Runnable vis = new Runnable() {
+            @Override
+            public void run() {
+                SendVerifyAgain.setVisibility(View.VISIBLE);
+            }
+        };
+
+        handler.postDelayed(vis,10000);
     }
 }

@@ -1,18 +1,28 @@
 package com.example.daybuddy;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,7 +37,16 @@ import java.util.ArrayList;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import retrofit.GsonConverterFactory;
+import retrofit.http.GET;
+import retrofit.http.Query;
+import retrofit2.Retrofit;
+
+
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "LOCATION_PICKER_TAG";
+
+    public String move_mode = "driving";
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference TasksBase = database.getReference("tasks");
@@ -39,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
     String Et_Time = "00:00";
     String St_Time = "00:00";
+
+    Double latitude = null;
+    Double longitude = null;
+    String address = null;
 
     int St_time_M = 0;
     int Et_time_M = 0;
@@ -70,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
 
-        Task_Model.add(new Task_Model(Task_text, "location", St_Time, Et_Time, St_time_M, Et_time_M));
+        Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 
         tasks_adapter.notifyItemInserted(0);
 
@@ -202,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                         } else if (Task_Model.get(Task_Model.size()-1).et_time_M > St_time_M) {
                             Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
                         }else {
-                            Task_Model.add(new Task_Model(Task_text, "location", St_Time, Et_Time, St_time_M, Et_time_M));
+                            Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 
                             tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
 
@@ -228,25 +251,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickaPlace(View view){
+        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
+        TextView ST_View = view1.findViewById(R.id.location);
 
-//        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_places, null);
-//        AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
-//                .setTitle("Choose the Task Place")
-//                .setView(view1)
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                    }
-//                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.dismiss();
-//                    }
-//                }).create();
-//        alertDialog.show();
+
         Intent intent = new Intent(MainActivity.this, places.class);
-        startActivity(intent);
+//        startActivity(intent);
+        placesResultLauncher.launch(intent);
 
     }
 
@@ -255,5 +266,46 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, LogIn.class);
         startActivity(intent);
     }
+
+    private ActivityResultLauncher<Intent> placesResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK){
+
+                        Intent data = result.getData();
+
+                        if (data != null){
+
+                            latitude = data.getDoubleExtra("latitude", 0.0);
+                            longitude = data.getDoubleExtra("longitude",0.0);
+                            address = data.getStringExtra("address");
+
+                        }else{
+                            Log.d(TAG, "onActivityResult: cancelled");
+                            Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+
+                            
+                        }
+                    }
+                }
+            }
+    );
+
+    public void direction(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String origin = "" + Task_Model.get(Task_Model.size()-1).latitude + ", " + Task_Model.get(Task_Model.size()-1).longitude;
+        String destination = "" + latitude + ", " + longitude;
+        String Url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
+                .buildUpon()
+                .appendQueryParameter("origin", origin)
+                .appendQueryParameter("destination", destination)
+                .appendQueryParameter("mode", move_mode)
+                .appendQueryParameter("key", getString(R.string.google_api_key))
+                .toString();
+    }
+
+
 
 }

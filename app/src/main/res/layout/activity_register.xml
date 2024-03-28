@@ -7,55 +7,89 @@
     tools:context=".register">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="200dp">
 
         <EditText
             android:id="@+id/EmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textEmailAddress" />
+            android:background="@drawable/edit_ext"
+            android:hint="  example@email.com"
+            android:inputType="textEmailAddress"
+            android:layout_margin="5dp"/>
 
         <EditText
             android:id="@+id/Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:background="@drawable/edit_ext"
+            android:hint="  Password"
+            android:inputType="textPassword"
+            android:layout_margin="5dp"/>
 
         <EditText
             android:id="@+id/PasswordConf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:background="@drawable/edit_ext"
+            android:hint="  Confirm Password"
+            android:inputType="textPassword"
+            android:layout_margin="5dp"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/SignUp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:text="Sign Up"
-            android:onClick="register"/>
+            android:onClick="register"
+            android:backgroundTint="@color/dark_blue"
+            app:cornerRadius="8dp"
+            android:layout_margin="5dp"/>
 
-        <Button
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/verifyEmail"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Send Verification Email Again"
+            android:onClick="sendEmail"
+            android:visibility="gone"
+            android:backgroundTint="@color/dark_blue"
+            app:cornerRadius="8dp"
+            android:layout_margin="5dp"/>
+
+        <LinearLayout
             android:id="@+id/LogIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="LogIn"
-            android:onClick="LogIn"/>
+            android:orientation="horizontal"
+            android:layout_marginStart="10dp">
 
-        <Button
-            android:id="@+id/verifyEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send Verification Email Again"
-            android:onClick="sendEmail"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account ?"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log in"
+                android:onClick="LogIn"
+                android:textColor="@color/light_blue"
+                android:layout_marginStart="6dp"/>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

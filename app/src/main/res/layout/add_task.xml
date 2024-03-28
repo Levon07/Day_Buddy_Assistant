@@ -58,6 +58,7 @@
                 android:text="Task Text" />
 
             <TextView
+                android:id="@+id/location"
                 android:text="Location"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
