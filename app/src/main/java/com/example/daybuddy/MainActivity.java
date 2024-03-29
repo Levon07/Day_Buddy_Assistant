@@ -28,6 +28,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ValueEventListener;
 
 import retrofit.GsonConverterFactory;
 import retrofit.http.GET;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model);
 
+    DatabaseReference myRef;
 
 
 
@@ -85,11 +89,35 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mUser = extras.getParcelable("auth");
             //The key argument here must match that used in the other activity
         }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
+
+        myRef = database.getReference("Task_Model");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) dataSnapshot.getValue(Object.class);
+                Log.d(TAG, "Value is: " + Task_Model);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+
 
 
 
@@ -252,7 +280,9 @@ public class MainActivity extends AppCompatActivity {
                             tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
                             CheckHintText();
                             tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                            myRef.setValue(Task_Model);
                         }
+
 
 
                         dialogInterface.dismiss();
