@@ -44,6 +44,8 @@ import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView HintText;
     private static final String TAG = "LOCATION_PICKER_TAG";
 
     public String move_mode = "driving";
@@ -93,14 +95,24 @@ public class MainActivity extends AppCompatActivity {
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
 
-        Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-
         tasks_adapter.notifyItemInserted(0);
 
 
 
         tasks_recyclerview.setAdapter(tasks_adapter);
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+        HintText = findViewById(R.id.HintText);
+        CheckHintText();
+
+    }
+
+    public void CheckHintText(){
+        if (Task_Model.size()>0){
+            HintText.setVisibility(View.GONE);
+        }else{
+            HintText.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -222,18 +234,23 @@ public class MainActivity extends AppCompatActivity {
 
                         if(St_time_M>=Et_time_M){
                             Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
-                        } else if (Task_Model.get(Task_Model.size()-1).et_time_M > St_time_M) {
-                            Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                        } else if (Task_Model.size()>0) {
+                            if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
+                                Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+
+                                tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
+                                CheckHintText();
+                                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                            }
                         }else {
+
                             Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 
                             tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
-
-//                        TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(MainActivity.this, Task_Model);
-//
-//                        tasks_recyclerview.setAdapter(tasks_adapter);
-//                        tasks_recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-//
+                            CheckHintText();
                             tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                         }
 

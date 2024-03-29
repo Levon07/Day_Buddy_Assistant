@@ -1,24 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RV_Tasks"
+
+
+    <LinearLayout
+        android:id="@+id/Topic"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:background="@drawable/btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:onClick="signOut">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/back_arrow"
+                android:backgroundTint="@color/white"/>
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/dayOfWeek"
+            android:layout_weight="1"
+            android:text="Monday"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="55dp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/day_of_week_topic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RV_Tasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/Topic" />
+
+        <TextView
+            android:id="@+id/HintText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Tasks To See Them"
+            android:textSize="55dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/light_gray"/>
+
+
+
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
+        android:backgroundTint="@color/dark_blue"
+        app:cornerRadius="8dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="48dp"
+        android:layout_height="wrap_content"
         android:onClick="Add_Task"
         android:text="ADD TASK"
         android:textSize="50sp"
@@ -26,16 +88,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        android:onClick="signOut"/>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

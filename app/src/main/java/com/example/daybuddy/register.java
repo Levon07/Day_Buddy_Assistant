@@ -119,6 +119,17 @@ public class register extends AppCompatActivity {
                             firebaseAuth.getCurrentUser().sendEmailVerification();
                             firebaseAuth.signOut();
 
+                            Handler handler = new Handler();
+
+                            Runnable vis = new Runnable() {
+                                @Override
+                                public void run() {
+                                    SendVerifyAgain.setVisibility(View.VISIBLE);
+                                }
+                            };
+
+                            handler.postDelayed(vis,10000);
+
                         } else{
                             //failure
                             Utility.showToast(register.this, task.getException().getLocalizedMessage());
@@ -161,15 +172,6 @@ public class register extends AppCompatActivity {
         mAuth.getCurrentUser().sendEmailVerification();
 
 
-        Handler handler = new Handler();
 
-        Runnable vis = new Runnable() {
-            @Override
-            public void run() {
-                SendVerifyAgain.setVisibility(View.VISIBLE);
-            }
-        };
-
-        handler.postDelayed(vis,10000);
     }
 }
