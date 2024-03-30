@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".calendar_activity"
     android:orientation="vertical"
     android:background="@color/light_green">
 
@@ -19,14 +19,15 @@
             android:background="@drawable/btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:onClick="signOut">
+            android:layout_weight="1"
+            android:onClick="signOut"
+            android:layout_marginEnd="1dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/back_arrow"
-                android:backgroundTint="@color/white"/>
+                android:background="@drawable/sign_out"
+                android:layout_margin="10dp"/>
 
         </FrameLayout>
 
@@ -34,10 +35,10 @@
         <TextView
             android:id="@+id/dayOfWeek"
             android:layout_weight="1"
-            android:text="Monday"
+            android:text="Notifications"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="55dp"
+            android:textSize="35dp"
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
             android:id="@+id/HintText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Tasks To See Them"
+            android:text="Add Days To See Them"
             android:textSize="55dp"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -82,8 +83,8 @@
         app:cornerRadius="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="Add_Task"
-        android:text="ADD TASK"
+        android:onClick="PickADate"
+        android:text="ADD DAY"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

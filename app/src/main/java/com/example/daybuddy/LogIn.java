@@ -41,7 +41,7 @@ public class LogIn extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         if(mUser != null){
-            Intent intent = new Intent(LogIn.this, MainActivity.class);
+            Intent intent = new Intent(LogIn.this, calendar_activity.class);
             startActivity(intent);
         }
 

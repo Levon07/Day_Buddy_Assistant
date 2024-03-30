@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DayBuddy"
         tools:targetApi="31">
+        <activity
+            android:name=".calendar_activity"
+            android:exported="false" />
         <activity
             android:name=".Splash_Screen"
             android:exported="true"
@@ -36,8 +39,7 @@
         <activity
             android:name=".LogIn"
             android:exported="false"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -48,7 +50,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>
