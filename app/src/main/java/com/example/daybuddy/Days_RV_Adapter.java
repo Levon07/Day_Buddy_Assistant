@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_ViewHolder> {
     Context context;
     ArrayList<Days_Model> Days_Model;
+    private final RV_Interface rvInterface;
 
-    public Days_RV_Adapter(Context context, ArrayList<Days_Model> Days_Model){
+    public Days_RV_Adapter(Context context, ArrayList<Days_Model> Days_Model, RV_Interface rvInterface){
         this.context = context;
         this.Days_Model = Days_Model;
+        this.rvInterface = rvInterface;
     }
 
 
@@ -29,7 +31,7 @@ public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_V
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.rv_days, parent, false);
 
-        return new Days_RV_Adapter.Days_ViewHolder(view);
+        return new Days_RV_Adapter.Days_ViewHolder(view, rvInterface);
     }
 
     @Override
@@ -54,11 +56,24 @@ public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_V
 
         TextView Date, Day_OW;
 
-        public Days_ViewHolder(@NonNull View itemView) {
+        public Days_ViewHolder(@NonNull View itemView, RV_Interface rvInterface) {
             super(itemView);
 
             Date = itemView.findViewById(R.id.Date);
             Day_OW = itemView.findViewById(R.id.Day_OW);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (rvInterface != null){
+                        int pos = getAdapterPosition();
+
+                        if (pos != RecyclerView.NO_POSITION){
+                            rvInterface.onItemClicked(pos);
+                        }
+                    }
+                }
+            });
         }
     }
 }

@@ -51,9 +51,13 @@ import retrofit.http.Query;
 import retrofit2.Retrofit;
 
 
-public class calendar_activity extends AppCompatActivity {
+public class calendar_activity extends AppCompatActivity implements RV_Interface {
+
+    int position;
 
     TextView HintText;
+
+    ArrayList<Task_Model> Task_Model = new ArrayList<>();
 
     private static final String TAG = "LOCATION_PICKER_TAG";
 
@@ -72,7 +76,7 @@ public class calendar_activity extends AppCompatActivity {
 
     FirebaseUser mUser;
 
-    Days_RV_Adapter days_adapter = new Days_RV_Adapter(this, Days_Model);
+    Days_RV_Adapter days_adapter = new Days_RV_Adapter(this, Days_Model, this);
 
     DatabaseReference myRef;
 
@@ -156,8 +160,8 @@ public class calendar_activity extends AppCompatActivity {
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
                 Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-
-                Days_Model.add(new Days_Model(Date, Day_OW));
+                Task_Model.add(new Task_Model(null,null,null,null,0,0,null,null));
+                Days_Model.add(new Days_Model(Date, Day_OW, Task_Model.get(Task_Model.size())));
                 days_adapter.notifyItemInserted(Days_Model.size() + 1);
                 CheckHintText();
                 days_recyclerview.smoothScrollToPosition(days_adapter.getItemCount());
@@ -178,5 +182,11 @@ public class calendar_activity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClicked(int position) {
+        Intent intent = new Intent(calendar_activity.this, places.class);
+
+
+    }
 
 }
