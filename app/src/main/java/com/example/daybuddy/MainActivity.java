@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model);
 
     DatabaseReference myRef;
+    int position;
 
 
 
@@ -89,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        Bundle extras1 = getIntent().getExtras();
+        if(extras1 == null) {
+            Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
+            position = extras1.getInt("Position");
+        }
 
 
         Bundle extras = getIntent().getExtras();
@@ -122,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
+        int pos = Task_Model.size()-1;
+        Toast.makeText(this, ""+ pos, Toast.LENGTH_SHORT).show();
 
-        tasks_adapter.notifyItemInserted(0);
+        tasks_adapter.notifyItemInserted(pos);
 
 
 
@@ -269,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 
-                                tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
+                                tasks_adapter.notifyItemInserted(Task_Model.size()+2);
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                             }
@@ -351,6 +359,15 @@ public class MainActivity extends AppCompatActivity {
                 .appendQueryParameter("mode", move_mode)
                 .appendQueryParameter("key", getString(R.string.google_api_key))
                 .toString();
+    }
+
+    public void Save(View view){
+        Intent intent = new Intent(MainActivity.this, calendar_activity.class);
+        intent.putExtra("TaskModelArr", Task_Model);
+        intent.putExtra("Position", position);
+        setResult(RESULT_OK, intent);
+
+        finish();
     }
 
 

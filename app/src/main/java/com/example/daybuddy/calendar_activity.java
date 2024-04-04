@@ -57,7 +57,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     TextView HintText;
 
-    ArrayList<Task_Model> Task_Model = new ArrayList<>();
+    ArrayList<TaskModelArr> Task_Model_Arr = new ArrayList<>();
 
     private static final String TAG = "LOCATION_PICKER_TAG";
 
@@ -88,6 +88,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        Bundle extras1 = getIntent().getExtras();
+        if(extras1 != null){
+            position = extras1.getInt("Position");
+            Task_Model_Arr.get(position).TaskModel = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
+        }
 
 
 
@@ -160,8 +165,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
                 Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                Task_Model.add(new Task_Model(null,null,null,null,0,0,null,null));
-                Days_Model.add(new Days_Model(Date, Day_OW, Task_Model.get(Task_Model.size())));
+                ArrayList<Task_Model> taskModels = new ArrayList<>();
+                Task_Model_Arr.add(new TaskModelArr(taskModels));
+                Days_Model.add(new Days_Model(Date, Day_OW, Task_Model_Arr.get(Task_Model_Arr.size()-1)));
                 days_adapter.notifyItemInserted(Days_Model.size() + 1);
                 CheckHintText();
                 days_recyclerview.smoothScrollToPosition(days_adapter.getItemCount());
@@ -184,9 +190,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     @Override
     public void onItemClicked(int position) {
-        Intent intent = new Intent(calendar_activity.this, places.class);
-
-
+        Intent intent = new Intent(calendar_activity.this, MainActivity.class);
+//        ArrayList<Task_Model> TaskModel = Task_Model_Arr.get(position-1).getTaskModel();
+        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
+        intent.putExtra("Position", position);
+        startActivity(intent);
     }
 
 }
