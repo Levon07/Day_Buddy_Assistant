@@ -101,7 +101,6 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
         Place.Field[] placesList = new Place.Field[]{Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG};
 
 
-        assert autocompleteSupportFragment != null;
         autocompleteSupportFragment.setPlaceFields(Arrays.asList(placesList));
 
         autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {

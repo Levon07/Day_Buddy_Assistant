@@ -168,7 +168,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 ArrayList<Task_Model> taskModels = new ArrayList<>();
                 Task_Model_Arr.add(new TaskModelArr(taskModels));
                 Days_Model.add(new Days_Model(Date, Day_OW, Task_Model_Arr.get(Task_Model_Arr.size()-1)));
-                days_adapter.notifyItemInserted(Days_Model.size() + 1);
+                days_adapter.notifyItemInserted(Days_Model.size()+1);
+                days_adapter.notifyDataSetChanged();
                 CheckHintText();
                 days_recyclerview.smoothScrollToPosition(days_adapter.getItemCount());
                 myRef.setValue(Days_Model);
@@ -190,10 +191,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     @Override
     public void onItemClicked(int position) {
-        Intent intent = new Intent(calendar_activity.this, MainActivity.class);
-//        ArrayList<Task_Model> TaskModel = Task_Model_Arr.get(position-1).getTaskModel();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
         intent.putExtra("Position", position);
+        intent.putExtra("day",Days_Model.get(position).getDay_OW());
         startActivity(intent);
     }
 

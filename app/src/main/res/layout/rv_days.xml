@@ -35,8 +35,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:textAlignment="center"
-                        android:text="Day Of Week"
-                        android:onClick="pickStarttime"/>
+                        android:text="Day Of Week" />
 
 
 

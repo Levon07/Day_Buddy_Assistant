@@ -134,6 +134,17 @@ public class register extends AppCompatActivity {
                             //failure
                             Utility.showToast(register.this, task.getException().getLocalizedMessage());
 
+                            Handler handler = new Handler();
+
+                            Runnable vis = new Runnable() {
+                                @Override
+                                public void run() {
+                                    SendVerifyAgain.setVisibility(View.VISIBLE);
+                                }
+                            };
+
+                            handler.postDelayed(vis,10000);
+
                         }
                     }
                 });

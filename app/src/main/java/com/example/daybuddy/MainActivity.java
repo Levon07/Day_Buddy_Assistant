@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseReference myRef;
     int position;
+    String Day_OW;
+    TextView Day_Of_Week;
 
 
 
@@ -88,13 +90,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Day_Of_Week = findViewById(R.id.dayOfWeek);
 
         Bundle extras1 = getIntent().getExtras();
-        if(extras1 == null) {
+        if(extras1 != null) {
             Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
             position = extras1.getInt("Position");
+            Day_OW = extras1.getString("day");
+            Day_Of_Week.setText(Day_OW);
+
         }
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -285,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
                             Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 
-                            tasks_adapter.notifyItemInserted(Task_Model.size() + 1);
+                            tasks_adapter.notifyItemInserted(Task_Model.size() + 2);
                             CheckHintText();
                             tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                             myRef.setValue(Task_Model);
@@ -317,9 +323,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signOut(View view){
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(MainActivity.this, LogIn.class);
-        startActivity(intent);
+        onBackPressed();
     }
 
     private ActivityResultLauncher<Intent> placesResultLauncher = registerForActivityResult(
