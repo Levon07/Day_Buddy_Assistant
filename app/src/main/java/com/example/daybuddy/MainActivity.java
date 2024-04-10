@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     String Day_OW;
     TextView Day_Of_Week;
 
+    View view1;
+
 
 
 
@@ -92,14 +94,15 @@ public class MainActivity extends AppCompatActivity {
 
         Day_Of_Week = findViewById(R.id.dayOfWeek);
 
-        Bundle extras1 = getIntent().getExtras();
-        if(extras1 != null) {
-            Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
-            position = extras1.getInt("Position");
-            Day_OW = extras1.getString("day");
-            Day_Of_Week.setText(Day_OW);
 
-        }
+        Bundle extras1 = getIntent().getExtras();
+//        if(extras1 != null) {
+//            Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
+//            position = extras1.getInt("Position");
+//            Day_OW = extras1.getString("day");
+//            Day_Of_Week.setText(Day_OW);
+//
+//        }
 
 
 
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
-        int pos = Task_Model.size()-1;
+        int pos = Task_Model.size();
         Toast.makeText(this, ""+ pos, Toast.LENGTH_SHORT).show();
 
         tasks_adapter.notifyItemInserted(pos);
@@ -161,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Choose Time
     public void pickStarttime(View view) {
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         TextView ST_View = view1.findViewById(R.id.Start_time_view);
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 St_Time = Hour + ":" + Minute;
-                ST_View.setText(St_Time);
+                ST_View.setText("" + St_Time);
 
             }
         });
@@ -202,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void pickEndtime(View view) {
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         TextView ET_View = view1.findViewById(R.id.End_Time_view);
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -241,13 +242,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void edittext(View view) {
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.input_text_dialog_layout, null);
-        TextInputEditText editText = view1.findViewById(R.id.edittext);
-        View view2 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
-        TextView task_text = view2.findViewById(R.id.Task_text_View);
+        View view2 = LayoutInflater.from(MainActivity.this).inflate(R.layout.input_text_dialog_layout, null);
+        TextInputEditText editText = view2.findViewById(R.id.edittext);
+        TextView task_text = view1.findViewById(R.id.Task_text_View);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
                 .setTitle("Title")
-                .setView(view1)
+                .setView(view2)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -265,8 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Add_Task(View view) {
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
-        TextView editText = view1.findViewById(R.id.Start_time_view);
+        view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
                 .setTitle("Add Task")
                 .setView(view1)
@@ -282,16 +281,16 @@ public class MainActivity extends AppCompatActivity {
 
                             } else {
                                 Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-
-                                tasks_adapter.notifyItemInserted(Task_Model.size()+2);
+                                Toast.makeText(MainActivity.this, "" + tasks_adapter.getItemCount(), Toast.LENGTH_SHORT).show();
+                                tasks_adapter.notifyItemInserted(tasks_adapter.getItemCount()+1);
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                             }
                         }else {
 
                             Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-
-                            tasks_adapter.notifyItemInserted(Task_Model.size() + 2);
+                            Toast.makeText(MainActivity.this, "" + tasks_adapter.getItemCount(), Toast.LENGTH_SHORT).show();
+                            tasks_adapter.notifyItemInserted(tasks_adapter.getItemCount()+1);
                             CheckHintText();
                             tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                             myRef.setValue(Task_Model);
@@ -312,8 +311,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickaPlace(View view){
-        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
-        TextView ST_View = view1.findViewById(R.id.location);
 
 
         Intent intent = new Intent(MainActivity.this, places.class);
@@ -336,10 +333,12 @@ public class MainActivity extends AppCompatActivity {
                         Intent data = result.getData();
 
                         if (data != null){
-
+                            TextView ST_View = view1.findViewById(R.id.location);
                             latitude = data.getDoubleExtra("latitude", 0.0);
                             longitude = data.getDoubleExtra("longitude",0.0);
                             address = data.getStringExtra("address");
+                            ST_View.setText(address);
+
 
                         }else{
                             Log.d(TAG, "onActivityResult: cancelled");

@@ -5,7 +5,7 @@
 
     <!-- fill/color -->
     <solid
-        android:color="@color/milk"
+        android:color="@color/NN_Blue"
         />
 
 

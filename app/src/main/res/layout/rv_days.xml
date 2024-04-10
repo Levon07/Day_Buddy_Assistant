@@ -30,6 +30,7 @@
                     <TextView
                         android:id="@+id/Day_OW"
                         android:textStyle="bold"
+                        android:textColor="@color/NN_White"
                         android:textSize="43sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
                     <TextView
                         android:id="@+id/Date"
                         android:textStyle="bold"
+                        android:textColor="@color/NN_White"
                         android:textSize="20sp"
                         android:textAlignment="center"
                         android:layout_width="match_parent"

@@ -15,6 +15,17 @@
     <color name="gray_blue">#B0C2CB</color>
     <color name="milk">#FFFAEC</color>
     <color name="green_blue_dark">#3D4F59</color>
+    <color name="N_Blue">#0267C1</color>
+    <color name="N_Creme">#E5D2B0</color>
+    <color name="N_Yellow">#EFA00B</color>
+    <color name="N_Orange">#D65108</color>
+    <color name="NN_Blue">#3855E8</color>
+    <color name="NN_Black">#0D1321</color>
+    <color name="NN_White">#FFEDDF</color>
+    <color name="NN_Gray">#7D7D7D</color>
+    <color name="NN_BlackB">#252728</color>
+
+
 
 
 </resources>

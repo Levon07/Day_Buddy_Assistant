@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="@color/light_green">
+    android:background="@color/NN_White">
 
 
 
@@ -70,7 +70,7 @@
             android:textSize="55dp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/green_blue"/>
+            android:textColor="@color/NN_Gray"/>
 
 
 
@@ -78,7 +78,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
-        android:backgroundTint="@color/green_blue"
+        android:backgroundTint="@color/NN_Black"
         app:cornerRadius="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +89,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        app:cornerRadius="8dp"
+        android:backgroundTint="@color/NN_Black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save"
