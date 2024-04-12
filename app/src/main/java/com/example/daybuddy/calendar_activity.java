@@ -227,6 +227,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(calendar_activity.this, LogIn.class);
         startActivity(intent);
+        finish();
     }
 
 
