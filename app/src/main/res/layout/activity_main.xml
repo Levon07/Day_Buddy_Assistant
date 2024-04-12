@@ -10,6 +10,8 @@
 
 
 
+
+
     <LinearLayout
         android:id="@+id/Topic"
         android:layout_width="match_parent"
@@ -71,6 +73,11 @@
             android:textStyle="bold"
             android:textAlignment="center"
             android:textColor="@color/NN_Gray"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
 
 

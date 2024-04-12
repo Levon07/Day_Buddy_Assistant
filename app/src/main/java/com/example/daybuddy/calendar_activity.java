@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.UUID;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,22 +89,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     Days_RV_Adapter days_adapter = new Days_RV_Adapter(this, Days_Model, this);
 
     DatabaseReference myRef;
-
-
+    ProgressBar progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
+        progressBar = findViewById(R.id.progressBar);
+        HintText = findViewById(R.id.HintText);
         Bundle extras1 = getIntent().getExtras();
-        if(extras1 != null){
+        if (extras1 != null) {
             position = extras1.getInt("Position");
             Task_Model_Arr.get(position).TaskModel = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
         }
-
-
 
 
         Bundle extras = getIntent().getExtras();
@@ -130,27 +130,26 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //                Log.w(TAG, "Failed to read value.", error.toException());
 //            }
 //        });
+        progressBar.setVisibility(View.VISIBLE);
+        HintText.setVisibility(View.GONE);
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
+        if (user != null) {
             FirebaseFirestore.getInstance().collection("daysModel").whereEqualTo("userId", user.getUid())
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                 Days_Model.add(new Days_Model(queryDocumentSnapshot.getId(), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
                             }
                             days_adapter.notifyDataSetChanged();
                             CheckHintText();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         }
-
-
 
 
         days_recyclerview = findViewById(R.id.RV_Tasks);
@@ -158,23 +157,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         days_adapter.notifyItemInserted(0);
 
 
-
         days_recyclerview.setAdapter(days_adapter);
         days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-        HintText = findViewById(R.id.HintText);
-        CheckHintText();
+        ;
 
     }
 
-    public void CheckHintText(){
-        if (Days_Model.size()>0){
+    public void CheckHintText() {
+        if (Days_Model.size() > 0) {
             HintText.setVisibility(View.GONE);
-        }else{
+        } else {
             HintText.setVisibility(View.VISIBLE);
         }
     }
-
 
 
     // Choose Time
@@ -191,15 +187,14 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
                 Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                Days_Model.add(new Days_Model("a" ,Date, Day_OW));
+                Days_Model.add(new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null)
-                {
+                if (user != null) {
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("date", Date);
                     hashMap.put("day_ow", Day_OW);
-                    hashMap.put("Position", Days_Model.size()+1);
+                    hashMap.put("Position", Days_Model.size() + 1);
                     hashMap.put("userId", user.getUid());
                     db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
@@ -228,7 +223,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
 
-    public void signOut(View view){
+    public void signOut(View view) {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(calendar_activity.this, LogIn.class);
         startActivity(intent);
@@ -240,7 +235,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
         intent.putExtra("Position", position);
-        intent.putExtra("day",Days_Model.get(position).getDay_OW());
+        intent.putExtra("day", Days_Model.get(position).getDay_OW());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         intent.putExtra("id", Days_Model.get(position).id);
 //        if (user != null)

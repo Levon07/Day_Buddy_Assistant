@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     View view1;
     String id;
-
+    ProgressBar progressBar;
 
 
 
@@ -100,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        progressBar = findViewById(R.id.progressBar);
+        HintText = findViewById(R.id.HintText);
         Day_Of_Week = findViewById(R.id.dayOfWeek);
 
 
@@ -142,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+
+        progressBar.setVisibility(View.VISIBLE);
+        HintText.setVisibility(View.GONE);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
@@ -154,13 +160,13 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                 int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                Toast.makeText(MainActivity.this, "6565565", Toast.LENGTH_SHORT).show();
                                 Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                         queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM ,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
                             tasks_adapter.notifyDataSetChanged();
                             CheckHintText();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         }
@@ -180,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
         tasks_recyclerview.setAdapter(tasks_adapter);
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-        HintText = findViewById(R.id.HintText);
-        CheckHintText();
+
+
 
     }
 
@@ -347,7 +353,6 @@ public class MainActivity extends AppCompatActivity {
                                 tasks_adapter.notifyDataSetChanged();
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-                                Toast.makeText(MainActivity.this, "++++", Toast.LENGTH_SHORT).show();
                             }
                         }else {
 
@@ -456,10 +461,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Save(View view){
-        Intent intent = new Intent(MainActivity.this, calendar_activity.class);
-        intent.putExtra("TaskModelArr", Task_Model);
-        intent.putExtra("Position", position);
-        setResult(RESULT_OK, intent);
+//        Intent intent = new Intent(MainActivity.this, calendar_activity.class);
+//        intent.putExtra("TaskModelArr", Task_Model);
+//        intent.putExtra("Position", position);
+//        setResult(RESULT_OK, intent);
 
         finish();
     }
