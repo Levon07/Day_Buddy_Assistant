@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:text="Send Verification Email Again"
-            android:onClick="sendEmail"
+
             android:visibility="gone"
             android:backgroundTint="@color/dark_blue"
             app:cornerRadius="8dp"

@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         Bundle extras1 = getIntent().getExtras();
-//        if(extras1 != null) {
+   if(extras1 != null) {
 //            Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
 //            position = extras1.getInt("Position");
-//            Day_OW = extras1.getString("day");
-//            Day_Of_Week.setText(Day_OW);
+            Day_OW = extras1.getString("day");
+            Day_Of_Week.setText(Day_OW);
 //
-//        }
+        }
 
 
 

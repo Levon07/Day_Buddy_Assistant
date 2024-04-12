@@ -56,6 +56,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit:converter-gson:2.0.0-beta2")
     implementation("androidx.test.ext:junit:1.1.5")
+    implementation("com.google.firebase:firebase-firestore:24.11.1")
     androidTestImplementation("junit:junit:4.12")
 
 }

@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -39,11 +42,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import retrofit.GsonConverterFactory;
 import retrofit.http.GET;
@@ -103,26 +111,43 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             //The key argument here must match that used in the other activity
         }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
+//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
+//
+//        myRef = database.getReference("Task_Model");
+//
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                Days_Model = (ArrayList<com.example.daybuddy.Days_Model>) dataSnapshot.getValue(Object.class);
+//                Log.d(TAG, "Value is: " + Days_Model);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
 
-        myRef = database.getReference("Task_Model");
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Days_Model = (ArrayList<com.example.daybuddy.Days_Model>) dataSnapshot.getValue(Object.class);
-                Log.d(TAG, "Value is: " + Days_Model);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            FirebaseFirestore.getInstance().collection("daysModel").whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
+                            {
+                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
+                            }
+                            days_adapter.notifyDataSetChanged();
+                        }
+                    });
+        }
 
 
 
@@ -167,13 +192,35 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
                 ArrayList<Task_Model> taskModels = new ArrayList<>();
                 Task_Model_Arr.add(new TaskModelArr(taskModels));
-                Days_Model.add(new Days_Model(Date, Day_OW, Task_Model_Arr.get(Task_Model_Arr.size()-1)));
+                Days_Model.add(new Days_Model(Date, Day_OW));
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null)
+                {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("date", Date);
+                    hashMap.put("day_ow", Day_OW);
+                    hashMap.put("userId", user.getUid());
+                    db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                }
+
                 days_adapter.notifyItemInserted(Days_Model.size()+1);
                 days_adapter.notifyDataSetChanged();
                 CheckHintText();
                 days_recyclerview.smoothScrollToPosition(days_adapter.getItemCount());
                 myRef.setValue(Days_Model);
-
             }
         });
         DatePicker.show(getSupportFragmentManager(), "tag");
@@ -192,7 +239,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
+//        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
         intent.putExtra("Position", position);
         intent.putExtra("day",Days_Model.get(position).getDay_OW());
         startActivity(intent);

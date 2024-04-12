@@ -117,7 +117,7 @@ public class register extends AppCompatActivity {
                             // creating acc is done
                             Utility.showToast(register.this, "Successfully create account, Check email to verify");
                             firebaseAuth.getCurrentUser().sendEmailVerification();
-                            firebaseAuth.signOut();
+//                            firebaseAuth.signOut();
 
                             Handler handler = new Handler();
 
@@ -125,6 +125,12 @@ public class register extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     SendVerifyAgain.setVisibility(View.VISIBLE);
+                                    SendVerifyAgain.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    });
                                 }
                             };
 
@@ -140,6 +146,12 @@ public class register extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     SendVerifyAgain.setVisibility(View.VISIBLE);
+                                    SendVerifyAgain.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    });
                                 }
                             };
 
@@ -179,10 +191,15 @@ public class register extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void sendEmail(View view){
-        mAuth.getCurrentUser().sendEmailVerification();
+//    public void sendEmail(View view){
+//        String email = Email.getText().toString();
+//        String password = Password.getText().toString();
+//
+//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//        firebaseAuth.createUserWithEmailAndPassword(email, password);
+//        firebaseAuth.getCurrentUser().sendEmailVerification();
+//
+//    }
 
 
-
-    }
 }
