@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     TextView Day_Of_Week;
 
     View view1;
+    String id;
 
 
 
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 //            position = extras1.getInt("Position");
             Day_OW = extras1.getString("day");
             Day_Of_Week.setText(Day_OW);
+            id = extras1.getString("id");
 //
         }
 
@@ -143,17 +145,18 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
-            FirebaseFirestore.getInstance().collection("daysModel").document("daysModelId").collection("taskModels").whereEqualTo("userId", user.getUid())
+            FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
                             {
-                                int STM = Integer.parseInt(String.valueOf(queryDocumentSnapshot.getDouble("St_time_M")));
-                                int ETM = Integer.parseInt(String.valueOf(queryDocumentSnapshot.getDouble("Et_time_M")));
+                                int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                Toast.makeText(MainActivity.this, "6565565", Toast.LENGTH_SHORT).show();
                                 Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                        queryDocumentSnapshot.getString("St_Time"), queryDocumentSnapshot.getString("Et_Time"), STM ,
+                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM ,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
                             tasks_adapter.notifyDataSetChanged();
@@ -165,11 +168,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        tasks_recyclerview = findViewById(R.id.RV_Tasks);
-        int pos = Task_Model.size();
-        Toast.makeText(this, ""+ pos, Toast.LENGTH_SHORT).show();
 
-        tasks_adapter.notifyItemInserted(pos);
+        tasks_recyclerview = findViewById(R.id.RV_Tasks);
+//        int pos = Task_Model.size();
+//        Toast.makeText(this, ""+ pos, Toast.LENGTH_SHORT).show();
+//
+        tasks_adapter.notifyDataSetChanged();
 
 
 
@@ -310,13 +314,13 @@ public class MainActivity extends AppCompatActivity {
 
                             } else {
                                 Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                                Toast.makeText(MainActivity.this, "" + tasks_adapter.getItemCount(), Toast.LENGTH_SHORT).show();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null)
                                 {
                                     HashMap<String, Object> hashMap = new HashMap<>();
                                     hashMap.put("day_ow", Day_OW);
+                                    hashMap.put("Task_text", Task_text);
                                     hashMap.put("ST_Time", St_Time);
                                     hashMap.put("ET_Time", Et_Time);
                                     hashMap.put("ET_time_M", Et_time_M);
@@ -326,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                                     hashMap.put("longitude", longitude);
 
                                     hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
                                             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -340,18 +344,47 @@ public class MainActivity extends AppCompatActivity {
 
                                     //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
                                 }
-                                tasks_adapter.notifyItemInserted(tasks_adapter.getItemCount()+1);
+                                tasks_adapter.notifyDataSetChanged();
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                                Toast.makeText(MainActivity.this, "++++", Toast.LENGTH_SHORT).show();
                             }
                         }else {
 
                             Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                            Toast.makeText(MainActivity.this, "" + tasks_adapter.getItemCount(), Toast.LENGTH_SHORT).show();
-                            tasks_adapter.notifyItemInserted(tasks_adapter.getItemCount()+1);
-                            CheckHintText();
-                            tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-                            myRef.setValue(Task_Model);
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user != null)
+                                {
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("day_ow", Day_OW);
+                                    hashMap.put("Task_text", Task_text);
+                                    hashMap.put("ST_Time", St_Time);
+                                    hashMap.put("ET_Time", Et_Time);
+                                    hashMap.put("ET_time_M", Et_time_M);
+                                    hashMap.put("ST_time_M", St_time_M);
+                                    hashMap.put("address", address);
+                                    hashMap.put("latitude", latitude);
+                                    hashMap.put("longitude", longitude);
+
+                                    hashMap.put("userId", user.getUid());
+                                    db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                                }
+                                tasks_adapter.notifyDataSetChanged();
+                                CheckHintText();
+                                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                         }
 
 
