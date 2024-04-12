@@ -145,6 +145,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
                             }
                             days_adapter.notifyDataSetChanged();
+                            CheckHintText();
                         }
                     });
         }
@@ -190,8 +191,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
                 Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                ArrayList<Task_Model> taskModels = new ArrayList<>();
-                Task_Model_Arr.add(new TaskModelArr(taskModels));
+                ArrayList<Task_Model> TaskModel = new ArrayList<>();
+                TaskModelArr taskModels = new TaskModelArr(TaskModel);
                 Days_Model.add(new Days_Model(Date, Day_OW));
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -200,6 +201,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("date", Date);
                     hashMap.put("day_ow", Day_OW);
+                    hashMap.put("Position", Days_Model.size()+1);
                     hashMap.put("userId", user.getUid());
                     db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
@@ -242,6 +244,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
         intent.putExtra("Position", position);
         intent.putExtra("day",Days_Model.get(position).getDay_OW());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            FirebaseFirestore.getInstance().collection("daysModel").whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+
+
+                        }
+                    });
+        }
         startActivity(intent);
     }
 

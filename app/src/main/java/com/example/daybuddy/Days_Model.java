@@ -12,6 +12,7 @@ public class Days_Model {
     public Days_Model(String Date, String day_OW) {
         this.Date = Date;
         this.Day_OW = day_OW;
+
     }
 
     public String getDate() {

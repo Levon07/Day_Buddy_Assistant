@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -35,10 +38,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import retrofit.GsonConverterFactory;
 import retrofit.http.GET;
@@ -106,32 +114,53 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mUser = extras.getParcelable("auth");
-            //The key argument here must match that used in the other activity
+//        Bundle extras = getIntent().getExtras();
+//        if (extras != null) {
+//            mUser = extras.getParcelable("auth");
+//            //The key argument here must match that used in the other activity
+//        }
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
+//
+//        myRef = database.getReference("Task_Model");
+//
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) dataSnapshot.getValue(Object.class);
+//                Log.d(TAG, "Value is: " + Task_Model);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
+//db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            FirebaseFirestore.getInstance().collection("daysModel").document("daysModelId").collection("taskModels").whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
+                            {
+                                int STM = Integer.parseInt(String.valueOf(queryDocumentSnapshot.getDouble("St_time_M")));
+                                int ETM = Integer.parseInt(String.valueOf(queryDocumentSnapshot.getDouble("Et_time_M")));
+                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                        queryDocumentSnapshot.getString("St_Time"), queryDocumentSnapshot.getString("Et_Time"), STM ,
+                                        ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                            }
+                            tasks_adapter.notifyDataSetChanged();
+                            CheckHintText();
+                        }
+                    });
         }
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
-
-        myRef = database.getReference("Task_Model");
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) dataSnapshot.getValue(Object.class);
-                Log.d(TAG, "Value is: " + Task_Model);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
 
 
 
@@ -282,6 +311,35 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
                                 Toast.makeText(MainActivity.this, "" + tasks_adapter.getItemCount(), Toast.LENGTH_SHORT).show();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user != null)
+                                {
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("day_ow", Day_OW);
+                                    hashMap.put("ST_Time", St_Time);
+                                    hashMap.put("ET_Time", Et_Time);
+                                    hashMap.put("ET_time_M", Et_time_M);
+                                    hashMap.put("ST_time_M", St_time_M);
+                                    hashMap.put("address", address);
+                                    hashMap.put("latitude", latitude);
+                                    hashMap.put("longitude", longitude);
+
+                                    hashMap.put("userId", user.getUid());
+                                    db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                                }
                                 tasks_adapter.notifyItemInserted(tasks_adapter.getItemCount()+1);
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
