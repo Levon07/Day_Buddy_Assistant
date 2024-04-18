@@ -61,7 +61,7 @@ import java.util.List;
 public class places extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "LOCATION_PICKER_TAG";
-    private static final int DEFAULT_ZOOM = 18;
+    private static final int DEFAULT_ZOOM = 5;
     private GoogleMap mMap = null;
 
     private PlacesClient mPlacesClient;

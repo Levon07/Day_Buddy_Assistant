@@ -15,9 +15,12 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
     Context context;
     ArrayList<Task_Model> Task_Model;
 
-    public TT_RV_Adapter(Context context, ArrayList<Task_Model> Task_Model){
+    private final RV_Interface rvInterface;
+
+    public TT_RV_Adapter(Context context, ArrayList<Task_Model> Task_Model, RV_Interface rvInterface){
         this.context = context;
         this.Task_Model = Task_Model;
+        this.rvInterface = rvInterface;
     }
 
 
@@ -29,7 +32,7 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.rv_tasks, parent, false);
 
-        return new TT_RV_Adapter.TT_ViewHolder(view);
+        return new TT_RV_Adapter.TT_ViewHolder(view, rvInterface);
     }
 
     @Override
@@ -56,13 +59,27 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
 
         TextView Time_Start, Time_End, Task_Text, Location;
 
-        public TT_ViewHolder(@NonNull View itemView) {
+        public TT_ViewHolder(@NonNull View itemView, RV_Interface rvInterface) {
             super(itemView);
 
             Time_Start = itemView.findViewById(R.id.time_start);
             Time_End = itemView.findViewById(R.id.time_end);
             Task_Text = itemView.findViewById(R.id.task_text);
             Location = itemView.findViewById(R.id.location);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (rvInterface != null){
+                        int pos = getAdapterPosition();
+
+                        if (pos != RecyclerView.NO_POSITION){
+                            rvInterface.onItemLongClick(pos);
+                        }
+                    }
+                    return true;
+                }
+            });
         }
     }
 }

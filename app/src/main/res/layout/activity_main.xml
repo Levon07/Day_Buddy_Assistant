@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/Topic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="75dp">
 
         <FrameLayout
             android:background="@drawable/btn"
@@ -33,20 +33,31 @@
         </FrameLayout>
 
 
-        <TextView
-            android:id="@+id/dayOfWeek"
-            android:layout_weight="1"
-            android:text="Monday"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="55dp"
-            android:textAlignment="center"
+        <FrameLayout
+            android:background="@drawable/btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/day_of_week_topic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="signOut">
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/dayOfWeek"
+                android:text="Monday"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="50dp"
+                android:textAlignment="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/day_of_week_topic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </FrameLayout>
+
+
 
     </LinearLayout>
 

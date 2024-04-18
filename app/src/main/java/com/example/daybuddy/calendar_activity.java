@@ -175,8 +175,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     // Choose Time
     public void PickADate(View view) {
-        View view1 = LayoutInflater.from(calendar_activity.this).inflate(R.layout.add_task, null);
-        TextView ST_View = view1.findViewById(R.id.Start_time_view);
         MaterialDatePicker<Long> DatePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Choose a Date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -255,6 +253,66 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //                    });
 //        }
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
+        MaterialDatePicker<Long> DatePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Choose a Date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setPositiveButtonText("Save Changes")
+                .setNegativeButtonText("Delete Day")
+                .build();
+
+        DatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
+                Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
+                Days_Model.set(position, new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                if (user != null) {
+//                    HashMap<String, Object> hashMap = new HashMap<>();
+//                    hashMap.put("date", Date);
+//                    hashMap.put("day_ow", Day_OW);
+//                    hashMap.put("Position", Days_Model.size() + 1);
+//                    hashMap.put("userId", user.getUid());
+//
+//                    db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                        @Override
+//                        public void onSuccess(DocumentReference documentReference) {
+//                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//
+//                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+//                }
+
+
+                days_adapter.notifyDataSetChanged();
+                CheckHintText();
+                days_recyclerview.smoothScrollToPosition(position);
+            }
+        });
+        DatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Days_Model.remove(position);
+                days_adapter.notifyItemRemoved(position);
+                CheckHintText();
+            }
+        });
+        DatePicker.show(getSupportFragmentManager(), "tag");
+
+
+
     }
 
 }
