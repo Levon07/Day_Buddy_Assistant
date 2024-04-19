@@ -24,6 +24,10 @@ public class Days_Model {
         return Day_OW;
     }
 
+    public String getId() {
+        return id;
+    }
+
 
 
 }

@@ -142,7 +142,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getId(), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
+                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
                             }
                             days_adapter.notifyDataSetChanged();
                             CheckHintText();
@@ -193,7 +193,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                    Days_Model.add(new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
+                    String id = UUID.randomUUID().toString();
+                    Days_Model.add(new Days_Model(id, Date, Day_OW));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -201,12 +202,14 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         hashMap.put("date", Date);
                         hashMap.put("day_ow", Day_OW);
                         hashMap.put("Position", Days_Model.size() + 1);
+                        hashMap.put("DocId", id);
                         hashMap.put("userId", user.getUid());
-                        db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        db.collection("daysModel").document(id).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
+                            public void onSuccess(Void unused) {
                                 Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
                             }
+
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
@@ -316,27 +319,34 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     Days_Model.set(position, new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                if (user != null) {
-//                    HashMap<String, Object> hashMap = new HashMap<>();
-//                    hashMap.put("date", Date);
-//                    hashMap.put("day_ow", Day_OW);
-//                    hashMap.put("Position", Days_Model.size() + 1);
-//                    hashMap.put("userId", user.getUid());
-//
-//                    db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference documentReference) {
-//                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//
-//                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
-//                }
+                if (user != null) {
+
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("date", Date);
+                    hashMap.put("day_ow", Day_OW);
+                    hashMap.put("Position", position);
+                    hashMap.put("DocId", Days_Model.get(position).id);
+                    hashMap.put("userId", user.getUid());
+
+                    Toast.makeText(calendar_activity.this, Days_Model.get(position).id, Toast.LENGTH_SHORT).show();
+
+
+                    db.collection("daysModel").document(Days_Model.get(position).id).update(hashMap)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("aaaa", e.getMessage());
+                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                }
 
 
                     days_adapter.notifyDataSetChanged();
@@ -351,6 +361,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         DatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete();
                 Days_Model.remove(position);
                 days_adapter.notifyItemRemoved(position);
                 CheckHintText();
