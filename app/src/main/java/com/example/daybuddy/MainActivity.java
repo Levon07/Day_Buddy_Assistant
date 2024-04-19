@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     String Et_Time = "00:00";
     String St_Time = "00:00";
 
+    String Title = null;
+
     Double latitude = null;
     Double longitude = null;
     String address = null;
@@ -433,7 +435,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                             latitude = data.getDoubleExtra("latitude", 0.0);
                             longitude = data.getDoubleExtra("longitude",0.0);
                             address = data.getStringExtra("address");
-                            ST_View.setText(address);
+                            Title = data.getStringExtra("title");
+                            ST_View.setText(Title);
 
 
                         }else{

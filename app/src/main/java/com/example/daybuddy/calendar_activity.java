@@ -184,29 +184,40 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             @Override
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
-                Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                Days_Model.add(new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("date", Date);
-                    hashMap.put("day_ow", Day_OW);
-                    hashMap.put("Position", Days_Model.size() + 1);
-                    hashMap.put("userId", user.getUid());
-                    db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                boolean flag = false;
+                for (int i = 0; i< Days_Model.size(); i++){
+                    if(Days_Model.get(i).getDate().equals(Date)){
+                        flag = true;
+                    }
 
-                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                }
+                if (!flag) {
+                    Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
+                    Days_Model.add(new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("date", Date);
+                        hashMap.put("day_ow", Day_OW);
+                        hashMap.put("Position", Days_Model.size() + 1);
+                        hashMap.put("userId", user.getUid());
+                        db.collection("daysModel").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                    }
+                }else {
+                    Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For  : " + Date, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -222,10 +233,34 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     public void signOut(View view) {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(calendar_activity.this, LogIn.class);
-        startActivity(intent);
-        finish();
+
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
+                .setTitle("Sign Out")
+                .setPositiveButton("Sign Out", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(calendar_activity.this, LogIn.class);
+                        startActivity(intent);
+                        finish();
+
+
+
+
+
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create();
+        alertDialog.show();
+
+
+
+
     }
 
 
@@ -269,10 +304,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             @Override
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
-                Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                Days_Model.set(position, new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                boolean flag = false;
+                for (int i = 0; i< Days_Model.size(); i++){
+                    if(Days_Model.get(i).getDate().equals(Date)){
+                        flag = true;
+                    }
+
+                }
+                if (!flag){
+                    Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
+                    Days_Model.set(position, new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //                if (user != null) {
 //                    HashMap<String, Object> hashMap = new HashMap<>();
 //                    hashMap.put("date", Date);
@@ -296,9 +339,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //                }
 
 
-                days_adapter.notifyDataSetChanged();
-                CheckHintText();
-                days_recyclerview.smoothScrollToPosition(position);
+                    days_adapter.notifyDataSetChanged();
+                    CheckHintText();
+                    days_recyclerview.smoothScrollToPosition(position);
+                }else {
+                    Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For" + Date, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         DatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {

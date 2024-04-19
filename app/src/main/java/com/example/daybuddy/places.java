@@ -61,7 +61,7 @@ import java.util.List;
 public class places extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "LOCATION_PICKER_TAG";
-    private static final int DEFAULT_ZOOM = 15;
+    private static final int DEFAULT_ZOOM = 19;
     private GoogleMap mMap = null;
 
     private PlacesClient mPlacesClient;
@@ -71,6 +71,8 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
     public boolean isSearching = false;
 
     private Double selectedLatitude = null;
+
+    private String selectedTitle = null;
     private Double selectedLongitude = null;
     private String selectedAddress = "";
 
@@ -122,6 +124,7 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
                 selectedLatitude = latLng.latitude;
                 selectedLongitude = latLng.longitude;
                 selectedAddress = place.getAddress();
+                selectedTitle = place.getName();
 
                 addMarkert(latLng, title, selectedAddress);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
@@ -156,6 +159,7 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
                 intent.putExtra("latitude", selectedLatitude);
                 intent.putExtra("longitude", selectedLongitude);
                 intent.putExtra("address", selectedAddress);
+                intent.putExtra("title", selectedAddress);
 
                 setResult(RESULT_OK, intent);
 
