@@ -571,10 +571,12 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                         dialogInterface.dismiss();
 
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Delete Task", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                        Task_Model.remove(position);
+                        tasks_adapter.notifyItemRemoved(position);
+                        CheckHintText();
                     }
                 }).create();
         alertDialog.show();

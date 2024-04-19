@@ -61,7 +61,7 @@ import java.util.List;
 public class places extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "LOCATION_PICKER_TAG";
-    private static final int DEFAULT_ZOOM = 5;
+    private static final int DEFAULT_ZOOM = 15;
     private GoogleMap mMap = null;
 
     private PlacesClient mPlacesClient;
@@ -124,6 +124,8 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
                 selectedAddress = place.getAddress();
 
                 addMarkert(latLng, title, selectedAddress);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
 
 
             }
@@ -173,6 +175,9 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
 
         Log.d(TAG, "onMapReady: ");
         mMap = googleMap;
+        LatLng ll = new LatLng(0,0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, DEFAULT_ZOOM));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
 
 
 
@@ -192,6 +197,10 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
 
                     Log.d(TAG, "onMapClick: selectedLatitude: " + selectedLatitude);
                     Log.d(TAG, "onMapClick: selectedLongitude: " + selectedLongitude);
+
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
 
                     addressFromLatLng(latLng);
                 }
