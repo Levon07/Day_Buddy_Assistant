@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                             {
                                 int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                 int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                         queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM ,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
@@ -321,7 +322,10 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                 Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
                             } else {
-                                Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                                String idNew = UUID.randomUUID().toString();
+
+                                Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null)
@@ -336,11 +340,11 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                     hashMap.put("address", address);
                                     hashMap.put("latitude", latitude);
                                     hashMap.put("longitude", longitude);
-
+                                    hashMap.put("DocID", idNew);
                                     hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onSuccess(DocumentReference documentReference) {
+                                        public void onSuccess(Void unused) {
                                             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -357,9 +361,10 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                 tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
                             }
                         }else {
-
-                            Task_Model.add(new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                            String idNew = UUID.randomUUID().toString();
+                            Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null)
                                 {
@@ -373,11 +378,11 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                     hashMap.put("address", address);
                                     hashMap.put("latitude", latitude);
                                     hashMap.put("longitude", longitude);
-
+                                    hashMap.put("DocID", idNew);
                                     hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onSuccess(DocumentReference documentReference) {
+                                        public void onSuccess(Void unused) {
                                             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -498,85 +503,41 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        if(St_time_M>=Et_time_M){
-                            Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
-                        } else if (Task_Model.size()>1) {
-                            if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
-                                Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
-                            } else {
-                                Task_Model.set(position, new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                                Task_Model.set(position, new Task_Model(Task_Model.get(position).DocID, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                                if (user != null)
-//                                {
-//                                    HashMap<String, Object> hashMap = new HashMap<>();
-//                                    hashMap.put("day_ow", Day_OW);
-//                                    hashMap.put("Task_text", Task_text);
-//                                    hashMap.put("ST_Time", St_Time);
-//                                    hashMap.put("ET_Time", Et_Time);
-//                                    hashMap.put("ET_time_M", Et_time_M);
-//                                    hashMap.put("ST_time_M", St_time_M);
-//                                    hashMap.put("address", address);
-//                                    hashMap.put("latitude", latitude);
-//                                    hashMap.put("longitude", longitude);
-//
-//                                    hashMap.put("userId", user.getUid());
-//                                    db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                        @Override
-//                                        public void onSuccess(DocumentReference documentReference) {
-//                                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }).addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    });
-//
-//                                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-//                                }
+                                if (user != null) {
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("day_ow", Day_OW);
+                                    hashMap.put("Task_text", Task_text);
+                                    hashMap.put("ST_Time", St_Time);
+                                    hashMap.put("ET_Time", Et_Time);
+                                    hashMap.put("ET_time_M", Et_time_M);
+                                    hashMap.put("ST_time_M", St_time_M);
+                                    hashMap.put("address", address);
+                                    hashMap.put("latitude", latitude);
+                                    hashMap.put("longitude", longitude);
+                                    hashMap.put("DocID", Task_Model.get(position).DocID);
+                                    hashMap.put("userId", user.getUid());
+                                    db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                                }
                                 tasks_adapter.notifyDataSetChanged();
                                 CheckHintText();
                                 tasks_recyclerview.smoothScrollToPosition(position);
-                            }
-                        }else {
 
-                            Task_Model.set(position, new Task_Model(Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                            if (user != null)
-//                            {
-//                                HashMap<String, Object> hashMap = new HashMap<>();
-//                                hashMap.put("day_ow", Day_OW);
-//                                hashMap.put("Task_text", Task_text);
-//                                hashMap.put("ST_Time", St_Time);
-//                                hashMap.put("ET_Time", Et_Time);
-//                                hashMap.put("ET_time_M", Et_time_M);
-//                                hashMap.put("ST_time_M", St_time_M);
-//                                hashMap.put("address", address);
-//                                hashMap.put("latitude", latitude);
-//                                hashMap.put("longitude", longitude);
-//
-//                                hashMap.put("userId", user.getUid());
-//                                db.collection("daysModel").document(id).collection("taskModels").add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                    @Override
-//                                    public void onSuccess(DocumentReference documentReference) {
-//                                        Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }).addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//
-//                                //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-//                            }
-                            tasks_adapter.notifyDataSetChanged();
-                            CheckHintText();
-                            tasks_recyclerview.smoothScrollToPosition(position);
-                        }
 
 
 
@@ -586,6 +547,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 }).setNegativeButton("Delete Task", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                        FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(position).DocID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         Task_Model.remove(position);
                         tasks_adapter.notifyItemRemoved(position);
                         CheckHintText();

@@ -359,7 +359,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         DatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete();
+                FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(calendar_activity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(calendar_activity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 Days_Model.remove(position);
                 days_adapter.notifyItemRemoved(position);
                 CheckHintText();
