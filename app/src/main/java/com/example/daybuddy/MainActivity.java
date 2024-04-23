@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     ProgressBar progressBar;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
