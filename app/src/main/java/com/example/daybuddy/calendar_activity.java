@@ -316,7 +316,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag){
                     Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                    Days_Model.set(position, new Days_Model(UUID.randomUUID().toString(), Date, Day_OW));
+                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, Date, Day_OW));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -327,8 +327,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     hashMap.put("Position", position);
                     hashMap.put("DocId", Days_Model.get(position).id);
                     hashMap.put("userId", user.getUid());
-
-                    Toast.makeText(calendar_activity.this, Days_Model.get(position).id, Toast.LENGTH_SHORT).show();
 
 
                     db.collection("daysModel").document(Days_Model.get(position).id).update(hashMap)
