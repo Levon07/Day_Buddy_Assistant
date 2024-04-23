@@ -117,7 +117,6 @@ public class register extends AppCompatActivity {
                             // creating acc is done
                             Utility.showToast(register.this, "Successfully create account, Check email to verify");
                             firebaseAuth.getCurrentUser().sendEmailVerification();
-//                            firebaseAuth.signOut();
 
                             Handler handler = new Handler();
 
@@ -191,15 +190,7 @@ public class register extends AppCompatActivity {
         startActivity(intent);
     }
 
-//    public void sendEmail(View view){
-//        String email = Email.getText().toString();
-//        String password = Password.getText().toString();
-//
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseAuth.createUserWithEmailAndPassword(email, password);
-//        firebaseAuth.getCurrentUser().sendEmailVerification();
-//
-//    }
+
 
 
 }

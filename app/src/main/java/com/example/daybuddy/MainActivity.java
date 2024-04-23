@@ -110,43 +110,12 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
         Bundle extras1 = getIntent().getExtras();
    if(extras1 != null) {
-//            Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
-//            position = extras1.getInt("Position");
+
             Day_OW = extras1.getString("day");
             Day_Of_Week.setText(Day_OW);
             id = extras1.getString("id");
-//
+
         }
-
-
-
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            mUser = extras.getParcelable("auth");
-//            //The key argument here must match that used in the other activity
-//        }
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
-//
-//        myRef = database.getReference("Task_Model");
-//
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                Task_Model = (ArrayList<com.example.daybuddy.Task_Model>) dataSnapshot.getValue(Object.class);
-//                Log.d(TAG, "Value is: " + Task_Model);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
-//db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-
         progressBar.setVisibility(View.VISIBLE);
         HintText.setVisibility(View.GONE);
 
@@ -178,9 +147,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
 
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
-//        int pos = Task_Model.size();
-//        Toast.makeText(this, ""+ pos, Toast.LENGTH_SHORT).show();
-//
+
         tasks_adapter.notifyDataSetChanged();
 
 
@@ -468,12 +435,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     }
 
     public void Save(View view){
-//        Intent intent = new Intent(MainActivity.this, calendar_activity.class);
-//        intent.putExtra("TaskModelArr", Task_Model);
-//        intent.putExtra("Position", position);
-//        setResult(RESULT_OK, intent);
-
-        finish();
+     finish();
     }
 
 

@@ -108,7 +108,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mUser = extras.getParcelable("auth");
-            //The key argument here must match that used in the other activity
+
         }
 
         progressBar.setVisibility(View.VISIBLE);
@@ -267,26 +267,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        intent.putExtra("TaskModelArr", Task_Model_Arr.get(position).getTaskModel());
+
         intent.putExtra("Position", position);
         intent.putExtra("day", Days_Model.get(position).getDay_OW());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         intent.putExtra("id", Days_Model.get(position).id);
-//        if (user != null)
-//        {
-//            FirebaseFirestore.getInstance().collection("daysModel")
-//                    .get()
-//                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
-//                            {
-//                                String id = queryDocumentSnapshot.getId();
-//                                intent.putExtra("id", id);
-//                            }
-//                        }
-//                    });
-//        }
+
         startActivity(intent);
     }
 
