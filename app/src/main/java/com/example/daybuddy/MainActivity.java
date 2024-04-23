@@ -482,6 +482,15 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     public void onItemLongClick(int position) {
 
         view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
+        TextView St_Time1 = view1.findViewById(R.id.Start_time_view);
+        TextView Et_Time1 = view1.findViewById(R.id.End_Time_view);
+        TextView TaskText1 = view1.findViewById(R.id.Task_text_View);
+        TextView Location1 = view1.findViewById(R.id.location);
+
+        St_Time1.setText(Task_Model.get(position).time_start);
+        Et_Time1.setText(Task_Model.get(position).time_end);
+        TaskText1.setText(Task_Model.get(position).task_text);
+        Location1.setText(Task_Model.get(position).location);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
                 .setTitle("Edit Task")
                 .setView(view1)
