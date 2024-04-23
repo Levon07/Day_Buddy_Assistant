@@ -111,25 +111,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             //The key argument here must match that used in the other activity
         }
 
-//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://day-buddy-default-rtdb.firebaseio.com/");
-//
-//        myRef = database.getReference("Task_Model");
-//
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                Days_Model = (ArrayList<com.example.daybuddy.Days_Model>) dataSnapshot.getValue(Object.class);
-//                Log.d(TAG, "Value is: " + Days_Model);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
         progressBar.setVisibility(View.VISIBLE);
         HintText.setVisibility(View.GONE);
 
@@ -160,7 +141,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         days_recyclerview.setAdapter(days_adapter);
         days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-        ;
+        CheckTutorial();
 
     }
 
@@ -170,6 +151,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         } else {
             HintText.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void CheckTutorial(){
+        if(Days_Model.isEmpty()){
+        View view = LayoutInflater.from(calendar_activity.this).inflate(R.layout.guide_text, null);
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
+                .setTitle("How To Use Day Buddy")
+                .setView(view)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create();
+        alertDialog.show();
+    }
     }
 
 
