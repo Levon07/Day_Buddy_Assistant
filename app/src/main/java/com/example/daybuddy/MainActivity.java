@@ -119,9 +119,6 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         HintText = findViewById(R.id.HintText);
         Day_Of_Week = findViewById(R.id.dayOfWeek);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         createNotificationChannel();
 
 
