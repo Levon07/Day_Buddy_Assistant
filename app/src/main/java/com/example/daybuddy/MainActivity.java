@@ -11,9 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +30,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.daybuddy.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,6 +46,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -58,6 +66,10 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements RV_Interface {
 
+    private ActivityMainBinding binding;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Calendar calendar;
     TextView HintText;
     private static final String TAG = "LOCATION_PICKER_TAG";
 
@@ -107,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         HintText = findViewById(R.id.HintText);
         Day_Of_Week = findViewById(R.id.dayOfWeek);
 
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        createNotificationChannel();
+
 
         Bundle extras1 = getIntent().getExtras();
    if(extras1 != null) {
@@ -141,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                         }
                     });
         }
+
 
 
 
@@ -203,6 +221,11 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 St_Time = Hour + ":" + Minute;
                 ST_View.setText("" + St_Time);
 
+                calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
             }
         });
         timePicker.show(getSupportFragmentManager(), "tag");
@@ -291,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                 String idNew = UUID.randomUUID().toString();
 
                                 Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-
+                                SetAlarm();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null)
@@ -329,7 +352,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                         }else {
                             String idNew = UUID.randomUUID().toString();
                             Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            SetAlarm();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null)
@@ -466,6 +490,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
 
                                 Task_Model.set(position, new Task_Model(Task_Model.get(position).DocID, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                                SetAlarm();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user != null) {
@@ -529,4 +554,29 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
 
     }
+
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "Day Buddy";
+            String desc = "Channel for Alarm Manager";
+            int imp = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("Day Buddy", name, imp);
+            channel.setDescription(desc);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void SetAlarm(){
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
 }
+
+

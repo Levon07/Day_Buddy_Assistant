@@ -11,9 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +29,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.daybuddy.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,6 +68,7 @@ import retrofit2.Retrofit;
 
 
 public class calendar_activity extends AppCompatActivity implements RV_Interface {
+
 
     int position;
 
@@ -144,6 +151,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         CheckTutorial();
 
     }
+
+
+
 
     public void CheckHintText() {
         if (Days_Model.size() > 0) {
