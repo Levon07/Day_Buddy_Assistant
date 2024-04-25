@@ -48,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -71,6 +72,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     int position;
+    private Calendar calendar;
 
     TextView HintText;
 
@@ -130,7 +132,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow")));
+                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
                             }
                             days_adapter.notifyDataSetChanged();
                             CheckHintText();
@@ -190,6 +192,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         DatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
+                calendar = Calendar.getInstance();
+                Date date = new Date(selection);
+                calendar.set(Calendar.MONTH, date.getMonth());
+                calendar.set(Calendar.YEAR, date.getYear());
+                calendar.set(Calendar.DATE, date.getDate());
                 Date = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(new Date(selection));
                 boolean flag = false;
                 for (int i = 0; i< Days_Model.size(); i++){
@@ -201,7 +208,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
                     String id = UUID.randomUUID().toString();
-                    Days_Model.add(new Days_Model(id, Date, Day_OW));
+                    Days_Model.add(new Days_Model(id, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -280,6 +287,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         intent.putExtra("Position", position);
         intent.putExtra("day", Days_Model.get(position).getDay_OW());
+        intent.putExtra("calendar", Days_Model.get(position).getCalendar());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         intent.putExtra("id", Days_Model.get(position).id);
 
@@ -309,7 +317,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag){
                     Day_OW = new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date(selection));
-                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, Date, Day_OW));
+                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -319,6 +327,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     hashMap.put("day_ow", Day_OW);
                     hashMap.put("Position", position);
                     hashMap.put("DocId", Days_Model.get(position).id);
+                    hashMap.put("calendar", Days_Model.get(position).calendar);
                     hashMap.put("userId", user.getUid());
 
 

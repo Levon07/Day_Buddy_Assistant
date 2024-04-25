@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
             Day_OW = extras1.getString("day");
             Day_Of_Week.setText(Day_OW);
+            calendar = (Calendar) extras1.get("calendar");
             id = extras1.getString("id");
 
         }
@@ -219,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 ST_View.setText("" + St_Time);
 
                 calendar = Calendar.getInstance();
+
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                 calendar.set(Calendar.MINUTE, timePicker.getMinute());
                 calendar.set(Calendar.SECOND, 0);
@@ -292,6 +294,54 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         alertDialog.show();
     }
 
+    private void Add_Task_To_Model(){
+        String idNew = UUID.randomUUID().toString();
+        Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+        SetAlarm();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("day_ow", Day_OW);
+            hashMap.put("Task_text", Task_text);
+            hashMap.put("ST_Time", St_Time);
+            hashMap.put("ET_Time", Et_Time);
+            hashMap.put("ET_time_M", Et_time_M);
+            hashMap.put("ST_time_M", St_time_M);
+            hashMap.put("address", address);
+            hashMap.put("latitude", latitude);
+            hashMap.put("longitude", longitude);
+            hashMap.put("DocID", idNew);
+            hashMap.put("userId", user.getUid());
+            db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+        }
+        tasks_adapter.notifyDataSetChanged();
+        CheckHintText();
+        tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+        if (Task_Model.size() > 1){
+            LatLng origin = new LatLng(Task_Model.get(Task_Model.size()-2).latitude, Task_Model.get(Task_Model.size()-2).longitude);
+            LatLng destination = new LatLng(Task_Model.get(Task_Model.size()-1).latitude, Task_Model.get(Task_Model.size()-1).longitude);
+            DestinationTimeCalculator travelTime = new DestinationTimeCalculator(origin, destination);
+            String result = String.valueOf(travelTime.execute());
+            Toast.makeText(this,result, Toast.LENGTH_SHORT).show();
+            Log.e("LEVON", result);
+        }
+    }
+
     public void Add_Task(View view) {
         view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(MainActivity.this)
@@ -308,82 +358,10 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                 Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
                             } else {
-                                String idNew = UUID.randomUUID().toString();
-
-                                Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                                SetAlarm();
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                if (user != null)
-                                {
-                                    HashMap<String, Object> hashMap = new HashMap<>();
-                                    hashMap.put("day_ow", Day_OW);
-                                    hashMap.put("Task_text", Task_text);
-                                    hashMap.put("ST_Time", St_Time);
-                                    hashMap.put("ET_Time", Et_Time);
-                                    hashMap.put("ET_time_M", Et_time_M);
-                                    hashMap.put("ST_time_M", St_time_M);
-                                    hashMap.put("address", address);
-                                    hashMap.put("latitude", latitude);
-                                    hashMap.put("longitude", longitude);
-                                    hashMap.put("DocID", idNew);
-                                    hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-                                }
-                                tasks_adapter.notifyDataSetChanged();
-                                CheckHintText();
-                                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                                Add_Task_To_Model();
                             }
                         }else {
-                            String idNew = UUID.randomUUID().toString();
-                            Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                            SetAlarm();
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                if (user != null)
-                                {
-                                    HashMap<String, Object> hashMap = new HashMap<>();
-                                    hashMap.put("day_ow", Day_OW);
-                                    hashMap.put("Task_text", Task_text);
-                                    hashMap.put("ST_Time", St_Time);
-                                    hashMap.put("ET_Time", Et_Time);
-                                    hashMap.put("ET_time_M", Et_time_M);
-                                    hashMap.put("ST_time_M", St_time_M);
-                                    hashMap.put("address", address);
-                                    hashMap.put("latitude", latitude);
-                                    hashMap.put("longitude", longitude);
-                                    hashMap.put("DocID", idNew);
-                                    hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-                                }
-                                tasks_adapter.notifyDataSetChanged();
-                                CheckHintText();
-                                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                            Add_Task_To_Model();
                         }
 
 
