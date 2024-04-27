@@ -1,7 +1,9 @@
 package com.example.daybuddy;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
@@ -70,6 +72,7 @@ public class DestinationTimeCalculator extends AsyncTask<Void, Void, String> {
                         JSONObject element = elements.getJSONObject(0);
                         JSONObject duration = element.getJSONObject("duration");
                         String durationText = duration.getString("text");
+                        //Toast.makeText(, durationText, Toast.LENGTH_SHORT).show();
                         // Use durationText as the estimated travel time
                     }
                 }

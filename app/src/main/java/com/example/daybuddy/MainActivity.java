@@ -5,11 +5,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -18,9 +21,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,32 +47,38 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import retrofit.GsonConverterFactory;
-import retrofit.http.GET;
-import retrofit.http.Query;
-import retrofit2.Retrofit;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 
 public class MainActivity extends AppCompatActivity implements RV_Interface {
+
+    public String ArriveDuration = null;
 
     private ActivityMainBinding binding;
     private AlarmManager alarmManager;
@@ -87,14 +101,15 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     String St_Time = "00:00";
 
     String Title = null;
-
+//    int visibilty = 0;
     Double latitude = null;
     Double longitude = null;
     String address = null;
-
+//    Drawable color = getResources().getDrawable(R.color.Green);
     int St_time_M = 0;
     int Et_time_M = 0;
     String Task_text = "Task";
+
     RecyclerView tasks_recyclerview;
 
     FirebaseUser mUser;
@@ -123,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
 
         Bundle extras1 = getIntent().getExtras();
-   if(extras1 != null) {
+        if (extras1 != null) {
 
             Day_OW = extras1.getString("day");
             Day_Of_Week.setText(Day_OW);
@@ -135,19 +150,17 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         HintText.setVisibility(View.GONE);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
+        if (user != null) {
             FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                 int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                 int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
                                 Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM ,
+                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
                             tasks_adapter.notifyDataSetChanged();
@@ -158,32 +171,24 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         }
 
 
-
-
-
-
         tasks_recyclerview = findViewById(R.id.RV_Tasks);
 
         tasks_adapter.notifyDataSetChanged();
-
 
 
         tasks_recyclerview.setAdapter(tasks_adapter);
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
 
-
-
     }
 
-    public void CheckHintText(){
-        if (Task_Model.size()>0){
+    public void CheckHintText() {
+        if (Task_Model.size() > 0) {
             HintText.setVisibility(View.GONE);
-        }else{
+        } else {
             HintText.setVisibility(View.VISIBLE);
         }
     }
-
 
 
     // Choose Time
@@ -201,19 +206,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             public void onClick(View view2) {
 
 
-
                 int H = timePicker.getHour();
                 int M = timePicker.getMinute();
                 String Hour = String.valueOf(timePicker.getHour());
                 String Minute = String.valueOf(timePicker.getMinute());
 
-                if(H < 10) {
+                if (H < 10) {
                     Hour = "0" + H;
                 }
-                if(M < 10) {
+                if (M < 10) {
                     Minute = "0" + M;
                 }
-                St_time_M = H*60 + M;
+                St_time_M = H * 60 + M;
 
 
                 St_Time = Hour + ":" + Minute;
@@ -251,14 +255,14 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 String Hour = String.valueOf(timePicker.getHour());
                 String Minute = String.valueOf(timePicker.getMinute());
 
-                if(H < 10) {
+                if (H < 10) {
                     Hour = "0" + H;
                 }
-                if(M < 10) {
+                if (M < 10) {
                     Minute = "0" + M;
                 }
 
-                Et_time_M = H*60 + M;
+                Et_time_M = H * 60 + M;
 
                 Et_Time = Hour + ":" + Minute;
                 ET_View.setText(Et_Time);
@@ -294,15 +298,19 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         alertDialog.show();
     }
 
-    private void Add_Task_To_Model(){
+    private void Add_Task_To_Model() {
         String idNew = UUID.randomUUID().toString();
+        if (Task_Model.isEmpty()){
+            //visibilty = 0;
+        }else {
+            //visibilty = 2;
+        }
         Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
         SetAlarm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
+        if (user != null) {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("day_ow", Day_OW);
             hashMap.put("Task_text", Task_text);
@@ -332,13 +340,64 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         tasks_adapter.notifyDataSetChanged();
         CheckHintText();
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-        if (Task_Model.size() > 1){
-            LatLng origin = new LatLng(Task_Model.get(Task_Model.size()-2).latitude, Task_Model.get(Task_Model.size()-2).longitude);
-            LatLng destination = new LatLng(Task_Model.get(Task_Model.size()-1).latitude, Task_Model.get(Task_Model.size()-1).longitude);
-            DestinationTimeCalculator travelTime = new DestinationTimeCalculator(origin, destination);
-            String result = String.valueOf(travelTime.execute());
-            Toast.makeText(this,result, Toast.LENGTH_SHORT).show();
-            Log.e("LEVON", result);
+        if (Task_Model.size() > 1) {
+            LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 2).latitude, Task_Model.get(Task_Model.size() - 2).longitude);
+            LatLng destination = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
+            DestinationTime travelTime = new DestinationTime(origin, destination);
+            travelTime.execute();
+
+
+
+            Handler handler = new Handler();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    int Duration = GetInt(ArriveDuration);
+                    Toast.makeText(MainActivity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
+                    if (Task_Model.get(Task_Model.size()-1).st_time_M - Task_Model.get(Task_Model.size()-2).et_time_M > Duration){
+                        //visibilty = 2;
+                        //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+                        Toast.makeText(MainActivity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
+
+                    }
+                    else{
+                        //visibilty = 2;
+                        //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+                        Toast.makeText(MainActivity.this, "You will be Late", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 1000);
+        }else {
+            //visibilty = 0;
+            //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+        }
+    }
+
+    public int GetInt(String a){
+        String input = a;
+
+        // Define a pattern to match digits
+        Pattern pattern = Pattern.compile("\\d+");
+
+        // Create a matcher for the input string
+        Matcher matcher = pattern.matcher(input);
+
+        // Check if a match is found
+        if (matcher.find()) {
+            // Get the matched substring
+            String numberStr = matcher.group();
+
+            // Convert the matched substring to an integer
+            int number = Integer.parseInt(numberStr);
+
+            // Print the integer value
+            System.out.println("Extracted integer: " + number);
+            return  number;
+        } else {
+            System.out.println("No integer found in the input string.");
+            return -1;
         }
     }
 
@@ -351,19 +410,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        if(St_time_M>=Et_time_M){
+                        if (St_time_M >= Et_time_M) {
                             Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
-                        } else if (Task_Model.size()>0) {
+                        } else if (Task_Model.size() > 0) {
                             if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
                                 Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 Add_Task_To_Model();
                             }
-                        }else {
+                        } else {
                             Add_Task_To_Model();
                         }
-
 
 
                         dialogInterface.dismiss();
@@ -378,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         alertDialog.show();
     }
 
-    public void pickaPlace(View view){
+    public void pickaPlace(View view) {
 
 
         Intent intent = new Intent(MainActivity.this, places.class);
@@ -387,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
     }
 
-    public void signOut(View view){
+    public void signOut(View view) {
         onBackPressed();
     }
 
@@ -396,33 +454,33 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
+                    if (result.getResultCode() == Activity.RESULT_OK) {
 
                         Intent data = result.getData();
 
-                        if (data != null){
+                        if (data != null) {
                             TextView ST_View = view1.findViewById(R.id.location);
                             latitude = data.getDoubleExtra("latitude", 0.0);
-                            longitude = data.getDoubleExtra("longitude",0.0);
+                            longitude = data.getDoubleExtra("longitude", 0.0);
                             address = data.getStringExtra("address");
                             Title = data.getStringExtra("title");
                             ST_View.setText(Title);
 
 
-                        }else{
+                        } else {
                             Log.d(TAG, "onActivityResult: cancelled");
                             Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
 
-                            
+
                         }
                     }
                 }
             }
     );
 
-    public void direction(){
+    public void direction() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String origin = "" + Task_Model.get(Task_Model.size()-1).latitude + ", " + Task_Model.get(Task_Model.size()-1).longitude;
+        String origin = "" + Task_Model.get(Task_Model.size() - 1).latitude + ", " + Task_Model.get(Task_Model.size() - 1).longitude;
         String destination = "" + latitude + ", " + longitude;
         String Url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
                 .buildUpon()
@@ -433,8 +491,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 .toString();
     }
 
-    public void Save(View view){
-     finish();
+    public void Save(View view) {
+        finish();
     }
 
 
@@ -464,42 +522,40 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                                Task_Model.set(position, new Task_Model(Task_Model.get(position).DocID, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                                SetAlarm();
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                if (user != null) {
-                                    HashMap<String, Object> hashMap = new HashMap<>();
-                                    hashMap.put("day_ow", Day_OW);
-                                    hashMap.put("Task_text", Task_text);
-                                    hashMap.put("ST_Time", St_Time);
-                                    hashMap.put("ET_Time", Et_Time);
-                                    hashMap.put("ET_time_M", Et_time_M);
-                                    hashMap.put("ST_time_M", St_time_M);
-                                    hashMap.put("address", address);
-                                    hashMap.put("latitude", latitude);
-                                    hashMap.put("longitude", longitude);
-                                    hashMap.put("DocID", Task_Model.get(position).DocID);
-                                    hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                        Task_Model.set(position, new Task_Model(Task_Model.get(position).DocID, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                        SetAlarm();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("day_ow", Day_OW);
+                            hashMap.put("Task_text", Task_text);
+                            hashMap.put("ST_Time", St_Time);
+                            hashMap.put("ET_Time", Et_Time);
+                            hashMap.put("ET_time_M", Et_time_M);
+                            hashMap.put("ST_time_M", St_time_M);
+                            hashMap.put("address", address);
+                            hashMap.put("latitude", latitude);
+                            hashMap.put("longitude", longitude);
+                            hashMap.put("DocID", Task_Model.get(position).DocID);
+                            hashMap.put("userId", user.getUid());
+                            db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
                                 }
-                                tasks_adapter.notifyDataSetChanged();
-                                CheckHintText();
-                                tasks_recyclerview.smoothScrollToPosition(position);
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-
+                            //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                        }
+                        tasks_adapter.notifyDataSetChanged();
+                        CheckHintText();
+                        tasks_recyclerview.smoothScrollToPosition(position);
 
 
                         dialogInterface.dismiss();
@@ -531,8 +587,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     }
 
 
-    private void createNotificationChannel(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Day Buddy";
             String desc = "Channel for Alarm Manager";
             int imp = NotificationManager.IMPORTANCE_HIGH;
@@ -544,13 +600,83 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         }
     }
 
-    private void SetAlarm(){
+    private void SetAlarm() {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    class DestinationTime extends AsyncTask<Void, Void, String> {
+        private static final String TAG = "DestinationTimeCalculator";
+
+        private LatLng origin;
+        private LatLng destination;
+        private String apiKey = "AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY";
+
+        String durationText;
+
+        public DestinationTime(LatLng origin, LatLng destination) {
+            this.origin = origin;
+            this.destination = destination;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String response = "";
+            try {
+                String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
+                        "?origins=" + origin.latitude + "," + origin.longitude +
+                        "&destinations=" + destination.latitude + "," + destination.longitude +
+                        "&key=" + apiKey;
+
+                URL url = new URL(apiUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                InputStream inputStream = connection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+
+                response = stringBuilder.toString();
+            } catch (IOException e) {
+                Log.e(TAG, "Error fetching data: " + e.getMessage());
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            if (response != null) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    JSONArray rows = jsonResponse.getJSONArray("rows");
+                    if (rows.length() > 0) {
+                        JSONObject row = rows.getJSONObject(0);
+                        JSONArray elements = row.getJSONArray("elements");
+                        if (elements.length() > 0) {
+                            JSONObject element = elements.getJSONObject(0);
+                            JSONObject duration = element.getJSONObject("duration");
+                            durationText = duration.getString("text");
+                            ArriveDuration = durationText;
+                            Toast.makeText(getApplicationContext(), durationText, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(, durationText, Toast.LENGTH_SHORT).show();
+                            // Use durationText as the estimated travel time
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error parsing JSON: " + e.getMessage());
+                }
+            }
+        }
     }
 }
 

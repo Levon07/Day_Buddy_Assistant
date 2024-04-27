@@ -1,5 +1,8 @@
 package com.example.daybuddy;
 
+import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
+
 public class Task_Model {
 
     String task_text;
@@ -13,6 +16,13 @@ public class Task_Model {
     Double latitude;
     Double longitude;
     String DocID;
+//    Drawable color;
+
+
+
+  //  int visibility;
+
+
 
     public Task_Model(String DocID, String task_text, String location, String time_start, String time_end, int st_time_M, int et_time_M, Double latitude, Double longitude) {
         this.task_text = task_text;
@@ -42,4 +52,6 @@ public class Task_Model {
     public String getTime_end() {
         return time_end;
     }
+
+
 }

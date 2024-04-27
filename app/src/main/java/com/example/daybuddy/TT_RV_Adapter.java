@@ -1,12 +1,16 @@
 package com.example.daybuddy;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -35,8 +39,9 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         return new TT_RV_Adapter.TT_ViewHolder(view, rvInterface);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
-    public void onBindViewHolder(@NonNull TT_RV_Adapter.TT_ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TT_ViewHolder holder, int position) {
         // assigning values to the views we created in the recycler_view_row layout file
         // based on the position of the recycler view
 
@@ -58,6 +63,7 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         // Kinda like in the onCreate method
 
         TextView Time_Start, Time_End, Task_Text, Location;
+        View Card;
 
         public TT_ViewHolder(@NonNull View itemView, RV_Interface rvInterface) {
             super(itemView);
@@ -66,6 +72,7 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
             Time_End = itemView.findViewById(R.id.time_end);
             Task_Text = itemView.findViewById(R.id.task_text);
             Location = itemView.findViewById(R.id.location);
+            Card = itemView.findViewById(R.id.Card);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
