@@ -75,7 +75,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 public class MainActivity extends AppCompatActivity implements RV_Interface {
 
     public String ArriveDuration = null;
@@ -101,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     String St_Time = "00:00";
 
     String Title = null;
-//    int visibilty = 0;
+    int visibility = 0;
     Double latitude = null;
     Double longitude = null;
     String address = null;
-//    Drawable color = getResources().getDrawable(R.color.Green);
+    int color = 0;
     int St_time_M = 0;
     int Et_time_M = 0;
     String Task_text = "Task";
@@ -117,13 +116,14 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model, this);
 
     DatabaseReference myRef;
-    int position;
+
     String Day_OW;
     TextView Day_Of_Week;
 
     View view1;
     String id;
     ProgressBar progressBar;
+    int Position_BackUp;
 
 
     @Override
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                 int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                 int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                         queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
@@ -300,12 +300,9 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
     private void Add_Task_To_Model() {
         String idNew = UUID.randomUUID().toString();
-        if (Task_Model.isEmpty()){
-            //visibilty = 0;
-        }else {
-            //visibilty = 2;
-        }
-        Task_Model.add(new Task_Model(idNew, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+
+
+        Task_Model.add(new Task_Model(idNew, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
         SetAlarm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -322,6 +319,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             hashMap.put("latitude", latitude);
             hashMap.put("longitude", longitude);
             hashMap.put("DocID", idNew);
+            hashMap.put("Color", color);
+            hashMap.put("Visibility", visibility);
             hashMap.put("userId", user.getUid());
             db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -340,12 +339,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         tasks_adapter.notifyDataSetChanged();
         CheckHintText();
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-        if (Task_Model.size() > 1) {
-            LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 2).latitude, Task_Model.get(Task_Model.size() - 2).longitude);
-            LatLng destination = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
+
+
+    }
+
+
+    public void Add_Task_Final() {
+        if (!Task_Model.isEmpty()) {
+            visibility = 1;
+            LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
+            LatLng destination = new LatLng(latitude, longitude);
             DestinationTime travelTime = new DestinationTime(origin, destination);
             travelTime.execute();
-
 
 
             Handler handler = new Handler();
@@ -355,27 +360,26 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 public void run() {
                     int Duration = GetInt(ArriveDuration);
                     Toast.makeText(MainActivity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
-                    if (Task_Model.get(Task_Model.size()-1).st_time_M - Task_Model.get(Task_Model.size()-2).et_time_M > Duration){
-                        //visibilty = 2;
-                        //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+                    if (St_time_M - Task_Model.get(Task_Model.size() - 1).et_time_M > Duration) {
+                        color = 0;
+                        Add_Task_To_Model();
                         Toast.makeText(MainActivity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
 
-                    }
-                    else{
-                        //visibilty = 2;
-                        //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+                    } else {
+                        color = 1;
+                        Add_Task_To_Model();
                         Toast.makeText(MainActivity.this, "You will be Late", Toast.LENGTH_SHORT).show();
                     }
                 }
             };
             handler.postDelayed(runnable, 1000);
-        }else {
-            //visibilty = 0;
-            //Task_Model.get(Task_Model.size()-1).visibility = visibilty;
+        } else {
+            visibility = 0;
+            Add_Task_To_Model();
         }
     }
 
-    public int GetInt(String a){
+    public int GetInt(String a) {
         String input = a;
 
         // Define a pattern to match digits
@@ -394,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
             // Print the integer value
             System.out.println("Extracted integer: " + number);
-            return  number;
+            return number;
         } else {
             System.out.println("No integer found in the input string.");
             return -1;
@@ -417,10 +421,10 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                 Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
                             } else {
-                                Add_Task_To_Model();
+                                Add_Task_Final();
                             }
                         } else {
-                            Add_Task_To_Model();
+                            Add_Task_Final();
                         }
 
 
@@ -478,18 +482,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             }
     );
 
-    public void direction() {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String origin = "" + Task_Model.get(Task_Model.size() - 1).latitude + ", " + Task_Model.get(Task_Model.size() - 1).longitude;
-        String destination = "" + latitude + ", " + longitude;
-        String Url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
-                .buildUpon()
-                .appendQueryParameter("origin", origin)
-                .appendQueryParameter("destination", destination)
-                .appendQueryParameter("mode", move_mode)
-                .appendQueryParameter("key", getString(R.string.google_api_key))
-                .toString();
-    }
+
+
 
     public void Save(View view) {
         finish();
@@ -503,6 +497,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
     @Override
     public void onItemLongClick(int position) {
+
+        Position_BackUp = position;
 
         view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_task, null);
         TextView St_Time1 = view1.findViewById(R.id.Start_time_view);
@@ -522,40 +518,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                        Task_Model.set(position, new Task_Model(Task_Model.get(position).DocID, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                        SetAlarm();
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if (user != null) {
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("day_ow", Day_OW);
-                            hashMap.put("Task_text", Task_text);
-                            hashMap.put("ST_Time", St_Time);
-                            hashMap.put("ET_Time", Et_Time);
-                            hashMap.put("ET_time_M", Et_time_M);
-                            hashMap.put("ST_time_M", St_time_M);
-                            hashMap.put("address", address);
-                            hashMap.put("latitude", latitude);
-                            hashMap.put("longitude", longitude);
-                            hashMap.put("DocID", Task_Model.get(position).DocID);
-                            hashMap.put("userId", user.getUid());
-                            db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        if (St_time_M >= Et_time_M) {
+                            Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                        } else if (!Task_Model.isEmpty()) {
+                            if (Task_Model.get(position - 1).et_time_M > St_time_M) {
+                                Toast.makeText(MainActivity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
-                            //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                            } else {
+                                Change_Task_Final();
+                            }
+                        } else {
+                            Change_Task_Final();
                         }
-                        tasks_adapter.notifyDataSetChanged();
-                        CheckHintText();
-                        tasks_recyclerview.smoothScrollToPosition(position);
 
 
                         dialogInterface.dismiss();
@@ -608,6 +582,95 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
     }
+
+
+
+
+    private void Change_Task_In_Model() {
+        String idNew = UUID.randomUUID().toString();
+
+
+        Task_Model.set(Position_BackUp, new Task_Model(idNew, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+        SetAlarm();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("day_ow", Day_OW);
+            hashMap.put("Task_text", Task_text);
+            hashMap.put("ST_Time", St_Time);
+            hashMap.put("ET_Time", Et_Time);
+            hashMap.put("ET_time_M", Et_time_M);
+            hashMap.put("ST_time_M", St_time_M);
+            hashMap.put("address", address);
+            hashMap.put("latitude", latitude);
+            hashMap.put("longitude", longitude);
+            hashMap.put("DocID", idNew);
+            hashMap.put("Color", color);
+            hashMap.put("Visibility", visibility);
+            hashMap.put("userId", user.getUid());
+            db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+        }
+        tasks_adapter.notifyDataSetChanged();
+        CheckHintText();
+        tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+
+
+    }
+
+
+    public void Change_Task_Final() {
+        if (!Task_Model.isEmpty()) {
+            visibility = 1;
+            LatLng origin = new LatLng(Task_Model.get(Position_BackUp-1).latitude, Task_Model.get(Position_BackUp-1).longitude);
+            LatLng destination = new LatLng(latitude, longitude);
+            DestinationTime travelTime = new DestinationTime(origin, destination);
+            travelTime.execute();
+
+
+            Handler handler = new Handler();
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    int Duration = GetInt(ArriveDuration);
+                    Toast.makeText(MainActivity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
+                    if (St_time_M - Task_Model.get(Position_BackUp-1).et_time_M > Duration) {
+                        color = 0;
+                        Change_Task_In_Model();
+                        Toast.makeText(MainActivity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        color = 1;
+                        Change_Task_In_Model();
+                        Toast.makeText(MainActivity.this, "You will be Late", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 1000);
+        } else {
+            visibility = 0;
+            Add_Task_To_Model();
+        }
+    }
+
+
+
+
+
 
     class DestinationTime extends AsyncTask<Void, Void, String> {
         private static final String TAG = "DestinationTimeCalculator";

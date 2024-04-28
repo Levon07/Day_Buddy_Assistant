@@ -49,6 +49,17 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         holder.Time_End.setText(Task_Model.get(position).getTime_end());
         holder.Task_Text.setText(Task_Model.get(position).getTask_text());
         holder.Location.setText(Task_Model.get(position).getLocation());
+        if (Task_Model.get(position).getVisibility() == 0){
+            holder.Card.setVisibility(View.GONE);
+        } else if (Task_Model.get(position).getVisibility() == 1) {
+            holder.Card.setVisibility(View.VISIBLE);
+        }
+        if (Task_Model.get(position).getColor() == 0){
+            holder.Card.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_green));
+        } else if (Task_Model.get(position).getColor() == 1) {
+            holder.Card.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_red));
+        }
+
 
     }
 

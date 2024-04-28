@@ -27,15 +27,16 @@
             android:orientation="vertical">
 
             <View
+                android:id="@+id/Card"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cornerRadius="5dp"
-                android:background="@color/Green"
-                android:layout_marginBottom="5dp" />
+                android:background="@drawable/rect_shape_green"
+                android:layout_marginBottom="10dp" />
 
             <LinearLayout
-                android:id="@+id/Card"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

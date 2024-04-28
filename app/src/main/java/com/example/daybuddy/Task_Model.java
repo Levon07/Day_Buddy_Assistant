@@ -16,15 +16,12 @@ public class Task_Model {
     Double latitude;
     Double longitude;
     String DocID;
-//    Drawable color;
+    int color;
+    int visibility;
 
 
 
-  //  int visibility;
-
-
-
-    public Task_Model(String DocID, String task_text, String location, String time_start, String time_end, int st_time_M, int et_time_M, Double latitude, Double longitude) {
+    public Task_Model(String DocID, int color, int visibility, String task_text, String location, String time_start, String time_end, int st_time_M, int et_time_M, Double latitude, Double longitude) {
         this.task_text = task_text;
         this.location = location;
         this.time_start = time_start;
@@ -34,6 +31,8 @@ public class Task_Model {
         this.latitude = latitude;
         this.longitude = longitude;
         this.DocID = DocID;
+        this.color = color;
+        this.visibility = visibility;
 
     }
 
@@ -53,5 +52,11 @@ public class Task_Model {
         return time_end;
     }
 
+    public int getColor() {
+        return color;
+    }
 
+    public int getVisibility() {
+        return visibility;
+    }
 }
