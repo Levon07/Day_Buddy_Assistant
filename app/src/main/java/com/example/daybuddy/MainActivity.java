@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     ProgressBar progressBar;
     int Position_BackUp;
 
+    String travelMode = "walking";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -349,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             visibility = 1;
             LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            DestinationTime travelTime = new DestinationTime(origin, destination);
+            DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
             travelTime.execute();
 
 
@@ -468,6 +470,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                             longitude = data.getDoubleExtra("longitude", 0.0);
                             address = data.getStringExtra("address");
                             Title = data.getStringExtra("title");
+                            travelMode = data.getStringExtra("travelMode");
                             ST_View.setText(Title);
 
 
@@ -637,7 +640,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             visibility = 1;
             LatLng origin = new LatLng(Task_Model.get(Position_BackUp-1).latitude, Task_Model.get(Position_BackUp-1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            DestinationTime travelTime = new DestinationTime(origin, destination);
+            DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
             travelTime.execute();
 
 
@@ -678,12 +681,15 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         private LatLng origin;
         private LatLng destination;
         private String apiKey = "AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY";
+        private String travelMode;
+
 
         String durationText;
 
-        public DestinationTime(LatLng origin, LatLng destination) {
+        public DestinationTime(LatLng origin, LatLng destination, String travelMode) {
             this.origin = origin;
             this.destination = destination;
+            this.travelMode = travelMode;
         }
 
         @Override
@@ -692,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             try {
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
-                        "&destinations=" + destination.latitude + "," + destination.longitude +
+                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);

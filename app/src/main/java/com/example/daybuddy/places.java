@@ -75,6 +75,7 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
     private String selectedTitle = null;
     private Double selectedLongitude = null;
     private String selectedAddress = "";
+    private String travelMode = "walking";
 
     LinearLayout screen;
 
@@ -160,6 +161,8 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
                 intent.putExtra("longitude", selectedLongitude);
                 intent.putExtra("address", selectedAddress);
                 intent.putExtra("title", selectedAddress);
+                intent.putExtra("travelMode", travelMode);
+
 
                 setResult(RESULT_OK, intent);
 
@@ -378,5 +381,15 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
+    public void Bike(View view) {
+        travelMode = "bicycling";
+    }
 
+    public void Car(View view) {
+        travelMode = "driving";
+    }
+
+    public void Walk(View view) {
+        travelMode = "walking";
+    }
 }
