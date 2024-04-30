@@ -366,15 +366,18 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                         color = 0;
                         Add_Task_To_Model();
                         Toast.makeText(MainActivity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
 
                     } else {
                         color = 1;
                         Add_Task_To_Model();
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(MainActivity.this, "You will be Late", Toast.LENGTH_SHORT).show();
                     }
                 }
             };
-            handler.postDelayed(runnable, 1000);
+            progressBar.setVisibility(View.VISIBLE);
+            handler.postDelayed(runnable, 2000);
         } else {
             visibility = 0;
             Add_Task_To_Model();
@@ -486,8 +489,6 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     );
 
 
-
-
     public void Save(View view) {
         finish();
     }
@@ -587,8 +588,6 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     }
 
 
-
-
     private void Change_Task_In_Model() {
         String idNew = UUID.randomUUID().toString();
 
@@ -638,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     public void Change_Task_Final() {
         if (!Task_Model.isEmpty()) {
             visibility = 1;
-            LatLng origin = new LatLng(Task_Model.get(Position_BackUp-1).latitude, Task_Model.get(Position_BackUp-1).longitude);
+            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
             DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
             travelTime.execute();
@@ -651,28 +650,32 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                 public void run() {
                     int Duration = GetInt(ArriveDuration);
                     Toast.makeText(MainActivity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
-                    if (St_time_M - Task_Model.get(Position_BackUp-1).et_time_M > Duration) {
+                    if (St_time_M - Task_Model.get(Position_BackUp - 1).et_time_M > Duration) {
+
                         color = 0;
                         Change_Task_In_Model();
                         Toast.makeText(MainActivity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
 
                     } else {
+
                         color = 1;
                         Change_Task_In_Model();
                         Toast.makeText(MainActivity.this, "You will be Late", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+
                     }
                 }
             };
-            handler.postDelayed(runnable, 1000);
+            progressBar.setVisibility(View.VISIBLE);
+            handler.postDelayed(runnable, 2000);
         } else {
+
             visibility = 0;
             Add_Task_To_Model();
         }
+
     }
-
-
-
-
 
 
     class DestinationTime extends AsyncTask<Void, Void, String> {
@@ -682,6 +685,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         private LatLng destination;
         private String apiKey = "AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY";
         private String travelMode;
+        private String trafficModel = "best_guess";
 
 
         String durationText;
@@ -698,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             try {
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
-                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
+                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode + "&traffic_model=" + trafficModel +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);

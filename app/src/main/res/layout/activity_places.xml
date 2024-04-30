@@ -115,6 +115,8 @@
             </LinearLayout>
 
             <RadioGroup
+                android:layout_marginTop="75dp"
+                android:layout_marginStart="10dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content" >
 
@@ -123,8 +125,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
-                    android:button="@drawable/baseline_directions_bike_24"
-                    android:background="@drawable/radio_button_selector"
+                    android:button="@color/translucent"
+                    android:background="@drawable/radio_button_selector_bike"
                     android:elevation="4dp"
                     android:onClick="Bike"
                     />
@@ -134,8 +136,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
-                    android:button="@drawable/baseline_drive_eta_24"
-                    android:background="@drawable/radio_button_selector"
+                    android:button="@color/translucent"
+                    android:background="@drawable/radio_button_selector_car"
                     android:elevation="4dp"
                     android:onClick="Car"/>
 
@@ -144,8 +146,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
-                    android:button="@drawable/baseline_directions_walk_24"
-                    android:background="@drawable/radio_button_selector"
+                    android:button="@color/translucent"
+                    android:background="@drawable/radio_button_selector_walk"
                     android:elevation="4dp"
                     android:onClick="Walk"/>
             </RadioGroup>
