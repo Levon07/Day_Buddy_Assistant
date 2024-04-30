@@ -193,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
         tasks_recyclerview.setAdapter(tasks_adapter);
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
+        startCheckingTraffic();
+
 
     }
 
@@ -697,7 +699,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
         // Create a periodic work request to run every 10 minutes
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
-                DurationCheckWorker.class, 10, TimeUnit.MINUTES)
+                DurationCheckWorker.class, 10, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build();
 
@@ -798,11 +800,20 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             // Your code to check duration goes here
             // This could include creating an instance of DestinationTimeCalculator and executing it
             // You may also want to handle the results (e.g., update UI, save data, etc.)
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
 
-            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
-            LatLng destination = new LatLng(latitude, longitude);
-            DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
-            travelTime.execute();
+            // Calculate total minutes since midnight
+            long totalMinutes = hour * 60 + minute;
+
+
+            Toast.makeText(MainActivity.this, ""+totalMinutes, Toast.LENGTH_SHORT).show();
+            Log.e("BACKGROUND", "checkDuration: " + totalMinutes);
+//            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
+//            LatLng destination = new LatLng(latitude, longitude);
+//            DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
+//            travelTime.execute();
         }
     }
 }
