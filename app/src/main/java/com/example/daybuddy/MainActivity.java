@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +74,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.xml.transform.Result;
+
+import android.content.Context;
+import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 
 public class MainActivity extends AppCompatActivity implements RV_Interface {
@@ -678,6 +690,22 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
     }
 
 
+    public void startCheckingTraffic(){
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        // Create a periodic work request to run every 10 minutes
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
+                DurationCheckWorker.class, 10, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+
+        // Enqueue the periodic work request
+        WorkManager.getInstance(this).enqueue(periodicWorkRequest);
+    }
+
+
     class DestinationTime extends AsyncTask<Void, Void, String> {
         private static final String TAG = "DestinationTimeCalculator";
 
@@ -749,6 +777,32 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                     Log.e(TAG, "Error parsing JSON: " + e.getMessage());
                 }
             }
+        }
+    }
+
+    public class DurationCheckWorker extends Worker {
+
+        public DurationCheckWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+            super(context, workerParams);
+        }
+
+        @NonNull
+        @Override
+        public Result doWork() {
+            // Call the method to check duration between locations
+            checkDuration();
+            return Result.success();
+        }
+
+        private void checkDuration() {
+            // Your code to check duration goes here
+            // This could include creating an instance of DestinationTimeCalculator and executing it
+            // You may also want to handle the results (e.g., update UI, save data, etc.)
+
+            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
+            LatLng destination = new LatLng(latitude, longitude);
+            DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
+            travelTime.execute();
         }
     }
 }
