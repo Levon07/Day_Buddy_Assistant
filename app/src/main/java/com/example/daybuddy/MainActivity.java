@@ -59,6 +59,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -177,6 +179,12 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
                                         queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
+                            Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                    return o1.time_start.compareTo(o2.time_start);
+                                }
+                            });
                             tasks_adapter.notifyDataSetChanged();
                             CheckHintText();
                             progressBar.setVisibility(View.GONE);
@@ -732,7 +740,7 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
             try {
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
-                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode + "&traffic_model=" + trafficModel +
+                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);

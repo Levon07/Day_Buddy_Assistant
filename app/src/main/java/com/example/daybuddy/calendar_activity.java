@@ -49,6 +49,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -134,6 +136,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                 Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
                             }
+                            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                    return o1.Date.compareTo(o2.Date);
+                                }
+                            });
                             days_adapter.notifyDataSetChanged();
                             CheckHintText();
                             progressBar.setVisibility(View.GONE);
