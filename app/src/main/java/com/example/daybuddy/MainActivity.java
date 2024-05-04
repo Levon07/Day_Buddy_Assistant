@@ -89,7 +89,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 
-public class MainActivity extends AppCompatActivity implements RV_Interface {
+public class MainActivity extends AppCompatActivity implements RV_Interface_Tasks {
 
     public String ArriveDuration = null;
 
@@ -517,12 +517,12 @@ public class MainActivity extends AppCompatActivity implements RV_Interface {
 
 
     @Override
-    public void onItemClicked(int position) {
+    public void onItemClickedTasks(int position) {
 
     }
 
     @Override
-    public void onItemLongClick(int position) {
+    public void onItemLongClickTasks(int position) {
 
         Position_BackUp = position;
 

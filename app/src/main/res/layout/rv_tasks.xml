@@ -3,101 +3,160 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="115dp"
     android:background="@color/translucent"
-    android:outlineSpotShadowColor="@color/translucent"
-    android:outlineAmbientShadowColor="@color/translucent">
+    android:outlineAmbientShadowColor="@color/translucent"
+    android:outlineSpotShadowColor="@color/translucent">
 
     <androidx.cardview.widget.CardView
-        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="5dp"
         android:background="@color/translucent"
         android:backgroundTint="@color/translucent"
         android:outlineAmbientShadowColor="@color/translucent"
-        android:outlineSpotShadowColor="@color/translucent">
+        android:outlineSpotShadowColor="@color/translucent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <View
                 android:id="@+id/Card"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:visibility="visible"
-                app:cornerRadius="5dp"
+                android:layout_height="5dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/rect_shape_green"
-                android:layout_marginBottom="10dp" />
+                android:visibility="visible"
+                app:cornerRadius="5dp" />
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@drawable/rect_shape"
-                android:backgroundTint="@color/blue">
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="1dp"
+                    android:background="@drawable/rect_shape_outline"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="start time"
+                        android:textColor="@color/quantum_grey"
+                        android:textSize="9dp"
+                        android:layout_marginTop="10dp"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toTopOf="@+id/time_start"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <TextView
+                        android:id="@+id/time_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="@color/NN_White"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toTopOf="@+id/time_end"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="end time"
+                        android:textColor="@color/quantum_grey"
+                        android:textSize="9dp"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toTopOf="@+id/time_end"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/time_start"
+                        app:layout_constraintVertical_bias="0.5" />
+
+                    <TextView
+                        android:id="@+id/time_end"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="@color/NN_White"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toBottomOf="parent
+"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/vertical_line" />
+
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rect_shape"
+                    android:backgroundTint="@color/NN_Black"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:textColor="@color/NN_White"
-                            android:id="@+id/time_start"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView" />
-
-                        <TextView
-                            android:textColor="@color/NN_White"
-                            android:id="@+id/time_end"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/task_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="15dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="@color/NN_White"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:textColor="@color/NN_White"
-                            android:id="@+id/task_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView" />
-
-                        <TextView
-                            android:textColor="@color/NN_White"
-                            android:id="@+id/location"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TextView" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="@color/NN_White"
+                        android:textSize="9dp" />
                 </LinearLayout>
+
 
             </LinearLayout>
 
 
         </LinearLayout>
-
 
 
     </androidx.cardview.widget.CardView>
