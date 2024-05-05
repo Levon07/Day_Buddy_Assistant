@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -41,7 +43,11 @@ public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_V
 
         holder.Date.setText(Days_Model.get(position).getDate());
         holder.Day_OW.setText(Days_Model.get(position).getDay_OW());
-
+        if(Days_Model.get(position).color == 0) {
+            holder.Background.setBackground(ContextCompat.getDrawable(context, R.drawable.button1));
+        }else{
+            holder.Background.setBackground(ContextCompat.getDrawable(context, R.drawable.button));
+        }
     }
 
     @Override
@@ -55,12 +61,14 @@ public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_V
         // Kinda like in the onCreate method
 
         TextView Date, Day_OW;
+        ConstraintLayout Background;
 
         public Days_ViewHolder(@NonNull View itemView, RV_Interface rvInterface) {
             super(itemView);
 
             Date = itemView.findViewById(R.id.Date);
             Day_OW = itemView.findViewById(R.id.Day_OW);
+            Background = itemView.findViewById(R.id.Background);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

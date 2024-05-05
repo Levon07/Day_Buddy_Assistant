@@ -14,29 +14,58 @@
         android:text="Add Days To See Them"
         android:textAlignment="center"
         android:textColor="@color/NN_Gray"
-        android:textSize="55dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="35dp"
+        app:layout_constraintStart_toStartOf="@id/RV_Days"
+        app:layout_constraintEnd_toEndOf="@id/RV_Days"
+        app:layout_constraintTop_toTopOf="@id/RV_Days"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Days" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintEnd_toStartOf="@+id/HintText"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="181dp"
+        tools:layout_editor_absoluteY="279dp"
+        app:layout_constraintStart_toStartOf="@id/RV_Days"
+        app:layout_constraintEnd_toEndOf="@id/RV_Days"
+        app:layout_constraintTop_toTopOf="@id/RV_Days"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Days"/>
+
+
+    <TextView
+        android:id="@+id/HintTextTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Tasks To See Them"
+        android:textAlignment="center"
+        android:textColor="@color/NN_Gray"
+        android:textSize="35dp"
+        app:layout_constraintStart_toStartOf="@id/RV_Tasks"
+        app:layout_constraintEnd_toEndOf="@id/RV_Tasks"
+        app:layout_constraintTop_toTopOf="@id/RV_Tasks"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Tasks" />
+
+    <ProgressBar
+        android:id="@+id/progressBarTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="181dp"
+        tools:layout_editor_absoluteY="279dp"
+        app:layout_constraintStart_toStartOf="@id/RV_Tasks"
+        app:layout_constraintEnd_toEndOf="@id/RV_Tasks"
+        app:layout_constraintTop_toTopOf="@id/RV_Tasks"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Tasks"/>
 
     <View
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="150dp"
+        android:background="@drawable/rect_shape"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toTopOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Days"
@@ -46,7 +75,10 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/RV_Tasks"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="15dp"
+        android:outlineSpotShadowColor="@color/NN_Black"
+        android:outlineAmbientShadowColor="@color/NN_Black"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -63,7 +95,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/newTask"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
@@ -92,6 +124,46 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@id/plus"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/newTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/newDay"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:onClick="Add_Task">
+
+        <ImageView
+            android:id="@+id/plus_task"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/icons8_plus"
+            android:backgroundTint="@color/light_green_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_task"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            android:foregroundGravity="center_horizontal"/>
+
+        <TextView
+            android:layout_marginStart="5dp"
+            android:id="@+id/add_task"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Add New Task"
+            android:textSize="17dp"
+            android:textColor="@color/light_green_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@id/plus_task"
             app:layout_constraintTop_toTopOf="parent" />
 
 
