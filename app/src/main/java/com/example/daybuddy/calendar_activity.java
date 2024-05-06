@@ -130,6 +130,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     MaterialButton pickTime;
     MaterialButton inputText;
+    int color_days = 0;
 
     ArrayList<Task_Model> Task_Model = new ArrayList<>();
 
@@ -151,12 +152,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model, this);
 
+    TextView HintTextTask;
+
     String Day_OW1;
     TextView Day_Of_Week;
 
     View view1;
     String id;
     int Position_BackUp;
+    ProgressBar progressBarTask;
 
     String travelMode = "walking";
 
@@ -171,6 +175,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         setContentView(R.layout.main_activity);
         progressBar = findViewById(R.id.progressBar);
         HintText = findViewById(R.id.HintText);
+        HintTextTask = findViewById(R.id.HintTextTask);
+        progressBarTask = findViewById(R.id.progressBarTask);
         Bundle extras1 = getIntent().getExtras();
         if (extras1 != null) {
             position = extras1.getInt("Position");
@@ -196,7 +202,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
+                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
                             }
                             Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                                 @Override
@@ -204,35 +210,45 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     return o1.Date.compareTo(o2.Date);
                                 }
                             });
-                            id = Days_Model.get(0).id;
                             days_adapter.notifyDataSetChanged();
                             CheckHintText();
                             progressBar.setVisibility(View.GONE);
+                            CheckTutorial();
 
 
-                            FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                                int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
-                                                int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
-                                                        ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
-                                            }
-                                            Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
-                                                @Override
-                                                public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
-                                                    return o1.time_start.compareTo(o2.time_start);
+                            if (!Days_Model.isEmpty()) {
+                                id = Days_Model.get(0).id;
+                                Days_Model.get(0).color = 1;
+                                days_adapter.notifyDataSetChanged();
+
+
+                                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                                                 }
-                                            });
-                                            tasks_adapter.notifyDataSetChanged();
-                                            CheckHintText();
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                    });
+                                                Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                                    @Override
+                                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                        return o1.time_start.compareTo(o2.time_start);
+                                                    }
+                                                });
+                                                tasks_adapter.notifyDataSetChanged();
+                                                CheckHintTasksText();
+                                                progressBarTask.setVisibility(View.GONE);
+                                            }
+                                        });
+                            }else{
+                                progressBarTask.setVisibility(View.GONE);
+
+                            }
                         }
                     });
         }
@@ -271,7 +287,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
 
-        CheckTutorial();
+
         CheckHintTasksText();
 
     }
@@ -289,9 +305,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public void CheckHintTasksText() {
         if (Task_Model.size() > 0) {
-            HintText.setVisibility(View.GONE);
+            HintTextTask.setVisibility(View.GONE);
         } else {
-            HintText.setVisibility(View.VISIBLE);
+            HintTextTask.setVisibility(View.VISIBLE);
         }
     }
 
@@ -327,7 +343,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 calendar.set(Calendar.MONTH, date.getMonth());
                 calendar.set(Calendar.YEAR, date.getYear());
                 calendar.set(Calendar.DATE, date.getDate());
-                Date = new SimpleDateFormat("d", Locale.getDefault()).format(new Date(selection));
+                Date = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date(selection));
                 boolean flag = false;
                 for (int i = 0; i< Days_Model.size(); i++){
                     if(Days_Model.get(i).getDate().equals(Date)){
@@ -338,7 +354,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("E", Locale.getDefault()).format(new Date(selection));
                     String id = UUID.randomUUID().toString();
-                    Days_Model.add(new Days_Model(id, Date, Day_OW, calendar));
+                    Days_Model.add(new Days_Model(id, color_days, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -346,6 +362,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         hashMap.put("date", Date);
                         hashMap.put("day_ow", Day_OW);
                         hashMap.put("Position", Days_Model.size() + 1);
+                        hashMap.put("Color", color_days);
                         hashMap.put("DocId", id);
                         hashMap.put("userId", user.getUid());
                         db.collection("daysModel").document(id).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -363,14 +380,80 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                         //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
                     }
+
+
+
+
+                    id = Days_Model.get(Days_Model.size()-1).id;
+                    for (int i = 0; i < Days_Model.size(); i++) {
+                        Days_Model.get(i).color = 0;
+                    }
+                    Days_Model.get(Days_Model.size()-1).color = 1;
+
+                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                        @Override
+                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                            return o1.Date.compareTo(o2.Date);
+                        }
+                    });
+
+                    days_adapter.notifyDataSetChanged();
+                    CheckHintText();
+                    if(Days_Model.size()>1) {
+                        days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
+                    }
+
+                    Task_Model.clear();
+                    if (user != null) {
+                        FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                            int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                            int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                    queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                    ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                        }
+                                        Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                            @Override
+                                            public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                return o1.time_start.compareTo(o2.time_start);
+                                            }
+                                        });
+                                        tasks_adapter.notifyDataSetChanged();
+                                        CheckHintTasksText();
+                                        progressBarTask.setVisibility(View.GONE);
+                                    }
+                                });
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 }else {
                     Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For  : " + Date, Toast.LENGTH_SHORT).show();
                 }
 
 
-                days_adapter.notifyDataSetChanged();
-                CheckHintText();
-                days_recyclerview.smoothScrollToPosition(days_adapter.getItemCount());
+
+
+
+
+
+
             }
         });
         DatePicker.show(getSupportFragmentManager(), "tag");
@@ -428,6 +511,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //        startActivity(intent);
 
         id = Days_Model.get(position).id;
+        for (int i = 0; i < Days_Model.size(); i++) {
+            Days_Model.get(i).color = 0;
+        }
+        Days_Model.get(position).color = 1;
+
+        days_adapter.notifyDataSetChanged();
         Task_Model.clear();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -450,11 +539,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 }
                             });
                             tasks_adapter.notifyDataSetChanged();
-                            CheckHintText();
                             progressBar.setVisibility(View.GONE);
+                            CheckHintTasksText();
                         }
                     });
         }
+
+
 
 
 
@@ -484,7 +575,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag){
                     Day_OW = new SimpleDateFormat("EE", Locale.getDefault()).format(new Date(selection));
-                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, Date, Day_OW, calendar));
+                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, color_days, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -493,6 +584,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     hashMap.put("date", Date);
                     hashMap.put("day_ow", Day_OW);
                     hashMap.put("Position", position);
+                    hashMap.put("Color", color_days);
                     hashMap.put("DocId", Days_Model.get(position).id);
                     hashMap.put("calendar", Days_Model.get(position).calendar);
                     hashMap.put("userId", user.getUid());
@@ -514,6 +606,16 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                     //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
                 }
+
+
+                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                        @Override
+                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                            return o1.Date.compareTo(o2.Date);
+                        }
+                    });
+
+
 
 
                     days_adapter.notifyDataSetChanged();
@@ -542,6 +644,59 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 Days_Model.remove(position);
                 days_adapter.notifyItemRemoved(position);
                 CheckHintText();
+
+
+                if(Days_Model.size()>1) {
+                    id = Days_Model.get(Days_Model.size() - 1).id;
+                    for (int i = 0; i < Days_Model.size(); i++) {
+                        Days_Model.get(i).color = 0;
+                    }
+                    Days_Model.get(Days_Model.size() - 1).color = 1;
+
+                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                        @Override
+                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                            return o1.Date.compareTo(o2.Date);
+                        }
+                    });
+
+                    days_adapter.notifyDataSetChanged();
+                    CheckHintText();
+                    if (Days_Model.size() > 1) {
+                        days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
+                    }
+
+                    Task_Model.clear();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                            int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                            int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                    queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                    ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                        }
+                                        Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                            @Override
+                                            public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                return o1.time_start.compareTo(o2.time_start);
+                                            }
+                                        });
+                                        tasks_adapter.notifyDataSetChanged();
+                                        CheckHintText();
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                });
+                    }
+                }
+
+
+
             }
         });
         DatePicker.show(getSupportFragmentManager(), "tag");
@@ -701,7 +856,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
         }
         tasks_adapter.notifyDataSetChanged();
-        CheckHintText();
+        CheckHintTasksText();
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
 
 
@@ -728,17 +883,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         color = 0;
                         Add_Task_To_Model();
                         Toast.makeText(calendar_activity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
+                        progressBarTask.setVisibility(View.GONE);
 
                     } else {
                         color = 1;
                         Add_Task_To_Model();
-                        progressBar.setVisibility(View.GONE);
+                        progressBarTask.setVisibility(View.GONE);
                         Toast.makeText(calendar_activity.this, "You will be Late", Toast.LENGTH_SHORT).show();
                     }
                 }
             };
-            progressBar.setVisibility(View.VISIBLE);
+            progressBarTask.setVisibility(View.VISIBLE);
             handler.postDelayed(runnable, 2000);
         } else {
             visibility = 0;
@@ -983,7 +1138,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
         }
         tasks_adapter.notifyDataSetChanged();
-        CheckHintText();
+        CheckHintTasksText();
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
 
 
@@ -1019,6 +1174,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         Change_Task_In_Model();
                         Toast.makeText(calendar_activity.this, "You will be Late", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
+
 
                     }
                 }

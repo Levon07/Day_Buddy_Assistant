@@ -8,16 +8,18 @@ public class Days_Model {
     String id;
     String Date;
     String Day_OW;
+    int color = 0;
 
 
 
     Calendar calendar;
 
-    public Days_Model(String id,String Date, String day_OW, Calendar calendar) {
+    public Days_Model(String id, int color , String Date, String day_OW, Calendar calendar) {
         this.id = id;
         this.Date = Date;
         this.Day_OW = day_OW;
         this.calendar = calendar;
+        this.color = color;
 
     }
 
@@ -39,5 +41,7 @@ public class Days_Model {
     }
 
 
-
+    public int getColor() {
+        return color;
+    }
 }
