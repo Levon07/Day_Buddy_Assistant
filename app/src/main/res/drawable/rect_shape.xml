@@ -2,19 +2,19 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/NN_Blue" />
+            <solid android:color="@color/NN_BlackB" />
             <gradient android:angle="90"
                 android:startColor="@color/translucent"
-                android:centerColor="@color/NN_Blue"
+                android:centerColor="@color/light_blue"
                 android:endColor="@color/translucent"/>
             <corners android:radius="15dp" />
         </shape>
     </item>
 
     <item
-          android:right="1dp"  android:left="1dp"  >
+        android:bottom="0dp" android:right="5dp"  android:left="5dp"  >
         <shape android:shape="rectangle">
-            <solid android:color="@color/NN_BlackB" />
+            <solid android:color="@color/NN_Blue" />
             <corners android:radius="20dp" />
         </shape>
     </item>

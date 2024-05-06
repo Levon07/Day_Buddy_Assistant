@@ -1,5 +1,7 @@
 package com.example.daybuddy;
 
+import static java.sql.DriverManager.println;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -15,6 +17,10 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -57,6 +63,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,6 +71,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -81,6 +89,11 @@ import org.json.JSONObject;
 
 
 public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks{
+
+    int NowTime;
+
+    TextView Time1;
+    TextView Time2;
 
 
     int position;
@@ -109,7 +122,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     DatabaseReference myRef;
     ProgressBar progressBar;
-
+    TextView Date_Today;
 
 
 
@@ -133,6 +146,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int color_days = 0;
 
     ArrayList<Task_Model> Task_Model = new ArrayList<>();
+    ArrayList<Task_Model> Task_Model1 = new ArrayList<>();
 
     String Et_Time = "00:00";
     String St_Time = "00:00";
@@ -169,6 +183,14 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ////////////////////////////////////////////
 
 
+    ZonedDateTime currentTime;
+    LocalDate currentDate;
+    String formattedDate;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+
+    TextView TextTaskText;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +200,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         HintTextTask = findViewById(R.id.HintTextTask);
         progressBarTask = findViewById(R.id.progressBarTask);
         Bundle extras1 = getIntent().getExtras();
+
+        TextTaskText = findViewById(R.id.TaskText);
+
+
+        Time1 = findViewById(R.id.Time_1);
+        Time2 = findViewById(R.id.Time_2);
+        Date_Today = findViewById(R.id.Date_Today);
+
+
+
+
+
+
+
         if (extras1 != null) {
             position = extras1.getInt("Position");
             Task_Model_Arr.get(position).TaskModel = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
@@ -216,6 +252,91 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             CheckTutorial();
 
 
+
+                            /////////////////////
+
+
+
+
+
+                            String currentTimeH = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
+                            String currentTimeM = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
+                            String currentDate = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date());
+
+                            String Datedate = currentDate.toString();
+
+
+                            for(int i = 0; i < Days_Model.size(); i++){
+                                if(Objects.equals(Days_Model.get(i).Date, Datedate)) {
+                                    Date_Today.setText(Datedate);
+
+                                    id = Days_Model.get(i).id;
+
+
+                                    FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                        int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                        int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                                queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                                ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                                    }
+
+
+
+                                                    int NowTimeHour = Integer.parseInt(currentTimeH.toString());
+                                                    int NowTimeMinute = Integer.parseInt(currentTimeM.toString());
+                                                    NowTime = NowTimeHour * 60 + NowTimeMinute;
+
+
+                                                    for (int j = 0; j < Task_Model1.size(); j++) {
+                                                        if (Task_Model1.get(j).st_time_M <= NowTime && Task_Model1.get(j).et_time_M >= NowTime) {
+
+                                                            Time1.setText(Task_Model1.get(j).time_start);
+                                                            Time2.setText(Task_Model1.get(j).time_end);
+                                                            TextTaskText.setText(Task_Model1.get(j).task_text);
+
+                                                        }
+                                                    }
+
+
+
+
+
+                                                }
+                                            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                }
+
+                            }
+
+
+
+
+
+
+                            ///////////////////////////////////
+
+
                             if (!Days_Model.isEmpty()) {
                                 id = Days_Model.get(0).id;
                                 Days_Model.get(0).color = 1;
@@ -243,8 +364,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                 tasks_adapter.notifyDataSetChanged();
                                                 CheckHintTasksText();
                                                 progressBarTask.setVisibility(View.GONE);
+
+
+
                                             }
                                         });
+
+
+
+
+
+
+                                ////////////////////////////
                             }else{
                                 progressBarTask.setVisibility(View.GONE);
 
@@ -289,6 +420,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
         CheckHintTasksText();
+
+
+
+
+
 
     }
 
@@ -518,6 +654,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         days_adapter.notifyDataSetChanged();
         Task_Model.clear();
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
