@@ -88,7 +88,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks{
+public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks {
 
     int NowTime;
 
@@ -123,8 +123,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     DatabaseReference myRef;
     ProgressBar progressBar;
     TextView Date_Today;
-
-
 
 
     ///////MAIN_ACTIVITY_CLASS////////////////////////////
@@ -179,7 +177,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     String travelMode = "walking";
 
 
-
     ////////////////////////////////////////////
 
 
@@ -205,13 +202,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
         Time1 = findViewById(R.id.Time_1);
-        Time2 = findViewById(R.id.Time_2);
         Date_Today = findViewById(R.id.Date_Today);
-
-
-
-
-
 
 
         if (extras1 != null) {
@@ -252,86 +243,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             CheckTutorial();
 
 
-
                             /////////////////////
 
-
-
-
-
-                            String currentTimeH = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
-                            String currentTimeM = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
-                            String currentDate = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date());
-
-                            String Datedate = currentDate.toString();
-
-
-                            for(int i = 0; i < Days_Model.size(); i++){
-                                if(Objects.equals(Days_Model.get(i).Date, Datedate)) {
-                                    Date_Today.setText(Datedate);
-
-                                    id = Days_Model.get(i).id;
-
-
-                                    FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
-                                            .get()
-                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                                        int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
-                                                        int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                                                queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
-                                                                ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
-                                                    }
-
-
-
-                                                    int NowTimeHour = Integer.parseInt(currentTimeH.toString());
-                                                    int NowTimeMinute = Integer.parseInt(currentTimeM.toString());
-                                                    NowTime = NowTimeHour * 60 + NowTimeMinute;
-
-
-                                                    for (int j = 0; j < Task_Model1.size(); j++) {
-                                                        if (Task_Model1.get(j).st_time_M <= NowTime && Task_Model1.get(j).et_time_M >= NowTime) {
-
-                                                            Time1.setText(Task_Model1.get(j).time_start);
-                                                            Time2.setText(Task_Model1.get(j).time_end);
-                                                            TextTaskText.setText(Task_Model1.get(j).task_text);
-
-                                                        }
-                                                    }
-
-
-
-
-
-                                                }
-                                            });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                }
-
-                            }
-
-
-
-
+                            SetCurrentActivityView();
 
 
                             ///////////////////////////////////
@@ -366,17 +280,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                 progressBarTask.setVisibility(View.GONE);
 
 
-
                                             }
                                         });
 
 
-
-
-
-
                                 ////////////////////////////
-                            }else{
+                            } else {
                                 progressBarTask.setVisibility(View.GONE);
 
                             }
@@ -385,25 +294,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
 
 
-
-
-
-
         days_recyclerview = findViewById(R.id.RV_Days);
 
 
         days_recyclerview.setAdapter(days_adapter);
-
-
-
-
-
-
-
-
-
-
-
 
 
         //days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -418,17 +312,70 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
 
-
         CheckHintTasksText();
-
-
-
-
 
 
     }
 
 
+    public void SetCurrentActivityView() {
+
+
+        String currentTimeH = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
+        String currentTimeM = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
+        String currentDate = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date());
+
+        String Datedate = currentDate.toString();
+
+
+        for (int i = 0; i < Days_Model.size(); i++) {
+            if (Objects.equals(Days_Model.get(i).Date, Datedate)) {
+                Date_Today.setText(Datedate);
+
+                id = Days_Model.get(i).id;
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                        int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                        int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                    }
+
+
+                                    int NowTimeHour = Integer.parseInt(currentTimeH.toString());
+                                    int NowTimeMinute = Integer.parseInt(currentTimeM.toString());
+                                    NowTime = NowTimeHour * 60 + NowTimeMinute;
+
+
+                                    for (int j = 0; j < Task_Model1.size(); j++) {
+                                        if (Task_Model1.get(j).st_time_M <= NowTime && Task_Model1.get(j).et_time_M >= NowTime) {
+
+                                            Time1.setText(Task_Model1.get(j).time_start);
+                                            TextTaskText.setText(Task_Model1.get(j).task_text);
+
+                                        }
+                                    }
+
+
+                                }
+                            });
+
+
+                }
+            }
+
+        }
+
+
+    }
 
 
     public void CheckHintText() {
@@ -447,20 +394,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
     }
 
-    public void CheckTutorial(){
-        if(Days_Model.isEmpty()){
-        View view = LayoutInflater.from(calendar_activity.this).inflate(R.layout.guide_text, null);
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
-                .setTitle("How To Use Day Buddy")
-                .setView(view)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).create();
-        alertDialog.show();
-    }
+    public void CheckTutorial() {
+        if (Days_Model.isEmpty()) {
+            View view = LayoutInflater.from(calendar_activity.this).inflate(R.layout.guide_text, null);
+            AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
+                    .setTitle("How To Use Day Buddy")
+                    .setView(view)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create();
+            alertDialog.show();
+        }
     }
 
 
@@ -481,8 +428,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 calendar.set(Calendar.DATE, date.getDate());
                 Date = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date(selection));
                 boolean flag = false;
-                for (int i = 0; i< Days_Model.size(); i++){
-                    if(Days_Model.get(i).getDate().equals(Date)){
+                for (int i = 0; i < Days_Model.size(); i++) {
+                    if (Days_Model.get(i).getDate().equals(Date)) {
                         flag = true;
                     }
 
@@ -518,13 +465,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     }
 
 
-
-
-                    id = Days_Model.get(Days_Model.size()-1).id;
+                    id = Days_Model.get(Days_Model.size() - 1).id;
                     for (int i = 0; i < Days_Model.size(); i++) {
                         Days_Model.get(i).color = 0;
                     }
-                    Days_Model.get(Days_Model.size()-1).color = 1;
+                    Days_Model.get(Days_Model.size() - 1).color = 1;
 
                     Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                         @Override
@@ -535,7 +480,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                     days_adapter.notifyDataSetChanged();
                     CheckHintText();
-                    if(Days_Model.size()>1) {
+                    if (Days_Model.size() > 1) {
                         days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
                     }
 
@@ -562,32 +507,16 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         tasks_adapter.notifyDataSetChanged();
                                         CheckHintTasksText();
                                         progressBarTask.setVisibility(View.GONE);
+
+                                        SetCurrentActivityView();
                                     }
                                 });
                     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-                }else {
+                } else {
                     Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For  : " + Date, Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-
-
 
 
             }
@@ -596,10 +525,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     }
-
-
-
-
 
 
     public void signOut(View view) {
@@ -616,9 +541,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         finish();
 
 
-
-
-
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -627,8 +549,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     }
                 }).create();
         alertDialog.show();
-
-
 
 
     }
@@ -683,10 +603,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
 
 
-
-
-
-
     }
 
     @Override
@@ -704,45 +620,45 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd", Locale.getDefault()).format(new Date(selection));
                 boolean flag = false;
-                for (int i = 0; i< Days_Model.size(); i++){
-                    if(Days_Model.get(i).getDate().equals(Date)){
+                for (int i = 0; i < Days_Model.size(); i++) {
+                    if (Days_Model.get(i).getDate().equals(Date)) {
                         flag = true;
                     }
 
                 }
-                if (!flag){
+                if (!flag) {
                     Day_OW = new SimpleDateFormat("EE", Locale.getDefault()).format(new Date(selection));
                     Days_Model.set(position, new Days_Model(Days_Model.get(position).id, color_days, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
+                    if (user != null) {
 
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("date", Date);
-                    hashMap.put("day_ow", Day_OW);
-                    hashMap.put("Position", position);
-                    hashMap.put("Color", color_days);
-                    hashMap.put("DocId", Days_Model.get(position).id);
-                    hashMap.put("calendar", Days_Model.get(position).calendar);
-                    hashMap.put("userId", user.getUid());
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("date", Date);
+                        hashMap.put("day_ow", Day_OW);
+                        hashMap.put("Position", position);
+                        hashMap.put("Color", color_days);
+                        hashMap.put("DocId", Days_Model.get(position).id);
+                        hashMap.put("calendar", Days_Model.get(position).calendar);
+                        hashMap.put("userId", user.getUid());
 
 
-                    db.collection("daysModel").document(Days_Model.get(position).id).update(hashMap)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("aaaa", e.getMessage());
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        db.collection("daysModel").document(Days_Model.get(position).id).update(hashMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(getApplicationContext(), "Changed", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("aaaa", e.getMessage());
+                                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
-                    //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
-                }
+                        //db.collection("daysModel").document("daysModelId").collection("tasks").add(hashMap);
+                    }
 
 
                     Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
@@ -753,12 +669,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     });
 
 
-
-
                     days_adapter.notifyDataSetChanged();
                     CheckHintText();
                     days_recyclerview.smoothScrollToPosition(position);
-                }else {
+                    SetCurrentActivityView();
+
+
+                } else {
                     Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For" + Date, Toast.LENGTH_SHORT).show();
                 }
 
@@ -781,9 +698,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 Days_Model.remove(position);
                 days_adapter.notifyItemRemoved(position);
                 CheckHintText();
+                SetCurrentActivityView();
 
 
-                if(Days_Model.size()>1) {
+                if (Days_Model.size() > 1) {
                     id = Days_Model.get(Days_Model.size() - 1).id;
                     for (int i = 0; i < Days_Model.size(); i++) {
                         Days_Model.get(i).color = 0;
@@ -833,19 +751,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
 
 
-
             }
         });
         DatePicker.show(getSupportFragmentManager(), "tag");
 
 
-
     }
 
 
-
     ////////////////////////////MAIN_ACTIVITY_CLASS///////////////////////////////////
-
 
 
     public void pickStarttime(View view) {
@@ -997,6 +911,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
 
 
+        SetCurrentActivityView();
+
+
     }
 
 
@@ -1140,8 +1057,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     );
 
 
-
-
     @Override
     public void onItemClickedTasks(int position) {
 
@@ -1277,6 +1192,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         tasks_adapter.notifyDataSetChanged();
         CheckHintTasksText();
         tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+        SetCurrentActivityView();
 
 
     }
@@ -1327,7 +1243,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
 
-    public void startCheckingTraffic(){
+    public void startCheckingTraffic() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
@@ -1443,7 +1359,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             long totalMinutes = hour * 60 + minute;
 
 
-            Toast.makeText(calendar_activity.this, ""+totalMinutes, Toast.LENGTH_SHORT).show();
+            Toast.makeText(calendar_activity.this, "" + totalMinutes, Toast.LENGTH_SHORT).show();
             Log.e("BACKGROUND", "checkDuration: " + totalMinutes);
 //            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
 //            LatLng destination = new LatLng(latitude, longitude);
@@ -1451,7 +1367,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //            travelTime.execute();
         }
     }
-
 
 
     ////////////////////////////////////////////////////////////////////

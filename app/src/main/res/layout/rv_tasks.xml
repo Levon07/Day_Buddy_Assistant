@@ -47,7 +47,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
+                    android:layout_marginEnd="3dp"
                     android:background="@drawable/rect_shape_outline"
                     android:orientation="vertical">
 
@@ -121,7 +121,7 @@
 
 
                 <LinearLayout
-
+                    android:layout_marginStart="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rect_shape"
