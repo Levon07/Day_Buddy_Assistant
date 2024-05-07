@@ -7,7 +7,7 @@
     <color name="light_red">#E94959</color>
     <color name="light_green">#CEEDE5</color>
     <color name="translucent">#00A4D3C6</color>
-    <color name="dark_blue">#1B1825</color>
+    <color name="dark_blue">#252230</color>
     <color name="light_gray">#A6D8D8D8</color>
     <color name="light_blue">#83B7F4</color>
     <color name="blue">#224590</color>
@@ -23,10 +23,10 @@
     <color name="N_Yellow">#EFA00B</color>
     <color name="N_Orange">#D65108</color>
     <color name="NN_Blue">#167efe</color>
-    <color name="NN_Black">#100D17</color>
+    <color name="NN_Black">#050507</color>
     <color name="NN_White">#FFEDDF</color>
     <color name="NN_Gray">#7D7D7D</color>
-    <color name="NN_BlackB">#0B0815</color>
+    <color name="NN_BlackB">#030205</color>
     <color name="Green">#02BD82</color>
 
 
