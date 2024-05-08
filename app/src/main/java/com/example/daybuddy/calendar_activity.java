@@ -111,6 +111,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     ArrayList<Days_Model> Days_Model = new ArrayList<>();
 
+
     String Date;
 
     String Day_OW;
@@ -158,6 +159,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int St_time_M = 0;
     int Et_time_M = 0;
     String Task_text = "Task";
+    TextView taskCount;
 
     RecyclerView tasks_recyclerview;
 
@@ -173,6 +175,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     String id;
     int Position_BackUp;
     ProgressBar progressBarTask;
+    TextView pendingTaskCount;
 
     String travelMode = "walking";
 
@@ -197,6 +200,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         HintTextTask = findViewById(R.id.HintTextTask);
         progressBarTask = findViewById(R.id.progressBarTask);
         Bundle extras1 = getIntent().getExtras();
+        taskCount = findViewById(R.id.taskCount);
+        pendingTaskCount = findViewById(R.id.pendingTasksCount);
 
         TextTaskText = findViewById(R.id.TaskText);
 
@@ -317,6 +322,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     }
 
+    int i = 0;
+    int dateNum;
+    int currentDateNum;
+    int countCheck = 0;
+    int count = 0;
+    String countCheckStr;
+    String countStr;
+
+
 
     public void SetCurrentActivityView() {
 
@@ -324,11 +338,73 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         String currentTimeH = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
         String currentTimeM = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
         String currentDate = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date());
+        currentDateNum = Integer.parseInt(new SimpleDateFormat("dd", Locale.getDefault()).format(new Date()));
 
         String Datedate = currentDate.toString();
+        countCheck = 0;
+        count = 0;
+
+
+
+
+
+        for (i = 0; i < Days_Model.size(); i++) {
+            id = Days_Model.get(i).id;
+            dateNum = GetInt(Days_Model.get(i).Date);
+
+
+
+
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                        count++;
+                                        int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                        int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                        if(dateNum < currentDateNum){
+                                            ++countCheck;
+                                            taskCount.setText(Integer.toString(countCheck));
+                                        } else if (Task_Model1.get(Task_Model1.size()-1).et_time_M < NowTime) {
+                                            ++countCheck;
+                                            taskCount.setText(Integer.toString(countCheck));
+                                        }
+                                    }
+
+
+                                }
+                            });
+
+
+                }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
         for (int i = 0; i < Days_Model.size(); i++) {
+
+
             if (Objects.equals(Days_Model.get(i).Date, Datedate)) {
                 Date_Today.setText(Datedate);
 
@@ -359,7 +435,29 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         if (Task_Model1.get(j).st_time_M <= NowTime && Task_Model1.get(j).et_time_M >= NowTime) {
 
                                             Time1.setText(Task_Model1.get(j).time_start);
-                                            TextTaskText.setText(Task_Model1.get(j).task_text);
+                                            String text = Task_Model1.get(j).task_text;
+
+                                            if (text.length() < 6) {
+                                                countCheckStr = String.valueOf(countCheck);
+                                                countStr = String.valueOf(count-countCheck);
+                                                TextTaskText.setText(text);
+                                                taskCount.setText(countCheckStr);
+                                                pendingTaskCount.setText(countStr);
+                                            } else if (text.length() < 10) {
+                                                TextTaskText.setTextSize(30);
+                                                countCheckStr = String.valueOf(countCheck);
+                                                countStr = String.valueOf(count-countCheck);
+                                                TextTaskText.setText(text);
+                                                taskCount.setText(countCheckStr);
+                                                pendingTaskCount.setText(countStr);
+                                            } else{
+                                                TextTaskText.setTextSize(20);
+                                                countCheckStr = String.valueOf(countCheck);
+                                                countStr = String.valueOf(count-countCheck);
+                                                TextTaskText.setText(text);
+                                                taskCount.setText(countCheckStr);
+                                                pendingTaskCount.setText(countStr);
+                                            }
 
                                         }
                                     }
