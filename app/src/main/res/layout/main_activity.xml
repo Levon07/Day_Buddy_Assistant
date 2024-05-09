@@ -7,6 +7,104 @@
     android:background="@color/dark_blue"
     tools:context=".calendar_activity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rectangle_3_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/DayBuddy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/quicksand_light"
+            android:text="Day Buddy"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bear_pfp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+            app:strokeColor="@color/blue"
+            app:strokeWidth="1dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/AI"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/rect_shape_asisstant"
+        app:layout_constraintBottom_toTopOf="@+id/liveUpdate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topPanel"
+        app:layout_constraintVertical_bias="0.5"
+        android:onClick="ChatGPT">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:fontFamily="@font/alata"
+            android:text="Need Help ?"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="75dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/quicksand_light"
+            android:text="Ask AI Assistant"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/gpt_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            android:layout_marginEnd="25dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/HintText"
         android:layout_width="match_parent"
@@ -14,11 +112,10 @@
         android:text="Add Days To See Them"
         android:textAlignment="center"
         android:textColor="@color/NN_Gray"
-        android:textSize="35dp"
-        app:layout_constraintBottom_toBottomOf="@id/RV_Days"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="@id/RV_Days"
-        app:layout_constraintStart_toStartOf="@id/RV_Days"
-        app:layout_constraintTop_toTopOf="@id/RV_Days" />
+        app:layout_constraintStart_toStartOf="@id/RV_Days" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -56,224 +153,252 @@
         tools:layout_editor_absoluteX="181dp"
         tools:layout_editor_absoluteY="279dp" />
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/CurrentActivity"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/rectangle_1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days">
+        android:id="@+id/liveUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="5dp"
+        app:layout_constraintBottom_toTopOf="@id/HintText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
 
 
-        <TextView
-            android:id="@+id/Date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text="Now"
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            app:layout_constraintStart_toEndOf="@+id/Date_Today"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/Date_Today"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="13dp"
-            android:fontFamily="sans-serif-thin"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/CurrentActivity"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rectangle_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
 
 
-        <TextView
-            android:id="@+id/TaskText"
+            <TextView
+                android:id="@+id/Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text="Now"
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                app:layout_constraintStart_toEndOf="@+id/Date_Today"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/Date_Today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="13dp"
+                android:fontFamily="sans-serif-thin"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/TaskText"
+                android:layout_width="170dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/alata"
+                android:text="Task"
+                android:textColor="@color/white"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/Time_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="35dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/bear" />
+
+            <ImageView
+                android:id="@+id/bear"
+                android:layout_width="48dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bear"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/completedTasks"
             android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="20dp"
-            android:fontFamily="@font/alata"
-            android:text="Task"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-
-        <TextView
-            android:id="@+id/Time_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="35dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/bear"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:id="@+id/bear"
-            android:layout_width="48dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="18dp"
+            android:layout_height="85dp"
+            android:layout_marginStart="7dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/bear"/>
+            android:background="@drawable/rectangle_3"
+            app:layout_constraintBottom_toTopOf="@id/pendingTasks"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
 
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/completedTasks"
-        android:layout_width="180dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="130dp"
-        android:layout_marginStart="15dp"
-        android:background="@drawable/rectangle_3"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
+            <TextView
+                android:id="@+id/completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text="Completed"
+                android:textColor="@color/light_gray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/check" />
 
 
-        <TextView
-            android:id="@+id/completed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text="Completed"
-            android:textColor="@color/light_gray"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/check" />
+            <TextView
+                android:id="@+id/taskCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/completed"
+                app:layout_constraintStart_toEndOf="@id/check"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/check"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
-            android:id="@+id/taskCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="20dp"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pendingTasks"
+            android:layout_width="170dp"
+            android:layout_height="85dp"
+            android:layout_marginStart="7dp"
             android:layout_marginBottom="5dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/completed"
-            app:layout_constraintStart_toEndOf="@id/check"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/check"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/check"
+            android:background="@drawable/rectangle_3_red"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
+
+
+            <TextView
+                android:id="@+id/pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text="Pending"
+                android:textColor="@color/light_gray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/clock" />
+
+
+            <TextView
+                android:id="@+id/pendingTasksCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/quicksand_light"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/pending"
+                app:layout_constraintStart_toEndOf="@id/clock"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/clock"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/clock"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/pendingTasks"
-        android:layout_width="180dp"
-        android:layout_height="85dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginStart="15dp"
-        android:background="@drawable/rectangle_3_red"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
-
-
-        <TextView
-            android:id="@+id/pending"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text="Pending"
-            android:textColor="@color/light_gray"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/clock" />
-
-
-        <TextView
-            android:id="@+id/pendingTasksCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/quicksand_light"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/pending"
-            app:layout_constraintStart_toEndOf="@id/clock"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/clock"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/clock"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Days"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginHorizontal="15dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/RV_Tasks"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/rect_shape_divider"
+        app:layout_constraintBottom_toTopOf="@id/RV_Tasks"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RV_Days" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Tasks"
         android:layout_width="match_parent"
         android:layout_height="230dp"
+        android:layout_marginHorizontal="15dp"
         app:layout_constraintBottom_toTopOf="@+id/newDay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

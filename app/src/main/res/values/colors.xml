@@ -23,11 +23,15 @@
     <color name="N_Yellow">#EFA00B</color>
     <color name="N_Orange">#D65108</color>
     <color name="NN_Blue">#167efe</color>
+    <color name="NN_Blue_Dark">#2C84F1</color>
     <color name="NN_Black">#050507</color>
     <color name="NN_White">#FFEDDF</color>
     <color name="NN_Gray">#7D7D7D</color>
+    <color name="Gray_50">#407D7D7D</color>
     <color name="NN_BlackB">#030205</color>
     <color name="Green">#02BD82</color>
+    <color name="primary">#A8CCCC</color>
+    <color name="secondary">#7AB1D6</color>
 
 
 

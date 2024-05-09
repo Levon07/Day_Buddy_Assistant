@@ -14,4 +14,5 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="google_api_key">"AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY"</string>
+    <string name="write_your_prompt_here">Write Your Prompt Here</string>
 </resources>

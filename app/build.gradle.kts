@@ -65,4 +65,7 @@ dependencies {
     implementation("androidx.work:work-runtime:2.9.0")
     androidTestImplementation("junit:junit:4.12")
 
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
 }

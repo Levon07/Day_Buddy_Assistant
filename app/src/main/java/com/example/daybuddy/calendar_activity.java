@@ -41,6 +41,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.daybuddy.chatgpt.ChatGPTActivity;
 import com.example.daybuddy.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -159,7 +160,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int St_time_M = 0;
     int Et_time_M = 0;
     String Task_text = "Task";
-    TextView taskCount;
+    TextView taskCompleted;
 
     RecyclerView tasks_recyclerview;
 
@@ -200,7 +201,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         HintTextTask = findViewById(R.id.HintTextTask);
         progressBarTask = findViewById(R.id.progressBarTask);
         Bundle extras1 = getIntent().getExtras();
-        taskCount = findViewById(R.id.taskCount);
+        taskCompleted = findViewById(R.id.taskCompleted);
         pendingTaskCount = findViewById(R.id.pendingTasksCount);
 
         TextTaskText = findViewById(R.id.TaskText);
@@ -322,6 +323,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     }
 
+
+
+
     int i = 0;
     int dateNum;
     int currentDateNum;
@@ -371,16 +375,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                 queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                                 ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
+                                        Log.e("FOR", "onSuccess: Task " + count);
+
                                         if(dateNum < currentDateNum){
                                             ++countCheck;
-                                            taskCount.setText(Integer.toString(countCheck));
+                                            taskCompleted.setText(Integer.toString(countCheck));
                                         } else if (Task_Model1.get(Task_Model1.size()-1).et_time_M < NowTime) {
                                             ++countCheck;
-                                            taskCount.setText(Integer.toString(countCheck));
+                                            taskCompleted.setText(Integer.toString(countCheck));
                                         }
                                     }
-
-
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("AAA" ,e.getMessage());
                                 }
                             });
 
@@ -389,6 +399,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
         }
+        countCheckStr = String.valueOf(countCheck);
+        countStr = String.valueOf(count-countCheck);
+        taskCompleted.setText(countCheckStr);
+        pendingTaskCount.setText(countStr);
 
 
 
@@ -438,25 +452,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             String text = Task_Model1.get(j).task_text;
 
                                             if (text.length() < 6) {
-                                                countCheckStr = String.valueOf(countCheck);
-                                                countStr = String.valueOf(count-countCheck);
+
                                                 TextTaskText.setText(text);
-                                                taskCount.setText(countCheckStr);
-                                                pendingTaskCount.setText(countStr);
+
                                             } else if (text.length() < 10) {
                                                 TextTaskText.setTextSize(30);
-                                                countCheckStr = String.valueOf(countCheck);
-                                                countStr = String.valueOf(count-countCheck);
                                                 TextTaskText.setText(text);
-                                                taskCount.setText(countCheckStr);
-                                                pendingTaskCount.setText(countStr);
                                             } else{
                                                 TextTaskText.setTextSize(20);
-                                                countCheckStr = String.valueOf(countCheck);
-                                                countStr = String.valueOf(count-countCheck);
                                                 TextTaskText.setText(text);
-                                                taskCount.setText(countCheckStr);
-                                                pendingTaskCount.setText(countStr);
                                             }
 
                                         }
@@ -967,51 +971,57 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
     private void Add_Task_To_Model() {
-        String idNew = UUID.randomUUID().toString();
 
 
-        Task_Model.add(new Task_Model(idNew, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-        SetAlarm();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (!Days_Model.isEmpty()) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("day_ow", Day_OW);
-            hashMap.put("Task_text", Task_text);
-            hashMap.put("ST_Time", St_Time);
-            hashMap.put("ET_Time", Et_Time);
-            hashMap.put("ET_time_M", Et_time_M);
-            hashMap.put("ST_time_M", St_time_M);
-            hashMap.put("address", address);
-            hashMap.put("latitude", latitude);
-            hashMap.put("longitude", longitude);
-            hashMap.put("DocID", idNew);
-            hashMap.put("Color", color);
-            hashMap.put("Visibility", visibility);
-            hashMap.put("userId", user.getUid());
-            db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                }
-            });
 
-            //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+            String idNew = UUID.randomUUID().toString();
+
+
+            Task_Model.add(new Task_Model(idNew, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+            SetAlarm();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("day_ow", Day_OW);
+                hashMap.put("Task_text", Task_text);
+                hashMap.put("ST_Time", St_Time);
+                hashMap.put("ET_Time", Et_Time);
+                hashMap.put("ET_time_M", Et_time_M);
+                hashMap.put("ST_time_M", St_time_M);
+                hashMap.put("address", address);
+                hashMap.put("latitude", latitude);
+                hashMap.put("longitude", longitude);
+                hashMap.put("DocID", idNew);
+                hashMap.put("Color", color);
+                hashMap.put("Visibility", visibility);
+                hashMap.put("userId", user.getUid());
+                db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+            }
+            tasks_adapter.notifyDataSetChanged();
+            CheckHintTasksText();
+            tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+
+
+            SetCurrentActivityView();
+
+
         }
-        tasks_adapter.notifyDataSetChanged();
-        CheckHintTasksText();
-        tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-
-
-        SetCurrentActivityView();
-
-
     }
 
 
@@ -1354,6 +1364,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         // Enqueue the periodic work request
         WorkManager.getInstance(this).enqueue(periodicWorkRequest);
+    }
+
+    public void ChatGPT(View view) {
+        Intent intent = new Intent(calendar_activity.this, ChatGPTActivity.class);
+
+        startActivity(intent);
+
     }
 
 
