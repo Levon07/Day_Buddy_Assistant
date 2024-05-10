@@ -12,7 +12,7 @@ public class OpenAIAPIClient {
 
     // Define the API service interface
     public interface OpenAIAPIService {
-        @Headers("Authorization: Bearer MY--API--KEY")
+        @Headers("Authorization: Bearer sk-proj-yLqsjbp6e6KKLPVTK3JgT3BlbkFJMGWDByEd3pKUlU1KRZXb\n")
         @POST("chat/completions")
         Call<OpenAIResponseModel> getCompletion(@Body OpenAIRequestModel requestModel);
     }

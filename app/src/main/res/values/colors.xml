@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="gray">#6A6A6A</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_25">#40FFFFFF</color>
     <color name="red">#DD1313</color>
     <color name="light_red">#E94959</color>
     <color name="light_green">#CEEDE5</color>
@@ -26,11 +27,11 @@
     <color name="NN_Blue_Dark">#2C84F1</color>
     <color name="NN_Black">#050507</color>
     <color name="NN_White">#FFEDDF</color>
-    <color name="NN_Gray">#7D7D7D</color>
-    <color name="Gray_50">#407D7D7D</color>
+    <color name="NN_Gray">#80C8C8C8</color>
+    <color name="Gray_50">#BF0A100F</color>
     <color name="NN_BlackB">#030205</color>
     <color name="Green">#02BD82</color>
-    <color name="primary">#A8CCCC</color>
+    <color name="primary">#400A100F</color>
     <color name="secondary">#7AB1D6</color>
 
 

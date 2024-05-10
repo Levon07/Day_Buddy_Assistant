@@ -1,63 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
     tools:context=".chatgpt.ChatGPTActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_chat"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:clipToPadding="false"
         android:overScrollMode="always"
         android:padding="16dp"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <RelativeLayout
-        android:id="@+id/layout_input"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/message_bar"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/edit_text_input"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_toStartOf="@+id/generate_button"
-            android:background="@color/translucent"
-            android:hint="@string/write_your_prompt_here" />
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/message_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/generate_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <EditText
+                android:id="@+id/edit_text_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:background="@color/translucent"
+                android:hint="@string/Send_a_message..."
+                android:textColor="@color/white"
+                android:textColorHint="@color/NN_Gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
             android:id="@+id/generate_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/snd_button" />
 
-    </RelativeLayout>
+
+    </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
