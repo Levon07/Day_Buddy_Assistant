@@ -2,6 +2,7 @@ package com.example.daybuddy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -42,8 +43,8 @@ public class register extends AppCompatActivity {
     ProgressDialog progressDialog;
 
 
-    MaterialButton SignUp;
-    MaterialButton SendVerifyAgain;
+    ConstraintLayout SignUp;
+    ConstraintLayout SendVerifyAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +189,8 @@ public class register extends AppCompatActivity {
         Intent intent = new Intent(register.this, LogIn.class);
 
         startActivity(intent);
+
+        finish();
     }
 
 

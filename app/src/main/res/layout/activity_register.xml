@@ -4,17 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bck_login"
     tools:context=".register">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alata"
+        android:text="Create new\n Account"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="45sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        android:layout_marginBottom="15dp"/>
+
+
+
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginHorizontal="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="200dp">
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/quicksand_light"
+            android:text="E-Mail"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/EmailAddress"
@@ -24,7 +55,18 @@
             android:background="@drawable/edit_ext"
             android:hint="  example@email.com"
             android:inputType="textEmailAddress"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/quicksand_light"
+            android:text="Password"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/Password"
@@ -34,7 +76,18 @@
             android:background="@drawable/edit_ext"
             android:hint="  Password"
             android:inputType="textPassword"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/quicksand_light"
+            android:text="Confirm Password"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/PasswordConf"
@@ -44,29 +97,66 @@
             android:background="@drawable/edit_ext"
             android:hint="  Confirm Password"
             android:inputType="textPassword"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:padding="5dp"/>
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/SignUp"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Sign Up"
-            android:onClick="register"
-            android:backgroundTint="@color/dark_blue"
-            app:cornerRadius="8dp"
-            android:layout_margin="5dp"/>
+            android:layout_height="65dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rectangle_3_login"
+            android:onClick="register">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_light"
+                android:text="Sign Up"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
 
 
-        <com.google.android.material.button.MaterialButton
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/verifyEmail"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Send Verification Email Again"
+            android:layout_height="65dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rectangle_3_login"
+            android:onClick="SignUp"
+            android:visibility="gone">
 
-            android:visibility="gone"
-            android:backgroundTint="@color/dark_blue"
-            app:cornerRadius="8dp"
-            android:layout_margin="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_light"
+                android:text="Send Verification Email Again"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <LinearLayout
             android:id="@+id/LogIn"
@@ -78,6 +168,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="Already have an account ?"/>
 
             <TextView

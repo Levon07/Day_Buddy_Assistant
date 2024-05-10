@@ -47,7 +47,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:strokeColor="@color/blue"
-            app:strokeWidth="1dp" />
+            app:strokeWidth="1dp"
+            android:onClick="signOut"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -58,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginHorizontal="15dp"
-        android:layout_marginVertical="8dp"
+        android:layout_marginVertical="12dp"
         android:background="@drawable/rect_shape_asisstant"
         app:layout_constraintBottom_toTopOf="@+id/liveUpdate"
         app:layout_constraintEnd_toEndOf="parent"

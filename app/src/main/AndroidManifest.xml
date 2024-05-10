@@ -20,13 +20,14 @@
         <activity
             android:name=".chatgpt.ChatGPTActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".NotificationActivity"
             android:exported="false" />
         <activity
             android:name=".calendar_activity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".Splash_Screen"
             android:exported="true"

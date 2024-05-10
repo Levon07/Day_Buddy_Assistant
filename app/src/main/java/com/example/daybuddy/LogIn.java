@@ -2,6 +2,7 @@ package com.example.daybuddy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ public class LogIn extends AppCompatActivity {
 
     EditText Email;
     EditText Password;
-    Button LogIn;
+    ConstraintLayout LogIn;
     FirebaseUser mUser;
     private FirebaseAuth mAuth;
 
@@ -32,7 +33,7 @@ public class LogIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        LogIn = findViewById(R.id.Login);
+        LogIn = findViewById(R.id.LogIn);
 
         Email = findViewById(R.id.Email);
         Password  = findViewById(R.id.Password);
@@ -121,5 +122,6 @@ public class LogIn extends AppCompatActivity {
     public void SignUp(View view) {
         Intent intent = new Intent(LogIn.this,register.class);
         startActivity(intent);
+        finish();
     }
 }
