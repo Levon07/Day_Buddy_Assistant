@@ -40,10 +40,11 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-places:17.0.0")
     implementation("com.google.android.libraries.places:places:3.4.0")
     implementation ("com.google.android.gms:play-services-location:21.2.0")
+    implementation ("com.google.maps:google-maps-services:0.18.0")
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-analytics")
