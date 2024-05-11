@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Constraints;
@@ -22,6 +23,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -37,6 +39,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -191,11 +194,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     TextView TextTaskText;
 
+    ConstraintLayout liveUpdate;
+    ConstraintLayout AI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        AI = findViewById(R.id.AI);
         progressBar = findViewById(R.id.progressBar);
         HintText = findViewById(R.id.HintText);
         HintTextTask = findViewById(R.id.HintTextTask);
@@ -203,6 +210,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         Bundle extras1 = getIntent().getExtras();
         taskCompleted = findViewById(R.id.taskCompleted);
         pendingTaskCount = findViewById(R.id.pendingTasksCount);
+        liveUpdate = findViewById(R.id.liveUpdate);
 
         TextTaskText = findViewById(R.id.TaskText);
 
@@ -319,6 +327,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
         CheckHintTasksText();
+
+
+
 
 
     }
@@ -1370,6 +1381,65 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         Intent intent = new Intent(calendar_activity.this, ChatGPTActivity.class);
 
         startActivity(intent);
+
+    }
+
+    boolean taskViewAreUp = false;
+
+
+
+    public void moveUp(View view) {
+
+
+
+
+
+
+        Log.e("MOVE UP", "moveUp: ");
+
+        if(!taskViewAreUp){
+            liveUpdate.setVisibility(View.GONE);
+            AI.setVisibility(View.GONE);
+            taskViewAreUp = true;
+
+            int newHeight = 1300;
+
+            ValueAnimator animator = ValueAnimator.ofInt(tasks_recyclerview.getLayoutParams().height, newHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = tasks_recyclerview.getLayoutParams();
+                    layoutParams.height = value;
+                    tasks_recyclerview.setLayoutParams(layoutParams);
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+
+
+
+        }else{
+            liveUpdate.setVisibility(View.VISIBLE);
+            AI.setVisibility(View.VISIBLE);
+            taskViewAreUp = false;
+
+
+            int newHeight = 550;
+
+            ValueAnimator animator = ValueAnimator.ofInt(tasks_recyclerview.getLayoutParams().height, newHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = tasks_recyclerview.getLayoutParams();
+                    layoutParams.height = value;
+                    tasks_recyclerview.setLayoutParams(layoutParams);
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+        }
 
     }
 

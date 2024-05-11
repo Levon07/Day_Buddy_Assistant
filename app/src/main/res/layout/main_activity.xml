@@ -61,13 +61,12 @@
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="12dp"
         android:background="@drawable/rect_shape_asisstant"
-        app:layout_constraintBottom_toTopOf="@+id/liveUpdate"
+        android:onClick="ChatGPT"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@id/liveUpdate"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topPanel"
-        app:layout_constraintVertical_bias="0.5"
-        android:onClick="ChatGPT">
+        app:layout_constraintTop_toBottomOf="@+id/topPanel">
 
         <TextView
             android:layout_width="wrap_content"
@@ -96,12 +95,12 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="25dp"
             android:background="@drawable/gpt_logo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5"
-            android:layout_marginEnd="25dp"/>
+            app:layout_constraintVertical_bias="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -114,7 +113,7 @@
         android:textAlignment="center"
         android:textColor="@color/NN_Gray"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
+        app:layout_constraintTop_toTopOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="@id/RV_Days"
         app:layout_constraintStart_toStartOf="@id/RV_Days" />
 
@@ -161,10 +160,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="5dp"
-        app:layout_constraintBottom_toTopOf="@id/HintText"
+        app:layout_constraintBottom_toTopOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AI">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -373,18 +373,20 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Days"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:orientation="horizontal"
         android:layout_marginHorizontal="15dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/RV_Tasks"
+        app:layout_constraintBottom_toTopOf="@+id/up_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/liveUpdate"/>
 
 
     <ImageView
+        android:id="@+id/up_button"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="30dp"
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rect_shape_divider"
@@ -392,17 +394,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RV_Days" />
+        app:layout_constraintTop_toBottomOf="@+id/RV_Days"
+        android:onClick="moveUp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Tasks"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="200dp"
         android:layout_marginHorizontal="15dp"
         app:layout_constraintBottom_toTopOf="@+id/newDay"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/up_button" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/newDay"
