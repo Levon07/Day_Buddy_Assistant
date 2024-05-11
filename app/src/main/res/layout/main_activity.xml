@@ -383,19 +383,38 @@
         app:layout_constraintTop_toBottomOf="@id/liveUpdate"/>
 
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/up_button"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rect_shape_divider"
+        android:onClick="moveUp"
         app:layout_constraintBottom_toTopOf="@id/RV_Tasks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RV_Days"
-        android:onClick="moveUp"/>
+        app:layout_constraintTop_toBottomOf="@+id/RV_Days">
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_margin="2dp"
+            android:layout_width="30dp"
+            android:layout_height="18dp"
+            android:rotation="180"
+            android:background="@drawable/arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
     <androidx.recyclerview.widget.RecyclerView

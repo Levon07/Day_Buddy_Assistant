@@ -23,6 +23,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -40,6 +41,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -151,6 +153,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ArrayList<Task_Model> Task_Model = new ArrayList<>();
     ArrayList<Task_Model> Task_Model1 = new ArrayList<>();
 
+    ImageView arrow;
+
     String Et_Time = "00:00";
     String St_Time = "00:00";
 
@@ -203,6 +207,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         AI = findViewById(R.id.AI);
+        arrow = findViewById(R.id.arrow);
         progressBar = findViewById(R.id.progressBar);
         HintText = findViewById(R.id.HintText);
         HintTextTask = findViewById(R.id.HintTextTask);
@@ -1417,6 +1422,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             animator.setDuration(500); // Set the duration of the animation in milliseconds
             animator.start();
 
+            ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(arrow, "rotation", 180, 360);
+            rotateAnimator.setDuration(500); // Duration in milliseconds (1 second in this example)
+            rotateAnimator.start();
+
 
 
         }else{
@@ -1439,6 +1448,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             });
             animator.setDuration(500); // Set the duration of the animation in milliseconds
             animator.start();
+
+            ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(arrow, "rotation", 0, 180);
+            rotateAnimator.setDuration(500); // Duration in milliseconds (1 second in this example)
+            rotateAnimator.start();
         }
 
     }
