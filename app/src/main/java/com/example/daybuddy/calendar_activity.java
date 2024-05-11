@@ -1396,6 +1396,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     public void moveUp(View view) {
 
 
+        int oldHeight = 550;
+        int newHeight = 1310;
+
+        int oldHeightL = 510;
+        int newHeightL = 0;
+
+        int oldHeightA = 210;
+        int newHeightA = 0;
+
+
+        Handler handler = new Handler();
+
+
 
 
 
@@ -1403,13 +1416,14 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         Log.e("MOVE UP", "moveUp: ");
 
         if(!taskViewAreUp){
-            liveUpdate.setVisibility(View.GONE);
-            AI.setVisibility(View.GONE);
+//            liveUpdate.setVisibility(View.GONE);
+//            AI.setVisibility(View.GONE);
             taskViewAreUp = true;
 
-            int newHeight = 1300;
 
-            ValueAnimator animator = ValueAnimator.ofInt(tasks_recyclerview.getLayoutParams().height, newHeight);
+
+
+            ValueAnimator animator = ValueAnimator.ofInt(oldHeight, newHeight);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -1421,6 +1435,40 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             });
             animator.setDuration(500); // Set the duration of the animation in milliseconds
             animator.start();
+
+
+
+            ValueAnimator animator1 = ValueAnimator.ofInt(oldHeightL, newHeightL);
+            animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = liveUpdate.getLayoutParams();
+                    layoutParams.height = value;
+                    liveUpdate.setLayoutParams(layoutParams);
+                }
+            });
+            animator1.setDuration(500); // Set the duration of the animation in milliseconds
+            animator1.start();
+
+
+            ValueAnimator animator2 = ValueAnimator.ofInt(oldHeightA, newHeightA);
+            animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = AI.getLayoutParams();
+                    layoutParams.height = value;
+                    AI.setLayoutParams(layoutParams);
+                }
+            });
+            animator2.setDuration(500); // Set the duration of the animation in milliseconds
+            animator2.start();
+
+
+
+
+
 
             ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(arrow, "rotation", 180, 360);
             rotateAnimator.setDuration(500); // Duration in milliseconds (1 second in this example)
@@ -1434,9 +1482,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             taskViewAreUp = false;
 
 
-            int newHeight = 550;
 
-            ValueAnimator animator = ValueAnimator.ofInt(tasks_recyclerview.getLayoutParams().height, newHeight);
+
+            ValueAnimator animator = ValueAnimator.ofInt(newHeight, oldHeight);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -1448,6 +1496,43 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             });
             animator.setDuration(500); // Set the duration of the animation in milliseconds
             animator.start();
+
+
+
+            ValueAnimator animator1 = ValueAnimator.ofInt(newHeightL, oldHeightL);
+            animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = liveUpdate.getLayoutParams();
+                    layoutParams.height = value;
+                    liveUpdate.setLayoutParams(layoutParams);
+                }
+            });
+            animator1.setDuration(500); // Set the duration of the animation in milliseconds
+            animator1.start();
+
+
+
+
+            ValueAnimator animator2 = ValueAnimator.ofInt(newHeightA, oldHeightA);
+            animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = AI.getLayoutParams();
+                    layoutParams.height = value;
+                    AI.setLayoutParams(layoutParams);
+                }
+            });
+            animator2.setDuration(500); // Set the duration of the animation in milliseconds
+            animator2.start();
+
+
+
+
+
+
 
             ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(arrow, "rotation", 0, 180);
             rotateAnimator.setDuration(500); // Duration in milliseconds (1 second in this example)
