@@ -386,7 +386,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/up_button"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rect_shape_divider"
@@ -400,13 +400,12 @@
         <ImageView
             android:id="@+id/arrow"
             android:layout_margin="2dp"
-            android:layout_width="30dp"
-            android:layout_height="18dp"
+            android:layout_width="21.2dp"
+            android:layout_height="12dp"
             android:rotation="180"
             android:background="@drawable/arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5" />
