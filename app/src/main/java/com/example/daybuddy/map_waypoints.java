@@ -112,7 +112,7 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
 
                             if(locations.size() > 2){
                                 for (int i = 0; i < locations.size()-1; i++) {
-                                    getDirections(locations.get(i), locations.get(i + 1), i);
+                                    getDirections(locations.get(i), locations.get(i + 1), i+1);
                                 }
                             }
 
@@ -139,12 +139,10 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
                     BitmapDescriptorFactory.HUE_RED,
                     BitmapDescriptorFactory.HUE_ORANGE,
                     BitmapDescriptorFactory.HUE_YELLOW,
-                    BitmapDescriptorFactory.HUE_GREEN,
                     BitmapDescriptorFactory.HUE_CYAN,
                     BitmapDescriptorFactory.HUE_AZURE,
                     BitmapDescriptorFactory.HUE_VIOLET,
                     BitmapDescriptorFactory.HUE_MAGENTA,
-                    BitmapDescriptorFactory.HUE_ROSE
             };
 
 // Generate a random index within the array bounds
@@ -152,9 +150,10 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
 
 // Get the random color from the array
             float randomColor = colors[randomIndex];
+            Log.d("COLOR", "addMarkersAndZoom: "+ randomColor);
 
 
-            mMap.addMarker(new MarkerOptions().position(origin).title("WayPoint " + Count).icon(BitmapDescriptorFactory.defaultMarker(randomColor)));
+            mMap.addMarker(new MarkerOptions().position(origin).title("Task Point" ).icon(BitmapDescriptorFactory.defaultMarker(randomColor)));
         }
     }
 
@@ -168,7 +167,7 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.map_style));
+                            this, R.raw.map_style_dark));
 
 
             if (!success) {
@@ -216,7 +215,7 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
                             public void run() {
                                 if (result.routes != null && result.routes.length > 0) {
                                     PolylineOptions polylineOptions = new PolylineOptions();
-                                    polylineOptions.color(R.color.NN_Blue_Dark); // Задаем синий цвет для линии маршрута
+                                    polylineOptions.color(Color.BLUE); // Задаем синий цвет для линии маршрута
                                     for (com.google.maps.model.LatLng point : result.routes[0].overviewPolyline.decodePath()) {
                                         polylineOptions.add(new LatLng(point.lat, point.lng));
                                     }
@@ -255,5 +254,11 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onItemLongClickTasks(int position) {
 
+    }
+
+    public void Back(View view) {
+        Intent intent = new Intent(map_waypoints.this, calendar_activity.class);
+        startActivity(intent);
+        finish();
     }
 }
