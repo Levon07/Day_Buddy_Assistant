@@ -218,7 +218,7 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
                             public void run() {
                                 if (result.routes != null && result.routes.length > 0) {
                                     PolylineOptions polylineOptions = new PolylineOptions();
-                                    polylineOptions.color(Color.BLUE); // Задаем синий цвет для линии маршрута
+                                    polylineOptions.color(Color.BLACK); // Задаем синий цвет для линии маршрута
                                     for (com.google.maps.model.LatLng point : result.routes[0].overviewPolyline.decodePath()) {
                                         polylineOptions.add(new LatLng(point.lat, point.lng));
                                     }

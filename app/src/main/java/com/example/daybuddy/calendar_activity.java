@@ -347,6 +347,67 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int count = 0;
     String countCheckStr;
     String countStr;
+    String id1;
+
+
+    public void SetCheckedPendingView() {
+
+        id1 = Days_Model.get(i).id;
+        dateNum = GetInt(Days_Model.get(i).Date);
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("daysModel").document(id1).collection("taskModels").whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                count++;
+                                int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                        ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                Log.e("FOR123", "onSuccess: Task " + count);
+                                Log.e("FOR123", "Date num " + dateNum);
+                                Log.e("FOR123", "currentDateNum " + currentDateNum);
+
+
+
+                                if (dateNum < currentDateNum) {
+                                    ++countCheck;
+                                    Log.e("FOR123", "count check " + count);
+                                    taskCompleted.setText(Integer.toString(countCheck));
+                                } else if (Task_Model1.get(Task_Model1.size() - 1).et_time_M < NowTime) {
+                                    ++countCheck;
+                                    Log.e("FOR123", "count check " + count);
+                                    taskCompleted.setText(Integer.toString(countCheck));
+                                }
+                            }
+                            if (i < Days_Model.size()-1){
+                                i++;
+                                SetCheckedPendingView();
+                            }else {
+                                countCheckStr = String.valueOf(countCheck);
+                                countStr = String.valueOf(count - countCheck);
+                                taskCompleted.setText(countCheckStr);
+                                pendingTaskCount.setText(countStr);
+                            }
+
+
+                        }
+                    });
+
+
+        }
+
+
+
+
+    }
 
 
     public void SetCurrentActivityView() {
@@ -360,56 +421,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         String Datedate = currentDate.toString();
         countCheck = 0;
         count = 0;
+        i = 0;
 
 
-        for (i = 0; i < Days_Model.size(); i++) {
-            id = Days_Model.get(i).id;
-            dateNum = GetInt(Days_Model.get(i).Date);
 
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                    count++;
-                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
-                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                    Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
-                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
-
-                                    Log.e("FOR", "onSuccess: Task " + count);
-
-                                    if (dateNum < currentDateNum) {
-                                        ++countCheck;
-                                        taskCompleted.setText(Integer.toString(countCheck));
-                                    } else if (Task_Model1.get(Task_Model1.size() - 1).et_time_M < NowTime) {
-                                        ++countCheck;
-                                        taskCompleted.setText(Integer.toString(countCheck));
-                                    }
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e("AAA", e.getMessage());
-                            }
-                        });
-
-
-            }
-
-
-        }
-        countCheckStr = String.valueOf(countCheck);
-        countStr = String.valueOf(count - countCheck);
-        taskCompleted.setText(countCheckStr);
-        pendingTaskCount.setText(countStr);
 
 
         for (int i = 0; i < Days_Model.size(); i++) {
@@ -471,6 +487,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             }
 
         }
+
+
+        SetCheckedPendingView();
 
 
     }
