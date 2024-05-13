@@ -86,33 +86,36 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
                                         queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                         ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                             }
-                            Collections.sort(Task_Model, new Comparator<Task_Model>() {
-                                @Override
-                                public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
-                                    return o1.time_start.compareTo(o2.time_start);
+
+
+                            if(!Task_Model.isEmpty()) {
+                                Collections.sort(Task_Model, new Comparator<Task_Model>() {
+                                    @Override
+                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                        return o1.time_start.compareTo(o2.time_start);
+                                    }
+                                });
+                                tasks_adapter.notifyDataSetChanged();
+                                for (Task_Model task : Task_Model) {
+                                    locations.add(new LatLng(task.latitude, task.longitude));
+
                                 }
-                            });
-                            tasks_adapter.notifyDataSetChanged();
-                            for (Task_Model task : Task_Model) {
-                                locations.add(new LatLng(task.latitude, task.longitude));
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                            }
-                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                            for (int i = 0; i < locations.size(); i++) {
-                                builder.include(locations.get(i));
-                            }
+                                for (int i = 0; i < locations.size(); i++) {
+                                    builder.include(locations.get(i));
+                                }
 
 
+                                LatLngBounds bounds = builder.build();
+                                int padding = 100;
+                                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                                mMap.animateCamera(cu);
 
-                            LatLngBounds bounds = builder.build();
-                            int padding = 100;
-                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                            mMap.animateCamera(cu);
-
-                            if(locations.size() > 2){
-                                for (int i = 0; i < locations.size()-1; i++) {
-                                    getDirections(locations.get(i), locations.get(i + 1), i+1);
+                                if (locations.size() > 2) {
+                                    for (int i = 0; i < locations.size() - 1; i++) {
+                                        getDirections(locations.get(i), locations.get(i + 1), i + 1);
+                                    }
                                 }
                             }
 
