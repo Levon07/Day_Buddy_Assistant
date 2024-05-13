@@ -112,7 +112,7 @@ public class map_waypoints extends AppCompatActivity implements OnMapReadyCallba
                                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                                 mMap.animateCamera(cu);
 
-                                if (locations.size() > 2) {
+                                if (locations.size() > 1) {
                                     for (int i = 0; i < locations.size() - 1; i++) {
                                         getDirections(locations.get(i), locations.get(i + 1), i + 1);
                                     }

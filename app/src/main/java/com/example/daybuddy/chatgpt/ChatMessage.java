@@ -13,4 +13,7 @@ public class ChatMessage {
     public boolean isUser() {
         return isUser;
     }
+    public boolean isMe() {
+        return isUser;
+    }
 }

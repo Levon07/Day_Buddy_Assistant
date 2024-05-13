@@ -1295,6 +1295,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             Task_Model.remove(position);
                             tasks_adapter.notifyItemRemoved(position);
                             CheckHintTasksText();
+                            SetCurrentActivityView();
 
                         }else if (Task_Model.size()-1 > position) {
                             if (Task_Model.size()>1) {
@@ -1319,6 +1320,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             Task_Model.remove(position);
                                             tasks_adapter.notifyItemRemoved(position);
                                             CheckHintTasksText();
+                                            SetCurrentActivityView();
 
 
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -1362,6 +1364,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             Task_Model.remove(position);
                                             tasks_adapter.notifyItemRemoved(position);
                                             CheckHintTasksText();
+                                            SetCurrentActivityView();
 
 
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -1411,6 +1414,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             Task_Model.remove(position);
                             tasks_adapter.notifyItemRemoved(position);
                             CheckHintTasksText();
+                            SetCurrentActivityView();
                         }
                     }
                 }).create();
@@ -1738,7 +1742,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             try {
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
-                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
+                        "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + trafficModel +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);

@@ -191,14 +191,19 @@ public class ChatGPTActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
     }
     // interact with chat gpt api
+    List<ChatMessage> chatHistory = new ArrayList<>();
     private void askChatGpt(String userPrompt) {
         // Create the Retrofit client
+        chatHistory.add(new ChatMessage(userPrompt, true));
         OpenAIAPIClient.OpenAIAPIService apiService = OpenAIAPIClient.create();
         // Create the request model
         Message message = new Message("user", userPrompt);
         List<Message> messageList = new ArrayList<>();
         messageList.add(message);
-        OpenAIRequestModel requestModel = new OpenAIRequestModel("gpt-3.5-turbo", messageList, 0.7f);
+        OpenAIRequestModel requestModel = new OpenAIRequestModel(
+                "gpt-4-turbo",
+                getMessagesForRequest(chatHistory),
+                0.7f);
         // Make the API request
         Call<OpenAIResponseModel> call = apiService.getCompletion(requestModel);
         call.enqueue(new Callback<OpenAIResponseModel>() {
@@ -221,6 +226,14 @@ public class ChatGPTActivity extends AppCompatActivity {
                 addMessageToChat(new ChatMessage("API onFailure: "+t.getMessage(), false));
             }
         });
+    }
+
+    private List<Message> getMessagesForRequest(List<ChatMessage> chatHistory) {
+        List<Message> messageList = new ArrayList<>();
+        for (ChatMessage chatMessage : chatHistory) {
+            messageList.add(new Message(chatMessage.isMe() ? "user" : "bot", chatMessage.getMessage()));
+        }
+        return messageList;
     }
 
     public void Back(View view) {
