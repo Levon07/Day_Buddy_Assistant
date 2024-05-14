@@ -386,7 +386,7 @@ public class places extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     public void Car(View view) {
-        travelMode = "driving";
+        travelMode = "driving**traffic**";
     }
 
     public void Walk(View view) {

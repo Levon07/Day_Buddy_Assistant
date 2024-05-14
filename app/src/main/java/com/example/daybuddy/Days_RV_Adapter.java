@@ -45,8 +45,10 @@ public class Days_RV_Adapter extends RecyclerView.Adapter<Days_RV_Adapter.Days_V
         holder.Day_OW.setText(Days_Model.get(position).getDay_OW());
         if(Days_Model.get(position).color == 0) {
             holder.Background.setBackground(ContextCompat.getDrawable(context, R.drawable.button1));
-        }else{
+        }else if(Days_Model.get(position).color == 1){
             holder.Background.setBackground(ContextCompat.getDrawable(context, R.drawable.button));
+        }else if(Days_Model.get(position).color == 2){
+            holder.Background.setBackground(ContextCompat.getDrawable(context, R.drawable.button2));
         }
     }
 

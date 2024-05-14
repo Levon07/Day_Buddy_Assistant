@@ -12,14 +12,14 @@
           android:centerY="3337.6"
           android:gradientRadius="1160.4"
           android:type="radial">
-        <item android:offset="0" android:color="#80E94959"/>
-        <item android:offset="0.3" android:color="#3EE94959"/>
-        <item android:offset="0.6" android:color="#14E94959"/>
+        <item android:offset="0" android:color="#8049B1E9"/>
+        <item android:offset="0.3" android:color="#3E49D1E9"/>
+        <item android:offset="0.6" android:color="#1449E9E9"/>
         <item android:offset="1" android:color="#00000000"/>
       </gradient>
     </aapt:attr>
   </path>
   <path
       android:pathData="M851.9,-0L1601.3,-0A836.2,836.2 0,0 1,2437.5 836.2L2437.5,2635A836.2,836.2 0,0 1,1601.3 3471.1L851.9,3471.1A836.2,836.2 0,0 1,15.7 2635L15.7,836.2A836.2,836.2 0,0 1,851.9 -0z"
-      android:fillColor="#EA4959"/>
+      android:fillColor="@color/NN_Blue"/>
 </vector>

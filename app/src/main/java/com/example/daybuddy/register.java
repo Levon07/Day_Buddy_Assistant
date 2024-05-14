@@ -67,7 +67,7 @@ public class register extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         if(mUser != null){
-            Intent intent = new Intent(register.this, MainActivity.class);
+            Intent intent = new Intent(register.this, calendar_activity.class);
             startActivity(intent);
         }
     }

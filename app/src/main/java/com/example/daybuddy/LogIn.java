@@ -113,7 +113,7 @@ public class LogIn extends AppCompatActivity {
 
 
     public void NextActivity(){
-        Intent intent = new Intent(LogIn.this, MainActivity.class);
+        Intent intent = new Intent(LogIn.this, calendar_activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("auth", mAuth.getCurrentUser());
         startActivity(intent);

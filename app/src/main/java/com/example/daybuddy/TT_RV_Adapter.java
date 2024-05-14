@@ -6,10 +6,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +52,7 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         holder.Task_Text.setText(Task_Model.get(position).getTask_text());
         holder.Location.setText(Task_Model.get(position).getLocation());
         if (Task_Model.get(position).getVisibility() == 0){
-            holder.Card.setVisibility(View.GONE);
+            holder.Card.setVisibility(View.INVISIBLE);
         } else if (Task_Model.get(position).getVisibility() == 1) {
             holder.Card.setVisibility(View.VISIBLE);
         }
@@ -58,6 +60,21 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
             holder.Card.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_green));
         } else if (Task_Model.get(position).getColor() == 1) {
             holder.Card.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_red));
+        }
+        if (Task_Model.get(position).getCheckColor() == 0){
+            holder.LeftBlock.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_outline));
+            holder.Time_Start.setVisibility(View.VISIBLE);
+            holder.Time_End.setVisibility(View.VISIBLE);
+            holder.Text1.setVisibility(View.VISIBLE);
+            holder.Text2.setVisibility(View.VISIBLE);
+            holder.Check.setVisibility(View.GONE);
+        } else if (Task_Model.get(position).getCheckColor() == 1) {
+            holder.LeftBlock.setBackground(ContextCompat.getDrawable(context, R.drawable.rect_shape_completed));
+            holder.Time_Start.setVisibility(View.GONE);
+            holder.Time_End.setVisibility(View.GONE);
+            holder.Text1.setVisibility(View.GONE);
+            holder.Text2.setVisibility(View.GONE);
+            holder.Check.setVisibility(View.VISIBLE);
         }
 
 
@@ -73,8 +90,10 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
         // grabbing the views from our recycler_view_row layout file
         // Kinda like in the onCreate method
 
-        TextView Time_Start, Time_End, Task_Text, Location;
+        TextView Time_Start, Time_End, Task_Text, Location, Text1, Text2;
+        ConstraintLayout LeftBlock;
         View Card;
+        ImageView Check;
 
         public TT_ViewHolder(@NonNull View itemView, RV_Interface_Tasks rvInterface) {
             super(itemView);
@@ -84,6 +103,10 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
             Task_Text = itemView.findViewById(R.id.task_text);
             Location = itemView.findViewById(R.id.location);
             Card = itemView.findViewById(R.id.Card);
+            Check = itemView.findViewById(R.id.check);
+            LeftBlock = itemView.findViewById(R.id.left_block);
+            Text1 = itemView.findViewById(R.id.text1);
+            Text2 = itemView.findViewById(R.id.text2);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
