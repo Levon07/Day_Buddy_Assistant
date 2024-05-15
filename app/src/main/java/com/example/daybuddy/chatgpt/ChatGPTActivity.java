@@ -1,5 +1,7 @@
 package com.example.daybuddy.chatgpt;
 
+import android.content.ActivityNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +14,10 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -45,6 +52,8 @@ public class ChatGPTActivity extends AppCompatActivity {
     public boolean flag = true;
 
     Button approve_btn;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 100;
+    private TextToSpeech textToSpeech;
 
 
     @Override
@@ -56,6 +65,19 @@ public class ChatGPTActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+
+
+        textToSpeech = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                int result = textToSpeech.setLanguage(Locale.getDefault());
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Log.e("TTS", "Language not supported");
+                }
+            } else {
+                Log.e("TTS", "Initialization failed");
+            }
         });
 
 
@@ -83,6 +105,56 @@ public class ChatGPTActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
+    private void speakResponse(String response) {
+        if (textToSpeech != null && !TextUtils.isEmpty(response)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH, null, null);
+            } else {
+                textToSpeech.speak(response, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+    }
+
+
+
+    public void startVoiceInput(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak something");
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT && resultCode == RESULT_OK && data != null) {
+            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (result != null && result.size() > 0) {
+                String userVoiceInput = result.get(0);
+                // Process the userVoiceInput (send it to ChatGPT or handle as needed)
+                if (!userVoiceInput.isEmpty()) {
+                    addMessageToChat(new ChatMessage(userVoiceInput, true));
+                    // Send the voice input to ChatGPT
+                    askChatGpt(userVoiceInput);
+                }
+            }
+        }
+    }
+
+
+
+
 
     public void ShowPopup(View view){
         if (!is_popped_up){
@@ -201,7 +273,7 @@ public class ChatGPTActivity extends AppCompatActivity {
         List<Message> messageList = new ArrayList<>();
         messageList.add(message);
         OpenAIRequestModel requestModel = new OpenAIRequestModel(
-                "gpt-4-turbo",
+                "gpt-4o",
                 getMessagesForRequest(chatHistory),
                 0.7f);
         // Make the API request
@@ -215,6 +287,7 @@ public class ChatGPTActivity extends AppCompatActivity {
 
                     responsemessage = generatedText;
                     addMessageToChat(new ChatMessage(generatedText, false));
+                    speakResponse(generatedText);
                 } else {
                     // Handle API error
                     addMessageToChat(new ChatMessage("API error", false));
@@ -227,6 +300,18 @@ public class ChatGPTActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    protected void onDestroy() {
+        // Release resources like TextToSpeech engine
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
+    }
+
 
     private List<Message> getMessagesForRequest(List<ChatMessage> chatHistory) {
         List<Message> messageList = new ArrayList<>();
@@ -241,6 +326,9 @@ public class ChatGPTActivity extends AppCompatActivity {
         finish();
 
     }
+
+
+
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
