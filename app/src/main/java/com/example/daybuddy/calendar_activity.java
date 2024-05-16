@@ -298,15 +298,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+                                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                                                         Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                                    }else if(GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+                                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                                                         if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
                                                             Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                                        }else {
+                                                        } else {
                                                             Task_Model.get(Task_Model.size() - 1).checkColor = 0;
                                                         }
-                                                    }else {
+                                                    } else {
                                                         Task_Model.get(Task_Model.size() - 1).checkColor = 0;
                                                     }
                                                 }
@@ -401,10 +401,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         ++countCheck;
                                         Log.e("FOR123", "count check " + count);
                                         taskCompleted.setText(Integer.toString(countCheck));
-                                    } else if (Task_Model1.get(Task_Model1.size() - 1).et_time_M < NowTime) {
-                                        ++countCheck;
-                                        Log.e("FOR123", "count check " + count);
-                                        taskCompleted.setText(Integer.toString(countCheck));
+                                    } else if (dateNum == currentDateNum) {
+                                        if (Task_Model1.get(Task_Model1.size() - 1).et_time_M < NowTime) {
+                                            ++countCheck;
+                                            Log.e("FOR123", "count check " + count);
+                                            taskCompleted.setText(Integer.toString(countCheck));
+                                        }
                                     }
                                 }
                                 if (i < Days_Model.size() - 1) {
@@ -426,8 +428,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
 
 
-
-
     }
 
 
@@ -445,15 +445,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         i = 0;
 
 
-
-
-
-
         for (int i = 0; i < Days_Model.size(); i++) {
 
             int NumDate = GetInt(Days_Model.get(i).Date);
 
-            if (NumDate < currentDateNum){
+            if (NumDate < currentDateNum) {
 
                 Days_Model.get(i).color = 2;
             }
@@ -462,7 +458,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             if (Objects.equals(Days_Model.get(i).Date, Datedate)) {
                 Date_Today.setText(Datedate);
 
-                id = Days_Model.get(i).id;
+
+                String id = Days_Model.get(i).id;
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -474,7 +471,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                         int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                         int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"),queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                        Task_Model1.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                                 queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                                 ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                                     }
@@ -581,7 +578,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("E", Locale.getDefault()).format(new Date(selection));
-                    String id = UUID.randomUUID().toString();
+                    id = UUID.randomUUID().toString();
                     Days_Model.add(new Days_Model(id, color_days, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -610,11 +607,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     }
 
 
-                    id = Days_Model.get(Days_Model.size() - 1).id;
                     for (int i = 0; i < Days_Model.size(); i++) {
-                        Days_Model.get(i).color = 0;
+                        int NumDate = GetInt(Days_Model.get(i).Date);
+
+                        if (NumDate < currentDateNum) {
+
+                            Days_Model.get(i).color = 2;
+
+                        } else {
+
+                            Days_Model.get(i).color = 0;
+
+                        }
                     }
+
                     Days_Model.get(Days_Model.size() - 1).color = 1;
+                    idCopy = id;
 
                     Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                         @Override
@@ -624,10 +632,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     });
 
                     days_adapter.notifyDataSetChanged();
-                    CheckHintText();
-                    if (Days_Model.size() > 1) {
-                        days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
+
+
+                    for (int i = 0; i < Days_Model.size(); i++) {
+
+                        if (Objects.equals(Days_Model.get(i).id, id)) {
+
+                            positionCopy = Days_Model.indexOf(Days_Model.get(i));
+
+                            days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
+
+                        }
                     }
+
+
+                    CheckHintText();
+
 
                     Task_Model.clear();
                     if (user != null) {
@@ -639,7 +659,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                             int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                             int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"),queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                                     queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                                     ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
                                         }
@@ -727,20 +747,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             for (int i = 0; i < Days_Model.size(); i++) {
                 int NumDate = GetInt(Days_Model.get(i).Date);
 
-                if (NumDate < currentDateNum){
+                if (NumDate < currentDateNum) {
 
                     Days_Model.get(i).color = 2;
-                }else {
+                } else {
                     Days_Model.get(i).color = 0;
                 }
             }
 
-                int NumDate = GetInt(Days_Model.get(i).Date);
+            int NumDate = GetInt(Days_Model.get(i).Date);
 
-                if (NumDate < currentDateNum){
+            if (NumDate < currentDateNum) {
 
-                    Days_Model.get(i).color = 2;
-                }
+                Days_Model.get(i).color = 2;
+            }
             Days_Model.get(position).color = 1;
 
             days_adapter.notifyDataSetChanged();
@@ -756,19 +776,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                                     int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
                                     int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"),queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                                         Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                    }else if(GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                                         if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
                                             Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                        }else {
+                                        } else {
                                             Task_Model.get(Task_Model.size() - 1).checkColor = 0;
                                         }
-                                    }else {
+                                    } else {
                                         Task_Model.get(Task_Model.size() - 1).checkColor = 0;
                                     }
                                 }
@@ -790,6 +810,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
     }
 
+
+    ArrayList<Task_Model> taskModels_delete = new ArrayList<>();
     @Override
     public void onItemLongClick(int position) {
 
@@ -869,77 +891,147 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         DatePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(calendar_activity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(calendar_activity.this, "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Days_Model.remove(position);
-                days_adapter.notifyItemRemoved(position);
-                CheckHintText();
-                SetCurrentActivityView();
 
 
-                if (Days_Model.size() > 1) {
-                    id = Days_Model.get(Days_Model.size() - 1).id;
-                    for (int i = 0; i < Days_Model.size(); i++) {
-                        Days_Model.get(i).color = 0;
-                    }
-                    Days_Model.get(Days_Model.size() - 1).color = 1;
 
-                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
-                        @Override
-                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
-                            return o1.Date.compareTo(o2.Date);
-                        }
-                    });
 
-                    days_adapter.notifyDataSetChanged();
-                    CheckHintText();
-                    if (Days_Model.size() > 1) {
-                        days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
-                    }
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                        int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                        int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                        taskModels_delete.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                    Task_Model.clear();
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                            int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
-                                            int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"),queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                                    queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
-                                                    ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                    }
+
+
+                                    delete_collection = 0;
+                                    delete_collection(Days_Model.get(position).id);
+                                    FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(calendar_activity.this, "Deleted", Toast.LENGTH_SHORT).show();
                                         }
-                                        Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(calendar_activity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    Days_Model.remove(position);
+                                    days_adapter.notifyItemRemoved(position);
+                                    CheckHintText();
+                                    SetCurrentActivityView();
+                                    Task_Model.clear();
+                                    tasks_adapter.notifyDataSetChanged();
+                                    CheckHintTasksText();
+
+                                    if (Days_Model.size() > 1) {
+                                        id = Days_Model.get(Days_Model.size() - 1).id;
+                                        for (int i = 0; i < Days_Model.size(); i++) {
+                                            int NumDate = GetInt(Days_Model.get(i).Date);
+
+                                            if (NumDate < currentDateNum) {
+
+                                                Days_Model.get(i).color = 2;
+
+                                            } else {
+
+                                                Days_Model.get(i).color = 0;
+
+                                            }
+                                        }
+
+
+                                        days_adapter.notifyDataSetChanged();
+
+                                        Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                                             @Override
-                                            public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
-                                                return o1.time_start.compareTo(o2.time_start);
+                                            public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                                return o1.Date.compareTo(o2.Date);
                                             }
                                         });
-                                        tasks_adapter.notifyDataSetChanged();
+
+                                        days_adapter.notifyDataSetChanged();
                                         CheckHintText();
-                                        progressBar.setVisibility(View.GONE);
+                                        if (Days_Model.size() > 1) {
+                                            days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(Days_Model.size() - 1)));
+                                        }
+
+                                        id = Days_Model.get(Days_Model.size() - 1).id;
+                                        Days_Model.get(Days_Model.size() - 1).color = 1;
+
+                                        Task_Model.clear();
+                                        if (user != null) {
+                                            FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                                    .get()
+                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                                int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                                int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                                        ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                                            }
+                                                            Task_Model.sort(new Comparator<com.example.daybuddy.Task_Model>() {
+                                                                @Override
+                                                                public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                                    return o1.time_start.compareTo(o2.time_start);
+                                                                }
+                                                            });
+                                                            tasks_adapter.notifyDataSetChanged();
+                                                            CheckHintTasksText();
+                                                            progressBar.setVisibility(View.GONE);
+                                                        }
+                                                    });
+                                        }
                                     }
-                                });
-                    }
+
+
+
+
+
+                                }
+                            });
                 }
+
+
+
+
+
+
+
 
 
             }
         });
         DatePicker.show(getSupportFragmentManager(), "tag");
 
+
+    }
+
+    int delete_collection = 0;
+
+    public void delete_collection(String idd){
+        if (!taskModels_delete.isEmpty()) {
+            FirebaseFirestore.getInstance().collection("daysModel").document(idd).collection("taskMmodels")
+                    .document(taskModels_delete.get(delete_collection).DocID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            delete_collection(idd);
+                        }
+                    });
+        }
 
     }
 
@@ -990,6 +1082,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     }
+
+
+
 
 
     public void pickEndtime(View view) {
@@ -1111,15 +1206,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public void Add_Task_Final() {
         if (!Task_Model.isEmpty()) {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                 checkColor = 1;
-            }else if(GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                 if (Et_time_M < NowTime) {
                     checkColor = 1;
-                }else {
+                } else {
                     checkColor = 0;
                 }
-            }else {
+            } else {
                 checkColor = 0;
             }
             visibility = 1;
@@ -1153,15 +1248,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             progressBarTask.setVisibility(View.VISIBLE);
             handler.postDelayed(runnable, 2000);
         } else {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                 checkColor = 1;
-            }else if(GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                 if (Et_time_M < NowTime) {
                     checkColor = 1;
-                }else {
+                } else {
                     checkColor = 0;
                 }
-            }else {
+            } else {
                 checkColor = 0;
             }
             visibility = 0;
@@ -1282,6 +1377,23 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         St_time_M = Task_Model.get(position).st_time_M;
         Et_time_M = Task_Model.get(position).et_time_M;
+        checkColor = Task_Model.get(position).checkColor;
+        color = Task_Model.get(position).color;
+        visibility = Task_Model.get(position).visibility;
+        Task_text = Task_Model.get(position).task_text;
+        St_Time = Task_Model.get(position).time_start;
+        Et_Time = Task_Model.get(position).time_end;
+        latitude = Task_Model.get(position).latitude;
+        longitude = Task_Model.get(position).longitude;
+        address = Task_Model.get(position).location;
+
+        calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, Task_Model.get(position).st_time_M/60);
+        calendar.set(Calendar.MINUTE, Task_Model.get(position).st_time_M%60);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
 
         Position_BackUp = position;
 
@@ -1302,17 +1414,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
+                        if (Task_Model.size() > 1) {
 
-                        if (St_time_M >= Et_time_M) {
-                            Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
-                        } else if (!Task_Model.isEmpty()) {
-                            if (Task_Model.get(position - 1).et_time_M > St_time_M) {
+
+                            if (St_time_M >= Et_time_M) {
                                 Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                            } else if (!Task_Model.isEmpty()) {
+                                if (Task_Model.get(position - 1).et_time_M > St_time_M) {
+                                    Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
 
+                                } else {
+                                    Change_Task_Final();
+                                }
                             } else {
                                 Change_Task_Final();
                             }
-                        } else {
+                        }else {
                             Change_Task_Final();
                         }
 
@@ -1336,7 +1453,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             }
                         });
                         if (position == 0) {
-                            if (Task_Model.size()>1) {
+                            if (Task_Model.size() > 1) {
                                 Task_Model.get(position + 1).visibility = 0;
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -1357,7 +1474,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     hashMap.put("CheckColor", checkColor);
                                     hashMap.put("Visibility", Task_Model.get(position + 1).visibility);
                                     hashMap.put("userId", user.getUid());
-                                    db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position+1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position + 1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -1377,9 +1494,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             CheckHintTasksText();
                             SetCurrentActivityView();
 
-                        }else if (Task_Model.size()-1 > position) {
-                            if (Task_Model.size()>1) {
-                                LatLng origin = new LatLng(Task_Model.get(position -1).latitude, Task_Model.get(position - 1).longitude);
+                        } else if (Task_Model.size() - 1 > position) {
+                            if (Task_Model.size() > 1) {
+                                LatLng origin = new LatLng(Task_Model.get(position - 1).latitude, Task_Model.get(position - 1).longitude);
                                 LatLng destination = new LatLng(Task_Model.get(position + 1).latitude, Task_Model.get(position + 1).longitude);
                                 DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
                                 travelTime.execute();
@@ -1393,7 +1510,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         int Duration = getTime(ArriveDuration);
                                         Toast.makeText(calendar_activity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
                                         if (Task_Model.get(position + 1).st_time_M - Task_Model.get(position - 1).et_time_M > Duration) {
-                                            Task_Model.get(position+1).color = 0;
+                                            Task_Model.get(position + 1).color = 0;
                                             Add_Task_To_Model();
                                             Toast.makeText(calendar_activity.this, "You will be on Time", Toast.LENGTH_SHORT).show();
                                             progressBarTask.setVisibility(View.GONE);
@@ -1422,7 +1539,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                 hashMap.put("CheckColor", Task_Model.get(position + 1).checkColor);
                                                 hashMap.put("Visibility", Task_Model.get(position + 1).visibility);
                                                 hashMap.put("userId", user.getUid());
-                                                db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position+1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position + 1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
                                                         Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -1436,9 +1553,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             }
 
 
-
                                         } else {
-                                            Task_Model.get(position+1).color = 1;
+                                            Task_Model.get(position + 1).color = 1;
                                             Add_Task_To_Model();
                                             progressBarTask.setVisibility(View.GONE);
                                             Toast.makeText(calendar_activity.this, "You will be Late", Toast.LENGTH_SHORT).show();
@@ -1467,7 +1583,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                 hashMap.put("CheckColor", Task_Model.get(position + 1).checkColor);
                                                 hashMap.put("Visibility", Task_Model.get(position + 1).visibility);
                                                 hashMap.put("userId", user.getUid());
-                                                db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position+1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position + 1).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
                                                         Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -1481,7 +1597,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             }
 
 
-
                                         }
                                     }
                                 };
@@ -1489,10 +1604,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 handler.postDelayed(runnable, 2000);
 
 
-
-
                             }
-                        }else {
+                        } else {
                             Task_Model.remove(position);
                             tasks_adapter.notifyItemRemoved(position);
                             CheckHintTasksText();
@@ -1505,7 +1618,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     }
 
-    public int getTime(String time){
+    public int getTime(String time) {
         String timeStr = time;
 
         // Split the string by spaces and extract hours and minutes
@@ -1560,64 +1673,79 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         String idNew = UUID.randomUUID().toString();
 
 
-        Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-        SetAlarm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("day_ow", Day_OW);
-            hashMap.put("Task_text", Task_text);
-            hashMap.put("ST_Time", St_Time);
-            hashMap.put("ET_Time", Et_Time);
-            hashMap.put("ET_time_M", Et_time_M);
-            hashMap.put("ST_time_M", St_time_M);
-            hashMap.put("address", address);
-            hashMap.put("latitude", latitude);
-            hashMap.put("longitude", longitude);
-            hashMap.put("DocID", idNew);
-            hashMap.put("Color", color);
-            hashMap.put("CheckColor", checkColor);
-            hashMap.put("Visibility", visibility);
-            hashMap.put("userId", user.getUid());
-            db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+                Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                SetAlarm();
 
-            //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
-        }
-        tasks_adapter.notifyDataSetChanged();
-        CheckHintTasksText();
-        tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-        SetCurrentActivityView();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("day_ow", Day_OW);
+                    hashMap.put("Task_text", Task_text);
+                    hashMap.put("ST_Time", St_Time);
+                    hashMap.put("ET_Time", Et_Time);
+                    hashMap.put("ET_time_M", Et_time_M);
+                    hashMap.put("ST_time_M", St_time_M);
+                    hashMap.put("address", address);
+                    hashMap.put("latitude", latitude);
+                    hashMap.put("longitude", longitude);
+                    hashMap.put("DocID", idNew);
+                    hashMap.put("Color", color);
+                    hashMap.put("CheckColor", checkColor);
+                    hashMap.put("Visibility", visibility);
+                    hashMap.put("userId", user.getUid());
+                    db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                }
+                tasks_adapter.notifyDataSetChanged();
+                CheckHintTasksText();
+                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                SetCurrentActivityView();
+
+
+
+            }
+        });
+
+
+
+
+
 
 
     }
 
 
     public void Change_Task_Final() {
-        if (!Task_Model.isEmpty()) {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+        if (Task_Model.size() > 1) {
+            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                 checkColor = 1;
-            }else if(GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                 if (Et_time_M < NowTime) {
                     checkColor = 1;
-                }else {
+                } else {
                     checkColor = 0;
                 }
-            }else {
+            } else {
                 checkColor = 0;
             }
             visibility = 1;
+
             LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
             calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode);
@@ -1652,18 +1780,21 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             progressBar.setVisibility(View.VISIBLE);
             handler.postDelayed(runnable, 2000);
         } else {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum){
+            visibility = 0;
+            Change_Task_In_Model();
+            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
                 checkColor = 1;
-            }else {
+            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
                 if (Et_time_M < NowTime) {
                     checkColor = 1;
                 } else {
                     checkColor = 0;
                 }
+            } else {
+                checkColor = 0;
             }
 
-            visibility = 0;
-            Add_Task_To_Model();
+
         }
 
     }

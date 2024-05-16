@@ -108,18 +108,19 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/NN_Gray"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/mic"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <ImageButton
-                android:id="@+id/attach_photo_button"
+                android:id="@+id/mic"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:padding = "5dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/add_photo"
+                android:background="@drawable/mic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
