@@ -903,13 +903,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     Days_Model.get(i).color = 0;
                 }
             }
-
-            int NumDate = GetInt(Days_Model.get(i).Date);
-
-            if (NumDate < currentDateNum) {
-
-                Days_Model.get(i).color = 2;
-            }
             Days_Model.get(position).color = 1;
 
             days_adapter.notifyDataSetChanged();
@@ -2200,6 +2193,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     public void onItemClickedMonth(int position) {
 
         if (monthViewAreUp) {
+            Task_Model.clear();
 
             NowMonth = position + 1;
             Month_TV.setText( Month_Model.get(position).Month);
