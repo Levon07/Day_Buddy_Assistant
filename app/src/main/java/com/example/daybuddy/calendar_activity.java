@@ -2195,6 +2195,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         if (monthViewAreUp) {
             Task_Model.clear();
             tasks_adapter.notifyDataSetChanged();
+            CheckHintTasksText();
 
             NowMonth = position + 1;
             Month_TV.setText( Month_Model.get(position).Month);
