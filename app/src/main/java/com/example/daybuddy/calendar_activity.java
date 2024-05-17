@@ -95,7 +95,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks {
+public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks, RV_Interface_Months {
 
     int NowTime;
 
@@ -109,6 +109,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     TextView HintText;
 
     ArrayList<TaskModelArr> Task_Model_Arr = new ArrayList<>();
+    ArrayList<Month_Model> Month_Model = new ArrayList<>();
+    Months_Adapter month_adapter = new Months_Adapter(this, Month_Model, this);
 
     private static final String TAG = "LOCATION_PICKER_TAG";
 
@@ -118,6 +120,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     ArrayList<Days_Model> Days_Model = new ArrayList<>();
+    ArrayList<Days_Model> Days_ModelY = new ArrayList<>();
+    ArrayList<Days_Model> Days_ModelALL = new ArrayList<>();
 
 
     String Date;
@@ -171,6 +175,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int Et_time_M = 0;
     String Task_text = "Task";
     TextView taskCompleted;
+    int Month;
 
     RecyclerView tasks_recyclerview;
 
@@ -200,18 +205,27 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     LocalDate currentDate;
     String formattedDate;
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+    int Year;
+    TextView Month_TV;
 
     TextView TextTaskText;
 
     ConstraintLayout liveUpdate;
     ConstraintLayout AI;
+    RecyclerView Months_RV;
+
+    String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+    ConstraintLayout Month_lay;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main_activity);
+
+
+        Month_lay = findViewById(R.id.Month_RV_Layout);
         AI = findViewById(R.id.AI);
         arrow = findViewById(R.id.arrow);
         progressBar = findViewById(R.id.progressBar);
@@ -222,18 +236,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         taskCompleted = findViewById(R.id.taskCompleted);
         pendingTaskCount = findViewById(R.id.pendingTasksCount);
         liveUpdate = findViewById(R.id.liveUpdate);
+        Month_TV = findViewById(R.id.Month_TV);
+
+        Download();
+
+        for (String month : Months) {
+            Month_Model.add(new Month_Model(month));
+        }
 
         TextTaskText = findViewById(R.id.TaskText);
 
 
         Time1 = findViewById(R.id.Time_1);
         Date_Today = findViewById(R.id.Date_Today);
-
-
-        if (extras1 != null) {
-            position = extras1.getInt("Position");
-            Task_Model_Arr.get(position).TaskModel = (ArrayList<com.example.daybuddy.Task_Model>) extras1.get("TaskModelArr");
-        }
 
 
         Bundle extras = getIntent().getExtras();
@@ -246,6 +261,49 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         HintText.setVisibility(View.GONE);
 
 
+        days_recyclerview = findViewById(R.id.RV_Days);
+
+
+        days_recyclerview.setAdapter(days_adapter);
+
+        Months_RV = findViewById(R.id.Month_RV);
+
+        Months_RV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        Months_RV.setAdapter(month_adapter);
+
+
+        //days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+
+        tasks_recyclerview = findViewById(R.id.RV_Tasks);
+
+        tasks_adapter.notifyDataSetChanged();
+
+
+        tasks_recyclerview.setAdapter(tasks_adapter);
+        tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+
+        CheckHintTasksText();
+
+
+    }
+
+
+    int NowYear;
+    int NowMonth;
+
+    public void Download() {
+
+
+
+
+        NowYear = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date()));
+        NowMonth = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date()));
+
+
+        Month_TV.setText(Months[NowMonth - 1]);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             FirebaseFirestore.getInstance().collection("daysModel").whereEqualTo("userId", user.getUid())
@@ -254,8 +312,35 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                Days_Model.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
+                                Days_ModelALL.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Year", int.class), queryDocumentSnapshot.get("Month", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
+
                             }
+
+
+                            Days_ModelY.clear();
+                            for (Days_Model daysModelALL : Days_ModelALL) {
+
+                                if (daysModelALL.Year == NowYear) {
+                                    Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                                }
+                            }
+
+
+                            Days_Model.clear();
+                            for (Days_Model daysModel : Days_ModelY) {
+
+                                if (daysModel.Month == NowMonth) {
+                                    Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                                }
+                            }
+
+                            for (int zz = 0; zz < Months.length; zz++) {
+                                if ((zz + 1) == NowMonth) {
+                                    Months_RV.scrollToPosition(zz);
+                                    Months_RV.suppressLayout(true);
+                                }
+                            }
+
 
                             Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                                 @Override
@@ -330,30 +415,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 progressBarTask.setVisibility(View.GONE);
 
                             }
+
+
                         }
+
                     });
         }
-
-
-        days_recyclerview = findViewById(R.id.RV_Days);
-
-
-        days_recyclerview.setAdapter(days_adapter);
-
-
-        //days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
-
-
-        tasks_recyclerview = findViewById(R.id.RV_Tasks);
-
-        tasks_adapter.notifyDataSetChanged();
-
-
-        tasks_recyclerview.setAdapter(tasks_adapter);
-        tasks_recyclerview.setLayoutManager(new LinearLayoutManager(this));
-
-
-        CheckHintTasksText();
 
 
     }
@@ -371,10 +438,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     public void SetCheckedPendingView() {
-        if (!Days_Model.isEmpty()) {
+        if (!Days_ModelALL.isEmpty()) {
 
-            id1 = Days_Model.get(i).id;
-            dateNum = GetInt(Days_Model.get(i).Date);
+            id1 = Days_ModelALL.get(i).id;
+            dateNum = GetInt(Days_ModelALL.get(i).Date);
 
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -409,7 +476,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         }
                                     }
                                 }
-                                if (i < Days_Model.size() - 1) {
+                                if (i < Days_ModelALL.size() - 1) {
                                     i++;
                                     SetCheckedPendingView();
                                 } else {
@@ -445,21 +512,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         i = 0;
 
 
-        for (int i = 0; i < Days_Model.size(); i++) {
+        for (int i = 0; i < Days_ModelALL.size(); i++) {
 
-            int NumDate = GetInt(Days_Model.get(i).Date);
+            int NumDate = GetInt(Days_ModelALL.get(i).Date);
 
             if (NumDate < currentDateNum) {
 
-                Days_Model.get(i).color = 2;
+                Days_ModelALL.get(i).color = 2;
+
             }
 
 
-            if (Objects.equals(Days_Model.get(i).Date, Datedate)) {
+            if (Objects.equals(Days_ModelALL.get(i).Date, Datedate)) {
                 Date_Today.setText(Datedate);
 
 
-                String id = Days_Model.get(i).id;
+                String id = Days_ModelALL.get(i).id;
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -537,7 +605,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
     public void CheckTutorial() {
-        if (Days_Model.isEmpty()) {
+        if (Days_ModelALL.isEmpty()) {
             View view = LayoutInflater.from(calendar_activity.this).inflate(R.layout.guide_text, null);
             AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
                     .setTitle("How To Use Day Buddy")
@@ -569,9 +637,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 calendar.set(Calendar.YEAR, date.getYear());
                 calendar.set(Calendar.DATE, date.getDate());
                 Date = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date(selection));
+                Year = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date(selection)));
+                Month = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date(selection)));
                 boolean flag = false;
-                for (int i = 0; i < Days_Model.size(); i++) {
-                    if (Days_Model.get(i).getDate().equals(Date)) {
+                for (int i = 0; i < Days_ModelALL.size(); i++) {
+                    if (Days_ModelALL.get(i).getDate().equals(Date)) {
                         flag = true;
                     }
 
@@ -579,7 +649,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("E", Locale.getDefault()).format(new Date(selection));
                     id = UUID.randomUUID().toString();
-                    Days_Model.add(new Days_Model(id, color_days, Date, Day_OW, calendar));
+                    Days_ModelALL.add(new Days_Model(id, color_days, Year, Month, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -589,6 +659,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         hashMap.put("Position", Days_Model.size() + 1);
                         hashMap.put("Color", color_days);
                         hashMap.put("DocId", id);
+                        hashMap.put("Year", Year);
+                        hashMap.put("Month", Month);
                         hashMap.put("userId", user.getUid());
                         db.collection("daysModel").document(id).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -607,76 +679,153 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     }
 
 
-                    for (int i = 0; i < Days_Model.size(); i++) {
-                        int NumDate = GetInt(Days_Model.get(i).Date);
+                    for (int i = 0; i < Days_ModelALL.size(); i++) {
+                        int NumDate = GetInt(Days_ModelALL.get(i).Date);
 
                         if (NumDate < currentDateNum) {
 
-                            Days_Model.get(i).color = 2;
+                            Days_ModelALL.get(i).color = 2;
 
                         } else {
 
-                            Days_Model.get(i).color = 0;
+                            Days_ModelALL.get(i).color = 0;
 
                         }
                     }
 
-                    Days_Model.get(Days_Model.size() - 1).color = 1;
-                    idCopy = id;
+                    Days_ModelY.clear();
+                    for (Days_Model daysModelALL : Days_ModelALL) {
 
-                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
-                        @Override
-                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
-                            return o1.Date.compareTo(o2.Date);
+                        if (daysModelALL.Year == NowYear) {
+                            Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
                         }
-                    });
+                    }
 
-                    days_adapter.notifyDataSetChanged();
+                    Days_Model.clear();
+                    for (Days_Model daysModel : Days_ModelY) {
 
-
-                    for (int i = 0; i < Days_Model.size(); i++) {
-
-                        if (Objects.equals(Days_Model.get(i).id, id)) {
-
-                            positionCopy = Days_Model.indexOf(Days_Model.get(i));
-
-                            days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
-
+                        if (daysModel.Month == NowMonth) {
+                            Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
                         }
                     }
 
 
-                    CheckHintText();
+                    if (!Days_Model.isEmpty()) {
 
 
-                    Task_Model.clear();
-                    if (user != null) {
-                        FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                                            int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
-                                            int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
-                                            Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
-                                                    queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
-                                                    ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
-                                        }
-                                        Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                        if (Objects.equals(Days_Model.get(Days_Model.size() - 1).id, id)) {
+                            Days_Model.get(Days_Model.size() - 1).color = 1;
+                            idCopy = id;
+                            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                    return o1.Date.compareTo(o2.Date);
+                                }
+                            });
+                            for (int i = 0; i < Days_Model.size(); i++) {
+
+                                if (Objects.equals(Days_Model.get(i).id, id)) {
+
+                                    positionCopy = Days_Model.indexOf(Days_Model.get(i));
+
+                                    days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
+
+                                }
+
+                            }
+
+                            CheckHintText();
+
+
+                            Task_Model.clear();
+                            if (user != null) {
+                                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                             @Override
-                                            public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
-                                                return o1.time_start.compareTo(o2.time_start);
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                                }
+                                                Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                                    @Override
+                                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                        return o1.time_start.compareTo(o2.time_start);
+                                                    }
+                                                });
+                                                tasks_adapter.notifyDataSetChanged();
+                                                CheckHintTasksText();
+                                                progressBarTask.setVisibility(View.GONE);
+
+                                                SetCurrentActivityView();
                                             }
                                         });
-                                        tasks_adapter.notifyDataSetChanged();
-                                        CheckHintTasksText();
-                                        progressBarTask.setVisibility(View.GONE);
+                            }
+                        } else {
 
-                                        SetCurrentActivityView();
-                                    }
-                                });
+                            Days_Model.get(Days_Model.size() - 1).color = 1;
+                            id = Days_Model.get(Days_Model.size() - 1).id;
+                            idCopy = Days_Model.get(Days_Model.size() - 1).id;
+                            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                    return o1.Date.compareTo(o2.Date);
+                                }
+                            });
+                            for (int i = 0; i < Days_Model.size(); i++) {
+
+                                if (Objects.equals(Days_Model.get(i).id, id)) {
+
+                                    positionCopy = Days_Model.indexOf(Days_Model.get(i));
+
+                                    days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
+
+                                }
+
+                            }
+
+                        }
+
+                        CheckHintText();
+
+
+                        Task_Model.clear();
+                        if (user != null) {
+                            FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                        queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                        ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                            }
+                                            Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                                @Override
+                                                public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                    return o1.time_start.compareTo(o2.time_start);
+                                                }
+                                            });
+                                            tasks_adapter.notifyDataSetChanged();
+                                            CheckHintTasksText();
+                                            progressBarTask.setVisibility(View.GONE);
+
+                                            SetCurrentActivityView();
+                                        }
+                                    });
+
+
+                        }
+
                     }
+                    CheckHintText();
 
 
                 } else {
@@ -810,8 +959,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
     }
 
+    String id2;
+    int positionDelete;
+
 
     ArrayList<Task_Model> taskModels_delete = new ArrayList<>();
+
     @Override
     public void onItemLongClick(int position) {
 
@@ -826,6 +979,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             @Override
             public void onPositiveButtonClick(Long selection) {
                 Date = new SimpleDateFormat("dd", Locale.getDefault()).format(new Date(selection));
+                Year = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date(selection)));
                 boolean flag = false;
                 for (int i = 0; i < Days_Model.size(); i++) {
                     if (Days_Model.get(i).getDate().equals(Date)) {
@@ -835,7 +989,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("EE", Locale.getDefault()).format(new Date(selection));
-                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, color_days, Date, Day_OW, calendar));
+                    Days_Model.set(position, new Days_Model(Days_Model.get(position).id, color_days, Year, Month, Date, Day_OW, calendar));
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
@@ -845,6 +999,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         hashMap.put("day_ow", Day_OW);
                         hashMap.put("Position", position);
                         hashMap.put("Color", color_days);
+                        hashMap.put("Year", Year);
+                        hashMap.put("Month", Month);
                         hashMap.put("DocId", Days_Model.get(position).id);
                         hashMap.put("calendar", Days_Model.get(position).calendar);
                         hashMap.put("userId", user.getUid());
@@ -868,18 +1024,119 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     }
 
 
-                    Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
-                        @Override
-                        public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
-                            return o1.Date.compareTo(o2.Date);
+                    for (int i = 0; i < Days_ModelALL.size(); i++) {
+                        int NumDate = GetInt(Days_ModelALL.get(i).Date);
+
+                        if (NumDate < currentDateNum) {
+
+                            Days_ModelALL.get(i).color = 2;
+
+                        } else {
+
+                            Days_ModelALL.get(i).color = 0;
+
                         }
-                    });
+                    }
+
+                    Days_ModelY.clear();
+                    for (Days_Model daysModelALL : Days_ModelALL) {
+
+                        if (daysModelALL.Year == NowYear) {
+                            Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                        }
+                    }
+
+                    Days_Model.clear();
+                    for (Days_Model daysModel : Days_ModelY) {
+
+                        if (daysModel.Month == NowMonth) {
+                            Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                        }
+                    }
 
 
-                    days_adapter.notifyDataSetChanged();
-                    CheckHintText();
-                    days_recyclerview.smoothScrollToPosition(position);
-                    SetCurrentActivityView();
+                    if (!Days_Model.isEmpty()) {
+
+
+                        if (Objects.equals(Days_Model.get(Days_Model.size() - 1).id, id)) {
+                            Days_Model.get(Days_Model.size() - 1).color = 1;
+                            idCopy = id;
+                            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                    return o1.Date.compareTo(o2.Date);
+                                }
+                            });
+                            for (int i = 0; i < Days_Model.size(); i++) {
+
+                                if (Objects.equals(Days_Model.get(i).id, id)) {
+
+                                    positionCopy = Days_Model.indexOf(Days_Model.get(i));
+
+                                    days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
+
+                                }
+
+                            }
+
+                            CheckHintText();
+
+
+                            Task_Model.clear();
+                            if (user != null) {
+                                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+                                                }
+                                                Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                                    @Override
+                                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                                        return o1.time_start.compareTo(o2.time_start);
+                                                    }
+                                                });
+                                                tasks_adapter.notifyDataSetChanged();
+                                                CheckHintTasksText();
+                                                progressBarTask.setVisibility(View.GONE);
+
+                                                SetCurrentActivityView();
+                                            }
+                                        });
+                            }
+                        } else {
+
+                            Days_Model.get(Days_Model.size() - 1).color = 1;
+                            id = Days_Model.get(Days_Model.size() - 1).id;
+                            idCopy = Days_Model.get(Days_Model.size() - 1).id;
+                            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                                @Override
+                                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                                    return o1.Date.compareTo(o2.Date);
+                                }
+                            });
+                            for (int i = 0; i < Days_Model.size(); i++) {
+
+                                if (Objects.equals(Days_Model.get(i).id, id)) {
+
+                                    positionCopy = Days_Model.indexOf(Days_Model.get(i));
+
+                                    days_recyclerview.smoothScrollToPosition(Days_Model.indexOf(Days_Model.get(i)));
+
+                                }
+
+                            }
+
+                        }
+
+                        CheckHintText();
+                    }
 
 
                 } else {
@@ -892,12 +1149,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             @Override
             public void onClick(View view) {
 
-
+                for (int zz = 0; zz < Days_ModelALL.size(); zz++) {
+                    if (Objects.equals(Days_ModelALL.get(zz).id, Days_Model.get(position).id)) {
+                        id2 = Days_Model.get(position).id;
+                        positionDelete = zz;
+                        break;
+                    }
+                }
 
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                    FirebaseFirestore.getInstance().collection("daysModel").document(id2).collection("taskModels").whereEqualTo("userId", user.getUid())
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
@@ -914,8 +1177,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
                                     delete_collection = 0;
-                                    delete_collection(Days_Model.get(position).id);
-                                    FirebaseFirestore.getInstance().collection("daysModel").document(Days_Model.get(position).id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    delete_collection(id2);
+                                    FirebaseFirestore.getInstance().collection("daysModel").document(id2).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Toast.makeText(calendar_activity.this, "Deleted", Toast.LENGTH_SHORT).show();
@@ -927,6 +1190,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         }
                                     });
                                     Days_Model.remove(position);
+                                    Days_ModelALL.remove(positionDelete);
                                     days_adapter.notifyItemRemoved(position);
                                     CheckHintText();
                                     SetCurrentActivityView();
@@ -998,19 +1262,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     }
 
 
-
-
-
                                 }
                             });
                 }
-
-
-
-
-
-
-
 
 
             }
@@ -1022,7 +1276,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     int delete_collection = 0;
 
-    public void delete_collection(String idd){
+    public void delete_collection(String idd) {
         if (!taskModels_delete.isEmpty()) {
             FirebaseFirestore.getInstance().collection("daysModel").document(idd).collection("taskMmodels")
                     .document(taskModels_delete.get(delete_collection).DocID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -1082,9 +1336,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     }
-
-
-
 
 
     public void pickEndtime(View view) {
@@ -1389,8 +1640,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.HOUR_OF_DAY, Task_Model.get(position).st_time_M/60);
-        calendar.set(Calendar.MINUTE, Task_Model.get(position).st_time_M%60);
+        calendar.set(Calendar.HOUR_OF_DAY, Task_Model.get(position).st_time_M / 60);
+        calendar.set(Calendar.MINUTE, Task_Model.get(position).st_time_M % 60);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -1429,7 +1680,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             } else {
                                 Change_Task_Final();
                             }
-                        }else {
+                        } else {
                             Change_Task_Final();
                         }
 
@@ -1718,14 +1969,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 SetCurrentActivityView();
 
 
-
             }
         });
-
-
-
-
-
 
 
     }
@@ -1828,8 +2073,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     public void moveUp(View view) {
 
 
-        int oldHeight = 550;
-        int newHeight = 1310;
+        int oldHeight = 350;
+        int newHeight = 1210;
 
         int oldHeightL = 510;
         int newHeightL = 0;
@@ -1948,6 +2193,230 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             rotateAnimator.setDuration(500); // Duration in milliseconds (1 second in this example)
             rotateAnimator.start();
         }
+
+    }
+
+    @Override
+    public void onItemClickedMonth(int position) {
+
+        if (monthViewAreUp) {
+
+            NowMonth = position + 1;
+            Month_TV.setText( Month_Model.get(position).Month);
+
+
+            Days_ModelY.clear();
+            for (Days_Model daysModelALL : Days_ModelALL) {
+
+                if (daysModelALL.Year == NowYear) {
+                    Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                }
+            }
+
+
+            Days_Model.clear();
+            for (Days_Model daysModel : Days_ModelY) {
+
+                if (daysModel.Month == NowMonth) {
+                    Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                }
+            }
+
+            for (int zz = 0; zz < Months.length; zz++) {
+                if ((zz + 1) == NowMonth) {
+                    Months_RV.scrollToPosition(zz);
+                    Months_RV.suppressLayout(true);
+                }
+            }
+
+
+            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                @Override
+                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                    return o1.Date.compareTo(o2.Date);
+                }
+            });
+            days_adapter.notifyDataSetChanged();
+            CheckHintText();
+            progressBar.setVisibility(View.GONE);
+            CheckTutorial();
+            if (!Days_Model.isEmpty()) {
+                idCopy = Days_Model.get(0).id;
+            }
+
+
+            /////////////////////
+
+            SetCurrentActivityView();
+
+
+            ///////////////////////////////////
+
+
+            if (!Days_Model.isEmpty()) {
+                id = Days_Model.get(0).id;
+                Days_Model.get(0).color = 1;
+                days_adapter.notifyDataSetChanged();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+                                        } else {
+                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+                                        }
+                                    } else {
+                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+                                    }
+                                }
+                                Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                    @Override
+                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                        return o1.time_start.compareTo(o2.time_start);
+                                    }
+                                });
+                                tasks_adapter.notifyDataSetChanged();
+                                CheckHintTasksText();
+                                progressBarTask.setVisibility(View.GONE);
+
+
+                            }
+                        });
+
+
+                ////////////////////////////
+            } else {
+                progressBarTask.setVisibility(View.GONE);
+
+            }
+
+
+            monthViewAreUp = false;
+            Months_RV.scrollToPosition(position);
+            int newHeight = 600;
+            int oldHeight = 115;
+
+            ValueAnimator animator = ValueAnimator.ofInt(newHeight, oldHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = Month_lay.getLayoutParams();
+                    layoutParams.height = value;
+                    Month_lay.setLayoutParams(layoutParams);
+                    Months_RV.suppressLayout(true);
+
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+            Months_RV.setClickable(false);
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Months_RV.setVisibility(View.INVISIBLE);
+                    Month_TV.setVisibility(View.VISIBLE);
+                }
+            };
+
+            handler.postDelayed(runnable, 500);
+
+
+
+
+            Toast.makeText(this, Month_Model.get(position).Month, Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onItemLongClickMonth(int position) {
+
+    }
+
+
+    boolean monthViewAreUp = false;
+
+    public void Open_Month(View view) {
+
+        int newHeight = 600;
+        int oldHeight = 115;
+
+
+        if (!monthViewAreUp) {
+            monthViewAreUp = true;
+            Months_RV.setClickable(true);
+            Months_RV.setVisibility(View.VISIBLE);
+            Month_TV.setVisibility(View.INVISIBLE);
+
+
+            ValueAnimator animator = ValueAnimator.ofInt(oldHeight, newHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = Month_lay.getLayoutParams();
+                    layoutParams.height = value;
+                    Month_lay.setLayoutParams(layoutParams);
+                    Months_RV.suppressLayout(false);
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+
+
+        } else {
+
+
+            monthViewAreUp = false;
+            Months_RV.setClickable(false);
+
+
+            ValueAnimator animator = ValueAnimator.ofInt(newHeight, oldHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = Month_lay.getLayoutParams();
+                    layoutParams.height = value;
+                    Month_lay.setLayoutParams(layoutParams);
+                    Months_RV.suppressLayout(true);
+
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Months_RV.setVisibility(View.INVISIBLE);
+                    Month_TV.setVisibility(View.VISIBLE);
+                }
+            };
+
+            handler.postDelayed(runnable, 500);
+
+
+
+        }
+
 
     }
 

@@ -42,13 +42,13 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/bear_pfp"
+            android:onClick="signOut"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:strokeColor="@color/blue"
-            app:strokeWidth="1dp"
-            android:onClick="signOut"/>
+            app:strokeWidth="1dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -62,8 +62,8 @@
         android:layout_marginVertical="12dp"
         android:background="@drawable/rect_shape_asisstant"
         android:onClick="ChatGPT"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/liveUpdate"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topPanel">
@@ -105,6 +105,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
+
+
+
     <TextView
         android:id="@+id/HintText"
         android:layout_width="match_parent"
@@ -113,9 +118,11 @@
         android:textAlignment="center"
         android:textColor="@color/NN_Gray"
         android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/RV_Days"
-        app:layout_constraintEnd_toEndOf="@id/RV_Days"
-        app:layout_constraintStart_toStartOf="@id/RV_Days" />
+        app:layout_constraintBottom_toBottomOf="@id/RV_Days"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -160,7 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="5dp"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
+        app:layout_constraintBottom_toTopOf="@id/YM"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -261,8 +268,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/rectangle_3"
             app:layout_constraintBottom_toTopOf="@id/pendingTasks"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
+            app:layout_constraintEnd_toEndOf="parent">
 
 
             <TextView
@@ -318,8 +324,7 @@
             android:layout_marginBottom="5dp"
             android:background="@drawable/rectangle_3_red"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/CurrentActivity">
+            app:layout_constraintEnd_toEndOf="parent">
 
 
             <TextView
@@ -374,13 +379,13 @@
         android:id="@+id/RV_Days"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="15dp"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/up_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/liveUpdate"/>
+        app:layout_constraintTop_toBottomOf="@id/YM" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -399,11 +404,11 @@
 
         <ImageView
             android:id="@+id/arrow"
-            android:layout_margin="2dp"
             android:layout_width="21.2dp"
             android:layout_height="12dp"
-            android:rotation="180"
+            android:layout_margin="2dp"
             android:background="@drawable/arrow"
+            android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -413,13 +418,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Tasks"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_marginHorizontal="15dp"
         app:layout_constraintBottom_toTopOf="@+id/newDay"
         app:layout_constraintEnd_toEndOf="parent"
@@ -502,6 +504,96 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@id/plus_task"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/YM"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/liveUpdate"
+        app:layout_constraintBottom_toTopOf="@id/RV_Days"
+        app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
+        android:background="@drawable/rect_year">
+
+
+        <TextView
+            android:id="@+id/Year_Text"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Month_RV_Layout"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/rect_year"
+        app:layout_constraintBottom_toBottomOf="@id/YM"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/YM"
+        app:layout_constraintTop_toTopOf="@id/YM"
+
+        app:layout_constraintVertical_bias="0.5">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="invisible"
+            android:id="@+id/Month_RV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="2dp"
+            android:clickable="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/Arrows"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/Month_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/NN_White"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageView
+            android:id="@+id/Arrows"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:onClick="Open_Month"
+            android:paddingEnd="7dp"
+            android:src="@drawable/arrows"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/Month_RV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
