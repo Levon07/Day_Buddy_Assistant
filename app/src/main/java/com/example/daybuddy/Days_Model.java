@@ -51,4 +51,8 @@ public class Days_Model {
     public int getYear() {
         return Year;
     }
+
+    public int getMonth() {
+        return Month;
+    }
 }

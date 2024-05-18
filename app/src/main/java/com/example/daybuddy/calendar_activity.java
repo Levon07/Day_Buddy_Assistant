@@ -221,8 +221,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     int[] years = {1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,
             2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057, 2058, 2059, 2060
-        , 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112,
-         2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2128, 2129, 2130, 2131};
+            , 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112,
+            2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2128, 2129, 2130, 2131};
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
     ConstraintLayout Month_lay;
     ConstraintLayout YM;
@@ -230,11 +230,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ImageView yarrows;
 
 
+    int NowYearNOW, NowMonthNOW;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+
+        NowYearNOW = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date()));
+        NowMonthNOW = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date()));
 
         yarrows = findViewById(R.id.YArrows);
         Year_TV = findViewById(R.id.Year_TV);
@@ -320,8 +326,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     public void Download() {
 
 
-
-
         NowYear = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date()));
         NowMonth = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date()));
 
@@ -339,8 +343,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 Days_ModelALL.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Year", int.class), queryDocumentSnapshot.get("Month", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
 
                             }
-
-
 
 
                             Days_ModelY.clear();
@@ -364,6 +366,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 if ((zz + 1) == NowMonth) {
                                     Months_RV.scrollToPosition(zz);
                                     Months_RV.suppressLayout(true);
+                                    Years_RV.suppressLayout(true);
                                 }
                             }
 
@@ -542,7 +545,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
             int NumDate = GetInt(Days_ModelALL.get(i).Date);
 
-            if (NumDate < currentDateNum) {
+
+            int NumYear = Days_ModelALL.get(i).Year;
+            int NumMonth = Days_ModelALL.get(i).Month;
+
+
+            if (NumDate < currentDateNum && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
 
                 Days_ModelALL.get(i).color = 2;
 
@@ -662,13 +670,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 calendar.set(Calendar.MONTH, date.getMonth());
                 calendar.set(Calendar.YEAR, date.getYear());
                 calendar.set(Calendar.DATE, date.getDate());
-                Date = new SimpleDateFormat("MMM dd", Locale.getDefault()).format(new Date(selection));
+                Date = new SimpleDateFormat("dd", Locale.getDefault()).format(new Date(selection));
                 Year = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date(selection)));
                 Month = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date(selection)));
                 boolean flag = false;
                 for (int i = 0; i < Days_ModelALL.size(); i++) {
-                    if (Days_ModelALL.get(i).getDate().equals(Date)) {
-                        flag = true;
+                    if (Days_ModelALL.get(i).getYear() == Year) {
+                        if (Days_ModelALL.get(i).getMonth() == Month) {
+                            if (Days_ModelALL.get(i).getDate().equals(Date)) {
+                                flag = true;
+                            }
+                        }
                     }
 
                 }
@@ -707,8 +719,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                     for (int i = 0; i < Days_ModelALL.size(); i++) {
                         int NumDate = GetInt(Days_ModelALL.get(i).Date);
+                        int NumYear = Days_ModelALL.get(i).Year;
+                        int NumMonth = Days_ModelALL.get(i).Month;
 
-                        if (NumDate < currentDateNum) {
+
+                        if (NumDate < currentDateNum && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
 
                             Days_ModelALL.get(i).color = 2;
 
@@ -919,16 +934,47 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             startActivity(intent);
 
         } else {
-            for (int i = 0; i < Days_Model.size(); i++) {
-                int NumDate = GetInt(Days_Model.get(i).Date);
+            for (int i = 0; i < Days_ModelALL.size(); i++) {
+                int NumDate = GetInt(Days_ModelALL.get(i).Date);
+                int NumYear = Days_ModelALL.get(i).Year;
+                int NumMonth = Days_ModelALL.get(i).Month;
 
-                if (NumDate < currentDateNum) {
 
-                    Days_Model.get(i).color = 2;
+                if (NumDate < currentDateNum && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
+
+                    Days_ModelALL.get(i).color = 2;
+
                 } else {
-                    Days_Model.get(i).color = 0;
+
+                    Days_ModelALL.get(i).color = 0;
+
                 }
             }
+            Days_ModelY.clear();
+            for (Days_Model daysModelALL : Days_ModelALL) {
+
+                if (daysModelALL.Year == NowYear) {
+                    Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                }
+            }
+
+
+            Days_Model.clear();
+            for (Days_Model daysModel : Days_ModelY) {
+
+                if (daysModel.Month == NowMonth) {
+                    Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                }
+            }
+
+            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                @Override
+                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                    return o1.Date.compareTo(o2.Date);
+                }
+            });
+
+
             Days_Model.get(position).color = 1;
 
             days_adapter.notifyDataSetChanged();
@@ -1045,8 +1091,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                     for (int i = 0; i < Days_ModelALL.size(); i++) {
                         int NumDate = GetInt(Days_ModelALL.get(i).Date);
+                        int NumYear = Days_ModelALL.get(i).Year;
+                        int NumMonth = Days_ModelALL.get(i).Month;
 
-                        if (NumDate < currentDateNum) {
+
+                        if (NumDate < currentDateNum && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
 
                             Days_ModelALL.get(i).color = 2;
 
@@ -1056,7 +1105,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                         }
                     }
-
                     Days_ModelY.clear();
                     for (Days_Model daysModelALL : Days_ModelALL) {
 
@@ -1219,16 +1267,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                                     if (Days_Model.size() > 1) {
                                         id = Days_Model.get(Days_Model.size() - 1).id;
-                                        for (int i = 0; i < Days_Model.size(); i++) {
-                                            int NumDate = GetInt(Days_Model.get(i).Date);
+                                        for (int i = 0; i < Days_ModelALL.size(); i++) {
+                                            int NumDate = GetInt(Days_ModelALL.get(i).Date);
+                                            int NumYear = Days_ModelALL.get(i).Year;
+                                            int NumMonth = Days_ModelALL.get(i).Month;
 
-                                            if (NumDate < currentDateNum) {
 
-                                                Days_Model.get(i).color = 2;
+                                            if (NumDate < currentDateNum && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
+
+                                                Days_ModelALL.get(i).color = 2;
 
                                             } else {
 
-                                                Days_Model.get(i).color = 0;
+                                                Days_ModelALL.get(i).color = 0;
 
                                             }
                                         }
@@ -1490,7 +1541,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             visibility = 1;
             LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode);
+            long departureTime = System.currentTimeMillis() / 1000;
+            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode, departureTime);
             travelTime.execute();
 
 
@@ -1768,7 +1820,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             if (Task_Model.size() > 1) {
                                 LatLng origin = new LatLng(Task_Model.get(position - 1).latitude, Task_Model.get(position - 1).longitude);
                                 LatLng destination = new LatLng(Task_Model.get(position + 1).latitude, Task_Model.get(position + 1).longitude);
-                                DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
+                                long departureTime = System.currentTimeMillis() / 1000;
+                                DestinationTime travelTime = new DestinationTime(origin, destination, travelMode,departureTime);
                                 travelTime.execute();
 
 
@@ -2012,7 +2065,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
             LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode);
+            long departureTime = System.currentTimeMillis() / 1000;
+            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode,departureTime);
             travelTime.execute();
 
 
@@ -2224,7 +2278,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             CheckHintTasksText();
 
             NowMonth = position + 1;
-            Month_TV.setText( Month_Model.get(position).Month);
+            Month_TV.setText(Month_Model.get(position).Month);
 
 
             Days_ModelY.clear();
@@ -2359,8 +2413,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             handler.postDelayed(runnable, 500);
 
 
-
-
             Toast.makeText(this, Month_Model.get(position).Month, Toast.LENGTH_SHORT).show();
 
         }
@@ -2436,7 +2488,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             handler.postDelayed(runnable, 500);
 
 
-
         }
 
 
@@ -2444,6 +2495,146 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     @Override
     public void onItemClickedYear(int position) {
+
+
+        if (YearsViewAreUp) {
+            Task_Model.clear();
+            tasks_adapter.notifyDataSetChanged();
+            CheckHintTasksText();
+
+            NowYear = Year_Model.get(position).Year;
+            Year_TV.setText("" + Year_Model.get(position).Year);
+
+
+            Days_ModelY.clear();
+            for (Days_Model daysModelALL : Days_ModelALL) {
+
+                if (daysModelALL.Year == NowYear) {
+                    Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                }
+            }
+
+
+            Days_Model.clear();
+            for (Days_Model daysModel : Days_ModelY) {
+
+                if (daysModel.Month == NowMonth) {
+                    Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                }
+            }
+
+
+            Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
+                @Override
+                public int compare(com.example.daybuddy.Days_Model o1, com.example.daybuddy.Days_Model o2) {
+                    return o1.Date.compareTo(o2.Date);
+                }
+            });
+            days_adapter.notifyDataSetChanged();
+            CheckHintText();
+            progressBar.setVisibility(View.GONE);
+            CheckTutorial();
+            if (!Days_Model.isEmpty()) {
+                idCopy = Days_Model.get(0).id;
+            }
+
+
+            /////////////////////
+
+            SetCurrentActivityView();
+
+
+            ///////////////////////////////////
+
+
+            if (!Days_Model.isEmpty()) {
+                id = Days_Model.get(0).id;
+                Days_Model.get(0).color = 1;
+                days_adapter.notifyDataSetChanged();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+                                        } else {
+                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+                                        }
+                                    } else {
+                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+                                    }
+                                }
+                                Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
+                                    @Override
+                                    public int compare(com.example.daybuddy.Task_Model o1, com.example.daybuddy.Task_Model o2) {
+                                        return o1.time_start.compareTo(o2.time_start);
+                                    }
+                                });
+                                tasks_adapter.notifyDataSetChanged();
+                                CheckHintTasksText();
+                                progressBarTask.setVisibility(View.GONE);
+
+
+                            }
+                        });
+
+
+                ////////////////////////////
+            } else {
+                progressBarTask.setVisibility(View.GONE);
+
+            }
+
+
+            YearsViewAreUp = false;
+            Years_RV.scrollToPosition(position);
+            int newHeight = 600;
+            int oldHeight = 115;
+
+            ValueAnimator animator = ValueAnimator.ofInt(newHeight, oldHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = YM.getLayoutParams();
+                    layoutParams.height = value;
+                    YM.setLayoutParams(layoutParams);
+                    Years_RV.suppressLayout(true);
+
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+            Years_RV.setClickable(false);
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Years_RV.setVisibility(View.INVISIBLE);
+                    Year_TV.setVisibility(View.VISIBLE);
+                }
+            };
+
+            handler.postDelayed(runnable, 500);
+
+
+            Toast.makeText(this, "" + Year_Model.get(position).Year, Toast.LENGTH_SHORT).show();
+
+        }
+
 
     }
 
@@ -2463,6 +2654,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         if (!YearsViewAreUp) {
             YearsViewAreUp = true;
+
             Years_RV.setClickable(true);
             Years_RV.setVisibility(View.VISIBLE);
             Year_TV.setVisibility(View.INVISIBLE);
@@ -2477,6 +2669,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     layoutParams.height = value;
                     YM.setLayoutParams(layoutParams);
                     Years_RV.suppressLayout(false);
+                    Years_RV.scrollToPosition(59);
                 }
             });
             animator.setDuration(500); // Set the duration of the animation in milliseconds
@@ -2520,12 +2713,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             handler.postDelayed(runnable, 500);
 
 
-
         }
     }
-
-
-
 
 
     class DestinationTime extends AsyncTask<Void, Void, String> {
@@ -2536,14 +2725,16 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         private String apiKey = "AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY";
         private String travelMode;
         private String trafficModel = "best_guess";
+        private long departureTime;
 
 
         String durationText;
 
-        public DestinationTime(LatLng origin, LatLng destination, String travelMode) {
+        public DestinationTime(LatLng origin, LatLng destination, String travelMode, long departureTime) {
             this.origin = origin;
             this.destination = destination;
             this.travelMode = travelMode;
+            this.departureTime = departureTime;
         }
 
         @Override
@@ -2553,6 +2744,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
                         "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
+                        "&departure_time=" + departureTime +  // Add departure time to request
+                        "&traffic_model=" + trafficModel +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);
