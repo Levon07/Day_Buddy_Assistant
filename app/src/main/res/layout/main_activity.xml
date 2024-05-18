@@ -106,10 +106,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
-
-
     <TextView
         android:id="@+id/HintText"
         android:layout_width="match_parent"
@@ -118,11 +114,11 @@
         android:textAlignment="center"
         android:textColor="@color/NN_Gray"
         android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/RV_Days"
-        app:layout_constraintBottom_toBottomOf="@id/RV_Days"/>
+        app:layout_constraintTop_toTopOf="@id/RV_Days" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -509,23 +505,39 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/YM"
+        android:id="@+id/Year_Lay"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/liveUpdate"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
+        android:background="@drawable/rect_year"
+        app:layout_constraintBottom_toTopOf="@id/YM"
         app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
-        android:background="@drawable/rect_year">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/YM">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/Year_RV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="2dp"
+            android:clickable="false"
+            android:visibility="invisible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/YArrows"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
 
 
         <TextView
-            android:id="@+id/Year_Text"
-            android:text=""
+            android:id="@+id/Year_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/NN_White"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -533,8 +545,32 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5" />
 
+        <ImageView
+            android:id="@+id/YArrows"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:onClick="Open_Year"
+            android:paddingEnd="7dp"
+            android:src="@drawable/arrows"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/Year_RV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/YM"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/RV_Days"
+        app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
+        app:layout_constraintTop_toBottomOf="@id/liveUpdate"/>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -548,19 +584,19 @@
         app:layout_constraintBottom_toBottomOf="@id/YM"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/YM"
+        app:layout_constraintStart_toEndOf="@id/Year_Lay"
         app:layout_constraintTop_toTopOf="@id/YM"
 
         app:layout_constraintVertical_bias="0.5">
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="invisible"
             android:id="@+id/Month_RV"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginVertical="2dp"
             android:clickable="false"
+            android:visibility="invisible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/Arrows"
@@ -573,8 +609,8 @@
             android:id="@+id/Month_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
             android:textColor="@color/NN_White"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -95,7 +95,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks, RV_Interface_Months {
+public class calendar_activity extends AppCompatActivity implements RV_Interface, RV_Interface_Tasks, RV_Interface_Months, RV_Interface_Year {
 
     int NowTime;
 
@@ -111,6 +111,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ArrayList<TaskModelArr> Task_Model_Arr = new ArrayList<>();
     ArrayList<Month_Model> Month_Model = new ArrayList<>();
     Months_Adapter month_adapter = new Months_Adapter(this, Month_Model, this);
+
+    ArrayList<Year_Model> Year_Model = new ArrayList<>();
+    Year_Adapter year_adapter = new Year_Adapter(this, Year_Model, this);
 
     private static final String TAG = "LOCATION_PICKER_TAG";
 
@@ -213,10 +216,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ConstraintLayout liveUpdate;
     ConstraintLayout AI;
     RecyclerView Months_RV;
+    RecyclerView Years_RV;
 
     String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    int[] years = {1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,
+            2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057, 2058, 2059, 2060
+        , 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112,
+         2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2128, 2129, 2130, 2131};
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
     ConstraintLayout Month_lay;
+    ConstraintLayout YM;
+    TextView Year_TV;
+    ImageView yarrows;
+
 
 
     @Override
@@ -224,7 +236,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-
+        yarrows = findViewById(R.id.YArrows);
+        Year_TV = findViewById(R.id.Year_TV);
+        YM = findViewById(R.id.Year_Lay);
         Month_lay = findViewById(R.id.Month_RV_Layout);
         AI = findViewById(R.id.AI);
         arrow = findViewById(R.id.arrow);
@@ -242,6 +256,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         for (String month : Months) {
             Month_Model.add(new Month_Model(month));
+        }
+
+        for (int year : years) {
+            Year_Model.add(new Year_Model(year));
         }
 
         TextTaskText = findViewById(R.id.TaskText);
@@ -270,6 +288,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         Months_RV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         Months_RV.setAdapter(month_adapter);
+
+
+        Years_RV = findViewById(R.id.Year_RV);
+
+        Years_RV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        Years_RV.setAdapter(year_adapter);
 
 
         //days_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -301,8 +325,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         NowYear = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date()));
         NowMonth = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date()));
 
-
         Month_TV.setText(Months[NowMonth - 1]);
+        Year_TV.setText("" + NowYear);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -315,6 +339,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 Days_ModelALL.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Year", int.class), queryDocumentSnapshot.get("Month", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
 
                             }
+
+
 
 
                             Days_ModelY.clear();
@@ -2415,6 +2441,91 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     }
+
+    @Override
+    public void onItemClickedYear(int position) {
+
+    }
+
+    @Override
+    public void onItemLongClickYear(int position) {
+
+    }
+
+    boolean YearsViewAreUp = false;
+
+    public void Open_Year(View view) {
+
+
+        int newHeight = 600;
+        int oldHeight = 115;
+
+
+        if (!YearsViewAreUp) {
+            YearsViewAreUp = true;
+            Years_RV.setClickable(true);
+            Years_RV.setVisibility(View.VISIBLE);
+            Year_TV.setVisibility(View.INVISIBLE);
+
+
+            ValueAnimator animator = ValueAnimator.ofInt(oldHeight, newHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = YM.getLayoutParams();
+                    layoutParams.height = value;
+                    YM.setLayoutParams(layoutParams);
+                    Years_RV.suppressLayout(false);
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+
+
+        } else {
+
+
+            YearsViewAreUp = false;
+            Years_RV.setClickable(false);
+
+
+            ValueAnimator animator = ValueAnimator.ofInt(newHeight, oldHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = YM.getLayoutParams();
+                    layoutParams.height = value;
+                    YM.setLayoutParams(layoutParams);
+                    Years_RV.suppressLayout(true);
+
+                }
+            });
+            animator.setDuration(500); // Set the duration of the animation in milliseconds
+            animator.start();
+
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    Years_RV.setVisibility(View.INVISIBLE);
+
+                    Year_TV.setVisibility(View.VISIBLE);
+
+                }
+            };
+
+            handler.postDelayed(runnable, 500);
+
+
+
+        }
+    }
+
+
+
 
 
     class DestinationTime extends AsyncTask<Void, Void, String> {
