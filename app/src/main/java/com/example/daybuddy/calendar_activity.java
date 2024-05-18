@@ -1538,7 +1538,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
             long departureTime = calendar.getTimeInMillis() / 1000;
-            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode, departureTime);
+            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode);
             travelTime.execute();
 
 
@@ -1937,7 +1937,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 LatLng origin = new LatLng(Task_Model.get(position - 1).latitude, Task_Model.get(position - 1).longitude);
                                 LatLng destination = new LatLng(Task_Model.get(position + 1).latitude, Task_Model.get(position + 1).longitude);
                                 long departureTime = calendar.getTimeInMillis() / 1000;
-                                DestinationTime travelTime = new DestinationTime(origin, destination, travelMode,departureTime);
+                                DestinationTime travelTime = new DestinationTime(origin, destination, travelMode);
                                 travelTime.execute();
 
 
@@ -2182,7 +2182,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
             long departureTime = calendar.getTimeInMillis() / 1000;
-            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode,departureTime);
+            calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode);
             travelTime.execute();
 
 
@@ -2841,26 +2841,26 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         private String apiKey = "AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY";
         private String travelMode;
         private String trafficModel = "best_guess";
-        private long departureTime;
 
 
         String durationText;
 
-        public DestinationTime(LatLng origin, LatLng destination, String travelMode, long departureTime) {
+        public DestinationTime(LatLng origin, LatLng destination, String travelMode) {
             this.origin = origin;
             this.destination = destination;
             this.travelMode = travelMode;
-            this.departureTime = departureTime;
         }
 
         @Override
         protected String doInBackground(Void... voids) {
             String response = "";
             try {
+                long departureTime = System.currentTimeMillis() / 1000;
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
                         "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
-                        "&departure_time=" + departureTime +  // Add departure time to request
+                        "&traffic_model=" + trafficModel +
+                        "&departure_time=" + departureTime + // Include departure_time for traffic conditions
                         "&traffic_model=" + trafficModel +
                         "&key=" + apiKey;
 
