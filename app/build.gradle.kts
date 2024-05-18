@@ -48,8 +48,6 @@ dependencies {
     implementation ("com.google.maps.android:android-maps-utils:2.2.0")
 
 
-
-
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
 

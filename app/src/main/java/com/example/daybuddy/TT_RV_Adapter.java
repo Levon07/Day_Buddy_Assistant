@@ -108,6 +108,19 @@ public class TT_RV_Adapter extends RecyclerView.Adapter<TT_RV_Adapter.TT_ViewHol
             Text1 = itemView.findViewById(R.id.text1);
             Text2 = itemView.findViewById(R.id.text2);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (rvInterface != null){
+                        int pos = getAdapterPosition();
+
+                        if (pos != RecyclerView.NO_POSITION){
+                            rvInterface.onItemClickedTasks(pos);
+                        }
+                    }
+                }
+            });
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {

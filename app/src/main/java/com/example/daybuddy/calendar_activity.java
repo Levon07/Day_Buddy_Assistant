@@ -412,17 +412,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
-                                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                                        } else {
-                                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                                        }
-                                                    } else {
-                                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                                    }
+//                                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+//                                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                                        } else {
+//                                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                                        }
+//                                                    } else {
+//                                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                                    }
+
+
                                                 }
                                                 Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
                                                     @Override
@@ -493,25 +495,19 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     Log.e("FOR123", "currentDateNum " + currentDateNum);
 
 
-                                    if (dateNum < currentDateNum) {
-                                        ++countCheck;
-                                        Log.e("FOR123", "count check " + count);
-                                        taskCompleted.setText(Integer.toString(countCheck));
-                                    } else if (dateNum == currentDateNum) {
-                                        if (Task_Model1.get(Task_Model1.size() - 1).et_time_M < NowTime) {
-                                            ++countCheck;
-                                            Log.e("FOR123", "count check " + count);
-                                            taskCompleted.setText(Integer.toString(countCheck));
-                                        }
+                                    if(Task_Model1.get(Task_Model1.size()-1).checkColor == 1){
+                                        countCheck++;
                                     }
                                 }
                                 if (i < Days_ModelALL.size() - 1) {
                                     i++;
                                     SetCheckedPendingView();
                                 } else {
+
+
                                     countCheckStr = String.valueOf(countCheck);
-                                    countStr = String.valueOf(count - countCheck);
                                     taskCompleted.setText(countCheckStr);
+                                    countStr = String.valueOf(count - countCheck);
                                     pendingTaskCount.setText(countStr);
                                 }
 
@@ -994,17 +990,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                        } else {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                        }
-                                    } else {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                    }
+//                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                        } else {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                        }
+//                                    } else {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                    }
                                 }
                                 idCopy = id;
                                 Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
@@ -1527,21 +1523,21 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public void Add_Task_Final() {
         if (!Task_Model.isEmpty()) {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                checkColor = 1;
-            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                if (Et_time_M < NowTime) {
-                    checkColor = 1;
-                } else {
-                    checkColor = 0;
-                }
-            } else {
-                checkColor = 0;
-            }
+//            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                checkColor = 1;
+//            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                if (Et_time_M < NowTime) {
+//                    checkColor = 1;
+//                } else {
+//                    checkColor = 0;
+//                }
+//            } else {
+//                checkColor = 0;
+//            }
             visibility = 1;
             LatLng origin = new LatLng(Task_Model.get(Task_Model.size() - 1).latitude, Task_Model.get(Task_Model.size() - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            long departureTime = System.currentTimeMillis() / 1000;
+            long departureTime = calendar.getTimeInMillis() / 1000;
             calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode, departureTime);
             travelTime.execute();
 
@@ -1570,17 +1566,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             progressBarTask.setVisibility(View.VISIBLE);
             handler.postDelayed(runnable, 2000);
         } else {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                checkColor = 1;
-            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                if (Et_time_M < NowTime) {
-                    checkColor = 1;
-                } else {
-                    checkColor = 0;
-                }
-            } else {
-                checkColor = 0;
-            }
+//            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                checkColor = 1;
+//            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                if (Et_time_M < NowTime) {
+//                    checkColor = 1;
+//                } else {
+//                    checkColor = 0;
+//                }
+//            } else {
+//                checkColor = 0;
+//            }
             visibility = 0;
             Add_Task_To_Model();
         }
@@ -1690,6 +1686,126 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     @Override
     public void onItemClickedTasks(int position) {
+
+        if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+
+            if(Task_Model.get(position).checkColor == 1) {
+                Task_Model.get(position).checkColor = 0;
+                countCheck--;
+                countCheckStr = String.valueOf(countCheck);
+                taskCompleted.setText(countCheckStr);
+                countStr = String.valueOf(count - countCheck);
+                pendingTaskCount.setText(countStr);
+            }else{
+                Task_Model.get(position).checkColor = 1;
+                countCheck++;
+                countCheckStr = String.valueOf(countCheck);
+                taskCompleted.setText(countCheckStr);
+                countStr = String.valueOf(count - countCheck);
+                pendingTaskCount.setText(countStr);
+            }
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("day_ow", Day_OW);
+                hashMap.put("Task_text", Task_Model.get(position).task_text);
+                hashMap.put("ST_Time", Task_Model.get(position).time_start);
+                hashMap.put("ET_Time", Task_Model.get(position).time_end);
+                hashMap.put("ET_time_M", Task_Model.get(position).et_time_M);
+                hashMap.put("ST_time_M", Task_Model.get(position).st_time_M);
+                hashMap.put("address", Task_Model.get(position).location);
+                hashMap.put("latitude", Task_Model.get(position).latitude);
+                hashMap.put("longitude", Task_Model.get(position).longitude);
+                hashMap.put("DocID", Task_Model.get(position).DocID);
+                hashMap.put("Color", Task_Model.get(position).color);
+                hashMap.put("CheckColor", Task_Model.get(position).checkColor);
+                hashMap.put("Visibility", Task_Model.get(position).visibility);
+                hashMap.put("userId", user.getUid());
+                db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+
+
+        } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+            if (Task_Model.get(position).et_time_M  < NowTime) {
+                if(Task_Model.get(position).checkColor == 1) {
+                    Task_Model.get(position).checkColor = 0;
+                    countCheck--;
+                    countCheckStr = String.valueOf(countCheck);
+                    taskCompleted.setText(countCheckStr);
+                    countStr = String.valueOf(count - countCheck);
+                    pendingTaskCount.setText(countStr);
+                }else{
+                    Task_Model.get(position).checkColor = 1;
+                    countCheck++;
+                    countCheckStr = String.valueOf(countCheck);
+                    taskCompleted.setText(countCheckStr);
+                    countStr = String.valueOf(count - countCheck);
+                    pendingTaskCount.setText(countStr);
+
+                }
+
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("day_ow", Day_OW);
+                    hashMap.put("Task_text", Task_Model.get(position).task_text);
+                    hashMap.put("ST_Time", Task_Model.get(position).time_start);
+                    hashMap.put("ET_Time", Task_Model.get(position).time_end);
+                    hashMap.put("ET_time_M", Task_Model.get(position).et_time_M);
+                    hashMap.put("ST_time_M", Task_Model.get(position).st_time_M);
+                    hashMap.put("address", Task_Model.get(position).location);
+                    hashMap.put("latitude", Task_Model.get(position).latitude);
+                    hashMap.put("longitude", Task_Model.get(position).longitude);
+                    hashMap.put("DocID", Task_Model.get(position).DocID);
+                    hashMap.put("Color", Task_Model.get(position).color);
+                    hashMap.put("CheckColor", Task_Model.get(position).checkColor);
+                    hashMap.put("Visibility", Task_Model.get(position).visibility);
+                    hashMap.put("userId", user.getUid());
+                    db.collection("daysModel").document(idCopy).collection("taskModels").document(Task_Model.get(position).DocID).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+
+
+            } else {
+                Task_Model.get(position). checkColor = 0;
+            }
+
+
+        } else {
+            Task_Model.get(position).checkColor = 0;
+        }
+        tasks_adapter.notifyDataSetChanged();
+
+
+
+
 
     }
 
@@ -1820,7 +1936,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             if (Task_Model.size() > 1) {
                                 LatLng origin = new LatLng(Task_Model.get(position - 1).latitude, Task_Model.get(position - 1).longitude);
                                 LatLng destination = new LatLng(Task_Model.get(position + 1).latitude, Task_Model.get(position + 1).longitude);
-                                long departureTime = System.currentTimeMillis() / 1000;
+                                long departureTime = calendar.getTimeInMillis() / 1000;
                                 DestinationTime travelTime = new DestinationTime(origin, destination, travelMode,departureTime);
                                 travelTime.execute();
 
@@ -2050,22 +2166,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public void Change_Task_Final() {
         if (Task_Model.size() > 1) {
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                checkColor = 1;
-            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                if (Et_time_M < NowTime) {
-                    checkColor = 1;
-                } else {
-                    checkColor = 0;
-                }
-            } else {
-                checkColor = 0;
-            }
+//            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                checkColor = 1;
+//            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                if (Et_time_M < NowTime) {
+//                    checkColor = 1;
+//                } else {
+//                    checkColor = 0;
+//                }
+//            } else {
+//                checkColor = 0;
+//            }
             visibility = 1;
 
             LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
             LatLng destination = new LatLng(latitude, longitude);
-            long departureTime = System.currentTimeMillis() / 1000;
+            long departureTime = calendar.getTimeInMillis() / 1000;
             calendar_activity.DestinationTime travelTime = new calendar_activity.DestinationTime(origin, destination, travelMode,departureTime);
             travelTime.execute();
 
@@ -2100,17 +2216,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         } else {
             visibility = 0;
             Change_Task_In_Model();
-            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                checkColor = 1;
-            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                if (Et_time_M < NowTime) {
-                    checkColor = 1;
-                } else {
-                    checkColor = 0;
-                }
-            } else {
-                checkColor = 0;
-            }
+//            if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                checkColor = 1;
+//            } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                if (Et_time_M < NowTime) {
+//                    checkColor = 1;
+//                } else {
+//                    checkColor = 0;
+//                }
+//            } else {
+//                checkColor = 0;
+//            }
 
 
         }
@@ -2347,17 +2463,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                        } else {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                        }
-                                    } else {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                    }
+//                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                        } else {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                        }
+//                                    } else {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                    }
                                 }
                                 Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
                                     @Override
@@ -2565,17 +2681,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
                                             ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
 
-                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
-                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
-                                        } else {
-                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                        }
-                                    } else {
-                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
-                                    }
+//                                    if (GetInt(Days_Model.get(positionCopy).Date) < currentDateNum) {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                    } else if (GetInt(Days_Model.get(positionCopy).Date) == currentDateNum) {
+//                                        if (Task_Model.get(Task_Model.size() - 1).et_time_M < NowTime) {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 1;
+//                                        } else {
+//                                            Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                        }
+//                                    } else {
+//                                        Task_Model.get(Task_Model.size() - 1).checkColor = 0;
+//                                    }
                                 }
                                 Collections.sort(Task_Model, new Comparator<com.example.daybuddy.Task_Model>() {
                                     @Override
