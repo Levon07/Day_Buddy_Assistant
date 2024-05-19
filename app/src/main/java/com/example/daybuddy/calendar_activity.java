@@ -2855,12 +2855,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         protected String doInBackground(Void... voids) {
             String response = "";
             try {
-                long departureTime = System.currentTimeMillis() / 1000;
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
                         "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
-                        "&traffic_model=" + trafficModel +
-                        "&departure_time=" + departureTime + // Include departure_time for traffic conditions
                         "&traffic_model=" + trafficModel +
                         "&key=" + apiKey;
 
