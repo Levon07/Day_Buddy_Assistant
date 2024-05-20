@@ -15,4 +15,5 @@
     <string name="login_failed">"Login failed"</string>
     <string name="google_api_key">"AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY"</string>
     <string name="Send_a_message...">Send a message...</string>
+    <string name="Task_Text">Your Task</string>
 </resources>

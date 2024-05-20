@@ -1487,6 +1487,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         alertDialog.show();
     }
 
+
+    public String Task_Text_for_notify;
+
     private void Add_Task_To_Model() {
 
 
@@ -1532,9 +1535,12 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
             }
 
+
+            Task_Text_for_notify = Task_text;
+
             Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra("Task", Task_text);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             // Set the alarm
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

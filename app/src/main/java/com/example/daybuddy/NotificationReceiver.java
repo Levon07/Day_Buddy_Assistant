@@ -1,31 +1,31 @@
 package com.example.daybuddy;
 
-import static android.content.Intent.getIntent;
-
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "MY_CHANNEL_ID";
+    public static final String NOTIFICATION_TEXT_KEY = "notification_text_key";
 
     @SuppressLint("MissingPermission")
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Get the notification text from the Intent
+        String notificationText = intent.getStringExtra(NOTIFICATION_TEXT_KEY);
+        if (notificationText == null) {
+            notificationText = "Default notification text";
+        }
+
         // Create the notification channel (required for Android 8.0 and above)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-
             CharSequence name = "My Notification Channel";
             String description = "Channel description";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -38,8 +38,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         // Build the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.app_icon) // your app icon
-                .setContentTitle("Time to do your task")
-                .setContentText("This is the scheduled notification content")
+                .setContentTitle("Your Current Task")
+                .setContentText(notificationText)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         // Send the notification
