@@ -266,7 +266,8 @@
             android:layout_marginBottom="@dimen/_7sdp"
             android:background="@drawable/rectangle_3"
             app:layout_constraintBottom_toTopOf="@id/pendingTasks"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="Charts">
 
 
             <TextView

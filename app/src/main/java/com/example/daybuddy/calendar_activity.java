@@ -2875,6 +2875,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
     }
 
+    public void Charts(View view) {
+        Intent intent = new Intent(calendar_activity.this, activity_pie_char.class);
+        intent.putExtra("countCheck", countCheck);
+        intent.putExtra("count", count);
+        startActivity(intent);
+    }
+
 
     class DestinationTime extends AsyncTask<Void, Void, String> {
         private static final String TAG = "DestinationTimeCalculator";
