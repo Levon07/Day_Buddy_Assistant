@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/Gray_50" />
-            <corners android:radius="30dp"/>
+            <corners android:radius="@dimen/_27sdp"/>
         </shape>
     </item>
 </layer-list>

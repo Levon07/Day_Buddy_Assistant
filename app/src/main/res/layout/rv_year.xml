@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/_40sdp"
     android:background="@color/translucent"
     android:outlineAmbientShadowColor="@color/translucent"
     android:outlineSpotShadowColor="@color/translucent">
 
     <TextView
         android:id="@+id/Year"
+        android:textSize="@dimen/_11sdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:textColor="@color/NN_White"/>
 
 

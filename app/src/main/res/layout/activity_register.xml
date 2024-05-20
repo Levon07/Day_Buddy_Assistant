@@ -15,12 +15,12 @@
         android:text="Create new\n Account"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="45sp"
+        android:textSize="@dimen/_30sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="@dimen/_12sdp"/>
 
 
 
@@ -30,21 +30,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginHorizontal="22dp"
+        android:layout_marginHorizontal="@dimen/_19sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="@dimen/_45sdp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/quicksand_light"
             android:text="E-Mail"
             android:textColor="@color/white"
-            android:textSize="17dp"
+            android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
 
         <EditText
@@ -55,17 +55,18 @@
             android:background="@drawable/edit_ext"
             android:hint="  example@email.com"
             android:inputType="textEmailAddress"
-            android:layout_margin="5dp"
-            android:padding="5dp"/>
+            android:layout_margin="@dimen/_4sdp"
+            android:textSize="@dimen/_18sdp"
+            android:padding="@dimen/_8sdp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/quicksand_light"
             android:text="Password"
             android:textColor="@color/white"
-            android:textSize="17dp"
+            android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
 
         <EditText
@@ -76,17 +77,18 @@
             android:background="@drawable/edit_ext"
             android:hint="  Password"
             android:inputType="textPassword"
-            android:layout_margin="5dp"
-            android:padding="5dp"/>
+            android:layout_margin="@dimen/_4sdp"
+            android:textSize="@dimen/_18sdp"
+            android:padding="@dimen/_8sdp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/quicksand_light"
             android:text="Confirm Password"
             android:textColor="@color/white"
-            android:textSize="17dp"
+            android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
 
         <EditText
@@ -97,15 +99,16 @@
             android:background="@drawable/edit_ext"
             android:hint="  Confirm Password"
             android:inputType="textPassword"
-            android:layout_margin="5dp"
-            android:padding="5dp"/>
+            android:textSize="@dimen/_18sdp"
+            android:layout_margin="@dimen/_4sdp"
+            android:padding="@dimen/_8sdp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/SignUp"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="15dp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_13sdp"
             android:background="@drawable/rectangle_3_login"
             android:onClick="register">
 
@@ -115,7 +118,7 @@
                 android:fontFamily="@font/quicksand_light"
                 android:text="Sign Up"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/_18sdp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -131,8 +134,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/verifyEmail"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rectangle_3_login"
             android:onClick="SignUp"
@@ -144,7 +147,7 @@
                 android:fontFamily="@font/quicksand_light"
                 android:text="Send Verification Email Again"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/_18sdp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -163,21 +166,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="10dp">
+            android:layout_marginStart="@dimen/_8sdp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/_11sdp"
                 android:textColor="@color/white"
                 android:text="Already have an account ?"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/_11sdp"
                 android:text="Log in"
                 android:onClick="LogIn"
                 android:textColor="@color/light_blue"
-                android:layout_marginStart="6dp"/>
+                android:layout_marginStart="@dimen/_5sdp"/>
         </LinearLayout>
 
 

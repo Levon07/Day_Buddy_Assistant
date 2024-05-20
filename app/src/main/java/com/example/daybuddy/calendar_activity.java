@@ -230,8 +230,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     ImageView yarrows;
 
 
-    int NowYearNOW, NowMonthNOW;
-
+    int NowYearNOW, NowMonthNOW, currentDateNum1;
+    int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +258,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         liveUpdate = findViewById(R.id.liveUpdate);
         Month_TV = findViewById(R.id.Month_TV);
 
+        currentDateNum1 = Integer.parseInt(new SimpleDateFormat("dd", Locale.getDefault()).format(new Date()));
+
         Download();
 
         for (String month : Months) {
@@ -280,6 +282,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             mUser = extras.getParcelable("auth");
 
         }
+
+        height = liveUpdate.getMeasuredHeight();
 
         progressBar.setVisibility(View.VISIBLE);
         HintText.setVisibility(View.GONE);
@@ -343,6 +347,24 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 Days_ModelALL.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Year", int.class), queryDocumentSnapshot.get("Month", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
 
                             }
+
+                            for (int i = 0; i < Days_ModelALL.size(); i++) {
+                                int NumDate = GetInt(Days_ModelALL.get(i).Date);
+                                int NumYear = Days_ModelALL.get(i).Year;
+                                int NumMonth = Days_ModelALL.get(i).Month;
+
+
+                                if (NumDate < currentDateNum1 && NumYear <= NowYearNOW && NumMonth <= NowMonthNOW) {
+
+                                    Days_ModelALL.get(i).color = 2;
+
+                                } else {
+
+                                    Days_ModelALL.get(i).color = 0;
+
+                                }
+                            }
+
 
 
                             Days_ModelY.clear();
@@ -1509,6 +1531,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                 //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
             }
+
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            intent.putExtra("Task", Task_text);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            // Set the alarm
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+
+
             tasks_adapter.notifyDataSetChanged();
             CheckHintTasksText();
             tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
@@ -2262,10 +2296,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     public void moveUp(View view) {
 
 
-        int oldHeight = 350;
-        int newHeight = 1210;
 
-        int oldHeightL = 510;
+
+
+        int oldHeight = 450;
+        int newHeight = 1350;
+
+        int oldHeightL = 750;
         int newHeightL = 0;
 
         int oldHeightA = 210;
@@ -2858,7 +2895,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 String apiUrl = "https://maps.googleapis.com/maps/api/distancematrix/json" +
                         "?origins=" + origin.latitude + "," + origin.longitude +
                         "&destinations=" + destination.latitude + "," + destination.longitude + "&mode=" + travelMode +
-                        "&traffic_model=" + trafficModel +
                         "&key=" + apiKey;
 
                 URL url = new URL(apiUrl);

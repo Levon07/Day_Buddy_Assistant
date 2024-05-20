@@ -3,7 +3,7 @@
         <shape android:shape="rectangle">
 
             <solid android:color="@color/white_25" /> <!-- Customize the color as per your design -->
-            <corners android:radius="16dp" /> <!-- Customize the corner radius as per your design --><!-- Customize the border color as per your design -->
+            <corners android:radius="@dimen/_14sdp" /> <!-- Customize the corner radius as per your design --><!-- Customize the border color as per your design -->
 
         </shape>
     </item>

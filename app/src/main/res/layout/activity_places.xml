@@ -22,32 +22,38 @@
         <LinearLayout
             android:id="@+id/toolbarLl"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/dark_blue">
 
             <ImageButton
                 android:id="@+id/toolbarBackBtn"
+                android:layout_gravity="center"
                 android:background="@drawable/back_arrow"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"/>
+                android:backgroundTint="@color/white"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_margin="@dimen/_8sdp"/>
 
             <TextView
                 android:id="@+id/toolbarTitleTv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Pick Place"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/quicksand_light"
+                android:textSize="@dimen/_20sdp"
                 android:layout_weight="2"/>
 
             <ImageButton
                 android:id="@+id/toolbarGpsBtn"
-                android:background="@drawable/gps"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"/>
+                android:background="@drawable/baseline_gps_fixed_24"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_margin="@dimen/_8sdp"/>
 
 
 
@@ -72,6 +78,7 @@
                 app:cardUseCompatPadding="true">
                 
                 <androidx.fragment.app.FragmentContainerView
+                    android:layout_gravity="center"
                     android:id="@+id/autocomplete_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,20 +92,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_8sdp"
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardUseCompatPadding="true"
-                    app:cardCornerRadius="8dp"
-                    app:contentPadding="10dp">
+                    app:cardCornerRadius="@dimen/_7sdp"
+                    app:contentPadding="@dimen/_8sdp">
 
                     <TextView
                         android:id="@+id/selectedPlaceTv"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_9sdp"/>
 
 
                 </com.google.android.material.card.MaterialCardView>
@@ -108,47 +116,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Done"
-                    app:cornerRadius="8dp"
-                    android:minHeight="20dp"/>
+                    android:textSize="@dimen/_9sdp"
+                    app:cornerRadius="@dimen/_7sdp"
+                    android:minHeight="@dimen/_18sdp"/>
 
 
             </LinearLayout>
 
             <RadioGroup
-                android:layout_marginTop="75dp"
-                android:layout_marginStart="10dp"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content" >
+                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_130sdp" >
 
                 <RadioButton
                     android:id="@+id/radioButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_margin="@dimen/_6sdp"
                     android:button="@color/translucent"
                     android:background="@drawable/radio_button_selector_bike"
-                    android:elevation="4dp"
+                    android:elevation="@dimen/_4sdp"
                     android:onClick="Bike"
                     />
 
                 <RadioButton
                     android:id="@+id/radioButton2"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_margin="@dimen/_6sdp"
                     android:button="@color/translucent"
                     android:background="@drawable/radio_button_selector_car"
-                    android:elevation="4dp"
+                    android:elevation="@dimen/_4sdp"
                     android:onClick="Car"/>
 
                 <RadioButton
                     android:id="@+id/radioButton3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_margin="@dimen/_6sdp"
                     android:button="@color/translucent"
                     android:background="@drawable/radio_button_selector_walk"
-                    android:elevation="4dp"
+                    android:elevation="@dimen/_4sdp"
                     android:onClick="Walk"/>
             </RadioGroup>
 

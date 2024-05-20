@@ -11,12 +11,12 @@
 
     <!-- Control the width and height of the shape -->
     <size
-        android:width="200dp"
-        android:height="50dp"/>
+        android:width="@dimen/_200sdp"
+        android:height="@dimen/_50sdp"/>
 
     <!-- Control the radius of each corners -->
     <corners
-        android:radius="8dp" />
+        android:radius="@dimen/_6sdp" />
 
 
 </shape>

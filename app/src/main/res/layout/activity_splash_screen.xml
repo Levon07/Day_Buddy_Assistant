@@ -8,35 +8,38 @@
     tools:context=".Splash_Screen">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
-        app:lottie_rawRes="@raw/splash_screen_bear"/>
+        app:lottie_rawRes="@raw/splash_screen_bear" />
 
     <ImageView
         android:id="@+id/day"
-        android:layout_width="150dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="68dp"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_74sdp"
+        android:layout_marginTop="@dimen/_52sdp"
         android:background="@drawable/db_day"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buddy"/>
 
     <ImageView
         android:id="@+id/buddy"
-        android:layout_width="210dp"
-        android:layout_height="81dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="@dimen/_65sdp"
+        android:layout_marginTop="@dimen/_7sdp"
         android:background="@drawable/db_buddy"
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/lottieAnimationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

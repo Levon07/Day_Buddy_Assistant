@@ -10,11 +10,11 @@
 
             <!-- Control the width and height of the shape -->
             <size
-                android:width="50dp"
-                android:height="50dp" />
+                android:width="@dimen/_30sdp"
+                android:height="@dimen/_30sdp" />
 
             <!-- Control the radius of each corners -->
-            <corners android:radius="15dp" />
+            <corners android:radius="@dimen/_8sdp" />
 
 
         </shape>
@@ -23,6 +23,8 @@
     </item>
 
     <item android:drawable="@drawable/baseline_directions_bike_24"
-        android:gravity="center" />
+        android:gravity="center"
+        android:width="@dimen/_14sdp"
+        android:height="@dimen/_14sdp"/>
 
 </layer-list>

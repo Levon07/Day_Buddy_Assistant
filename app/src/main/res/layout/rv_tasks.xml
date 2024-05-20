@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="115dp"
+    android:layout_height="@dimen/_75sdp"
     android:background="@color/translucent"
     android:outlineAmbientShadowColor="@color/translucent"
     android:outlineSpotShadowColor="@color/translucent">
@@ -11,7 +11,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/_4sdp"
         android:background="@color/translucent"
         android:backgroundTint="@color/translucent"
         android:outlineAmbientShadowColor="@color/translucent"
@@ -22,21 +22,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/_9sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:orientation="vertical">
 
             <View
                 android:id="@+id/Card"
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_7sdp"
                 android:background="@drawable/rect_shape_green"
                 android:visibility="visible"
-                app:cornerRadius="5dp" />
+                app:cornerRadius="@dimen/_4sdp" />
 
             <LinearLayout
 
@@ -46,9 +46,9 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/left_block"
-                    android:layout_width="100dp"
+                    android:layout_width="@dimen/_70sdp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
+                    android:layout_marginEnd="@dimen/_3sdp"
                     android:background="@drawable/rect_shape_outline"
                     android:orientation="vertical">
 
@@ -57,7 +57,7 @@
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="30dp"
+                        android:layout_margin="@dimen/_20sdp"
                         android:src="@drawable/checked"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -70,11 +70,11 @@
                         android:id="@+id/text1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/_8sdp"
                         android:text="start time"
                         android:textAlignment="center"
                         android:textColor="@color/quantum_grey"
-                        android:textSize="9dp"
+                        android:textSize="@dimen/_8sdp"
                         app:layout_constraintBottom_toTopOf="@+id/time_start"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -89,7 +89,8 @@
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="@color/NN_White"
-                        android:textSize="18dp"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:textSize="@dimen/_12sdp"
                         app:layout_constraintBottom_toTopOf="@+id/time_end"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -100,11 +101,11 @@
                         android:id="@+id/text2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/_3sdp"
                         android:text="end time"
                         android:textAlignment="center"
                         android:textColor="@color/quantum_grey"
-                        android:textSize="9dp"
+                        android:textSize="@dimen/_8sdp"
                         app:layout_constraintBottom_toTopOf="@+id/time_end"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -116,13 +117,12 @@
                         android:id="@+id/time_end"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="@dimen/_8sdp"
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="@color/NN_White"
-                        android:textSize="18dp"
-                        app:layout_constraintBottom_toBottomOf="parent
-"
+                        android:textSize="@dimen/_12sdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -130,15 +130,15 @@
 
 
                 <View
-                    android:layout_width="2dp"
+                    android:layout_width="@dimen/_2sdp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginEnd="3dp"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_3sdp"
                     android:background="@drawable/vertical_line" />
 
 
                 <LinearLayout
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/_2sdp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rect_shape"
@@ -149,27 +149,27 @@
                         android:id="@+id/task_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="15dp"
+                        android:layout_marginStart="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_13sdp"
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="@color/NN_White"
-                        android:textSize="12dp"
+                        android:textSize="@dimen/_11sdp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="15dp"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="@color/NN_White"
-                        android:textSize="9dp" />
+                        android:textSize="@dimen/_6sdp" />
                 </LinearLayout>
 
 

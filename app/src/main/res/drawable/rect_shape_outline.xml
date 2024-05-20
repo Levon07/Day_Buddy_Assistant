@@ -7,12 +7,12 @@
 
     <stroke
         android:color="@color/NN_Black"
-        android:width="2dp"
+        android:width="@dimen/_2sdp"
         />
 
     <!-- Control the radius of each corners -->
     <corners
-        android:radius="10dp" />
+        android:radius="@dimen/_8sdp" />
 
 
 </shape>

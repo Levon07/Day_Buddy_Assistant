@@ -10,15 +10,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_55sdp"
+        android:layout_height="@dimen/_45sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/rectangle_3_dark"
+        app:layout_constraintBottom_toTopOf="@id/AI"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/AI">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/DayBuddy"
@@ -30,15 +30,15 @@
             android:text="Day Buddy"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/_25sdp"
+            android:textSize="@dimen/_22sdp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginTop="@dimen/_11sdp"
             android:layout_marginEnd="@dimen/_12sdp"
             android:layout_marginBottom="@dimen/_11sdp"
@@ -58,9 +58,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/AI"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_55sdp"
+        android:layout_height="@dimen/_40sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginVertical="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
         android:background="@drawable/rect_shape_asisstant"
         android:onClick="ChatGPT"
         app:layout_constraintBottom_toTopOf="@id/liveUpdate"
@@ -76,7 +77,7 @@
             android:fontFamily="@font/alata"
             android:text="Need Help ?"
             android:textColor="@color/white"
-            android:textSize="@dimen/_21sdp"
+            android:textSize="@dimen/_15sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,14 +89,14 @@
             android:fontFamily="@font/quicksand_light"
             android:text="Ask AI Assistant"
             android:textColor="@color/white"
-            android:textSize="@dimen/_21sdp"
+            android:textSize="@dimen/_15sdp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_17sdp"
             android:background="@drawable/gpt_logo"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -375,8 +376,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Days"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_85sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_height="@dimen/_75sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/up_button"
@@ -388,7 +389,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/up_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_15sdp"
+        android:layout_height="@dimen/_12sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginVertical="@dimen/_4sdp"
         android:background="@drawable/rect_shape_divider"
@@ -401,8 +402,8 @@
 
         <ImageView
             android:id="@+id/arrow"
-            android:layout_width="@dimen/_16sdp"
-            android:layout_height="@dimen/_10sdp"
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_8sdp"
             android:layout_margin="@dimen/_2sdp"
             android:background="@drawable/arrow"
             android:rotation="180"
@@ -418,99 +419,125 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV_Tasks"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_110sdp"
+        android:layout_height="@dimen/_90sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
-        app:layout_constraintBottom_toTopOf="@+id/newDay"
+        android:layout_marginBottom="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/up_button" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/newDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="PickADate"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/_12sdp"
-        android:paddingBottom="@dimen/_12sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/newTask"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/plus"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:background="@drawable/icons8_plus"
-            android:backgroundTint="@color/NN_Blue"
-            android:foregroundGravity="center_horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:text="Add New Day"
-            android:textColor="@color/NN_Blue"
-            android:textSize="@dimen/_14sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/plus"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/newTask"
-        android:layout_width="wrap_content"
+        android:id="@+id/newLay"
+        android:background="@drawable/rect_new_day"
+        android:layout_width="@dimen/_230sdp"
         android:layout_height="wrap_content"
-        android:onClick="Add_Task"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/_12sdp"
-        android:paddingBottom="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/newDay">
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RV_Tasks"
+        android:elevation="@dimen/_2sdp">
 
-        <ImageView
-            android:id="@+id/plus_task"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:background="@drawable/icons8_plus"
-            android:backgroundTint="@color/light_green_blue"
-            android:foregroundGravity="center_horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/add_task"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <TextView
-            android:id="@+id/add_task"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newDay"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:text="Add New Task"
-            android:textColor="@color/light_green_blue"
-            android:textSize="@dimen/_13sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:onClick="PickADate"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_7sdp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/plus_task"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/newTask"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/plus"
+
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/icons8_plus"
+                android:backgroundTint="@color/NN_Blue"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:text="Add New Day"
+                android:textColor="@color/NN_Blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/plus"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:onClick="Add_Task"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_7sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/newDay">
+
+            <ImageView
+                android:id="@+id/plus_task"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/icons8_plus"
+                android:backgroundTint="@color/light_green_blue"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/add_task"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/add_task"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:text="Add New Task"
+                android:textColor="@color/light_green_blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/plus_task"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Year_Lay"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_height="@dimen/_21sdp"
         android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_7sdp"
         android:background="@drawable/rect_year"
         app:layout_constraintBottom_toTopOf="@id/YM"
         app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
@@ -538,7 +565,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/NN_White"
-            android:textSize="@dimen/_13sdp"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -548,7 +575,7 @@
 
         <ImageView
             android:id="@+id/YArrows"
-            android:layout_width="@dimen/_15sdp"
+            android:layout_width="@dimen/_12sdp"
             android:layout_height="match_parent"
             android:onClick="Open_Year"
             android:paddingEnd="@dimen/_5sdp"
@@ -565,21 +592,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/YM"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_height="@dimen/_25sdp"
+        app:layout_constraintBottom_toTopOf="@id/RV_Days"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/RV_Days"
-        app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
-        app:layout_constraintTop_toBottomOf="@id/liveUpdate"/>
+        app:layout_constraintTop_toBottomOf="@id/liveUpdate" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Month_RV_Layout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_height="@dimen/_21sdp"
         android:layout_marginVertical="@dimen/_4sdp"
-        android:layout_marginStart="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/rect_year"
         app:layout_constraintBottom_toBottomOf="@id/YM"
@@ -611,7 +637,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/NN_White"
-            android:textSize="@dimen/_13sdp"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -621,7 +647,7 @@
 
         <ImageView
             android:id="@+id/Arrows"
-            android:layout_width="@dimen/_15sdp"
+            android:layout_width="@dimen/_12sdp"
             android:layout_height="match_parent"
             android:onClick="Open_Month"
             android:paddingEnd="@dimen/_5sdp"
@@ -632,12 +658,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5" />
 
-        
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
