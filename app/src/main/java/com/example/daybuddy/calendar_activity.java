@@ -106,7 +106,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int position;
     private Calendar calendar;
 
-    TextView HintText;
+    ConstraintLayout HintText;
 
     ArrayList<TaskModelArr> Task_Model_Arr = new ArrayList<>();
     ArrayList<Month_Model> Month_Model = new ArrayList<>();
@@ -185,7 +185,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     TT_RV_Adapter tasks_adapter = new TT_RV_Adapter(this, Task_Model, this);
 
-    TextView HintTextTask;
+    ConstraintLayout HintTextTask;
 
     String Day_OW1;
 
@@ -781,6 +781,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     return o1.Date.compareTo(o2.Date);
                                 }
                             });
+                            days_adapter.notifyDataSetChanged();
                             for (int i = 0; i < Days_Model.size(); i++) {
 
                                 if (Objects.equals(Days_Model.get(i).id, id)) {

@@ -108,19 +108,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/HintText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Days To See Them"
-        android:textAlignment="center"
-        android:textColor="@color/NN_Gray"
-        android:textSize="@dimen/_15sdp"
-        app:layout_constraintBottom_toBottomOf="@id/RV_Days"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/RV_Days" />
+
+
+
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -134,18 +124,7 @@
         tools:layout_editor_absoluteY="270sdp" />
 
 
-    <TextView
-        android:id="@+id/HintTextTask"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Tasks To See Them"
-        android:textAlignment="center"
-        android:textColor="@color/NN_Gray"
-        android:textSize="@dimen/_28sdp"
-        app:layout_constraintBottom_toBottomOf="@id/RV_Tasks"
-        app:layout_constraintEnd_toEndOf="@id/RV_Tasks"
-        app:layout_constraintStart_toStartOf="@id/RV_Tasks"
-        app:layout_constraintTop_toTopOf="@id/RV_Tasks" />
+
 
     <ProgressBar
         android:id="@+id/progressBarTask"
@@ -429,108 +408,7 @@
         app:layout_constraintTop_toBottomOf="@id/up_button" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/newLay"
-        android:background="@drawable/rect_new_day"
-        android:layout_width="@dimen/_230sdp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_30sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RV_Tasks"
-        android:elevation="@dimen/_2sdp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/newDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:onClick="PickADate"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/_7sdp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/newTask"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/plus"
-
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:background="@drawable/icons8_plus"
-                android:backgroundTint="@color/NN_Blue"
-                android:foregroundGravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_3sdp"
-                android:text="Add New Day"
-                android:textColor="@color/NN_Blue"
-                android:textSize="@dimen/_10sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@id/plus"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/newTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:onClick="Add_Task"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/_7sdp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/newDay">
-
-            <ImageView
-                android:id="@+id/plus_task"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:background="@drawable/icons8_plus"
-                android:backgroundTint="@color/light_green_blue"
-                android:foregroundGravity="center_horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/add_task"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <TextView
-                android:id="@+id/add_task"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_3sdp"
-                android:text="Add New Task"
-                android:textColor="@color/light_green_blue"
-                android:textSize="@dimen/_10sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@id/plus_task"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -661,6 +539,135 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/HintText"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:background="@drawable/group_14"
+        app:layout_constraintTop_toTopOf="@id/RV_Days"
+        app:layout_constraintBottom_toBottomOf="@id/RV_Days"
+        app:layout_constraintStart_toStartOf="@id/RV_Days"
+        android:outlineSpotShadowColor="@color/translucent"
+        android:outlineAmbientShadowColor="@color/translucent"
+        android:onClick="PickADate"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/HintTextTask"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@drawable/group_16"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        app:layout_constraintStart_toStartOf="@id/RV_Tasks"
+        app:layout_constraintEnd_toEndOf="@id/RV_Tasks"
+        app:layout_constraintTop_toTopOf="@id/RV_Tasks"
+        android:onClick="Add_Task"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/newLay"
+        android:background="@drawable/rect_new_day"
+        android:layout_width="@dimen/_230sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_30sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RV_Tasks"
+        android:elevation="@dimen/_2sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:onClick="PickADate"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_7sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/newTask"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/plus"
+
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/icons8_plus"
+                android:backgroundTint="@color/NN_Blue"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:text="Add New Day"
+                android:textColor="@color/NN_Blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/plus"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:onClick="Add_Task"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_7sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/newDay">
+
+            <ImageView
+                android:id="@+id/plus_task"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/icons8_plus"
+                android:backgroundTint="@color/light_green_blue"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/add_task"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/add_task"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:text="Add New Task"
+                android:textColor="@color/light_green_blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/plus_task"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
