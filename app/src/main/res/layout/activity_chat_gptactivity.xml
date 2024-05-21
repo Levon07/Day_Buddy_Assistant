@@ -91,12 +91,14 @@
             android:layout_weight="1"
             android:background="@drawable/message_bar"
             android:paddingEnd="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_3sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/generate_button"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent">
 
             <EditText
+                android:paddingVertical="@dimen/_2sdp"
                 android:id="@+id/edit_text_input"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
