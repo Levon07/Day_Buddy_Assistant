@@ -689,6 +689,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 calendar.set(Calendar.YEAR, date.getYear());
                 calendar.set(Calendar.DATE, date.getDate());
                 Date = new SimpleDateFormat("dd", Locale.getDefault()).format(new Date(selection));
+                int dateNum = Integer.parseInt(Date);
                 Year = Integer.parseInt(new SimpleDateFormat("yyyy", Locale.getDefault()).format(new Date(selection)));
                 Month = Integer.parseInt(new SimpleDateFormat("MM", Locale.getDefault()).format(new Date(selection)));
                 boolean flag = false;
@@ -701,6 +702,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         }
                     }
 
+                }
+                if(Year < NowYearNOW){
+                    flag = true;
+                } else if (Year == NowYearNOW) {
+                    if (Month < NowMonthNOW){
+                        flag = true;
+                    } else if (Month == NowMonthNOW) {
+                        if(dateNum < currentDateNum1){
+                            flag = true;
+                        }
+
+                    }
                 }
                 if (!flag) {
                     Day_OW = new SimpleDateFormat("E", Locale.getDefault()).format(new Date(selection));
@@ -1415,6 +1428,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                 calendar = Calendar.getInstance();
 
+                calendar.set(Calendar.YEAR, Days_Model.get(positionCopy).Year);
+                calendar.set(Calendar.MONTH, Days_Model.get(positionCopy).Month-1);
+                calendar.set(Calendar.DAY_OF_MONTH, GetInt(Days_Model.get(positionCopy).Date));
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                 calendar.set(Calendar.MINUTE, timePicker.getMinute());
                 calendar.set(Calendar.SECOND, 0);
@@ -1493,71 +1509,90 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     private void Add_Task_To_Model() {
 
+    boolean flag = false;
 
         if (!Days_Model.isEmpty()) {
 
-
-            String idNew = UUID.randomUUID().toString();
-
-
-            Task_Model.add(new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-            SetAlarm();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("day_ow", Day_OW);
-                hashMap.put("Task_text", Task_text);
-                hashMap.put("ST_Time", St_Time);
-                hashMap.put("ET_Time", Et_Time);
-                hashMap.put("ET_time_M", Et_time_M);
-                hashMap.put("ST_time_M", St_time_M);
-                hashMap.put("address", address);
-                hashMap.put("latitude", latitude);
-                hashMap.put("longitude", longitude);
-                hashMap.put("DocID", idNew);
-                hashMap.put("Color", color);
-                hashMap.put("CheckColor", checkColor);
-                hashMap.put("Visibility", visibility);
-                hashMap.put("userId", user.getUid());
-                db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+            if(Days_Model.get(positionCopy).Year < NowYearNOW){
+                flag = true;
+            } else if (Days_Model.get(positionCopy).Year == NowYearNOW) {
+                if (Days_Model.get(positionCopy).Month < NowMonthNOW){
+                    flag = true;
+                } else if (Days_Model.get(positionCopy).Month == NowMonthNOW) {
+                    if(Integer.parseInt(Days_Model.get(positionCopy).Date) < currentDateNum1){
+                        flag = true;
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
 
-                //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                }
             }
 
+            if (!flag) {
 
-            Task_Text_for_notify = Task_text;
 
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                String idNew = UUID.randomUUID().toString();
 
-            // Set the alarm
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager != null) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+                Task_Model.add(new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+                SetAlarm();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("day_ow", Day_OW);
+                    hashMap.put("Task_text", Task_text);
+                    hashMap.put("ST_Time", St_Time);
+                    hashMap.put("ET_Time", Et_Time);
+                    hashMap.put("ET_time_M", Et_time_M);
+                    hashMap.put("ST_time_M", St_time_M);
+                    hashMap.put("address", address);
+                    hashMap.put("latitude", latitude);
+                    hashMap.put("longitude", longitude);
+                    hashMap.put("DocID", idNew);
+                    hashMap.put("Color", color);
+                    hashMap.put("CheckColor", checkColor);
+                    hashMap.put("Visibility", visibility);
+                    hashMap.put("userId", user.getUid());
+                    db.collection("daysModel").document(id).collection("taskModels").document(idNew).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                }
+
+
+                Task_Text_for_notify = Task_text;
+
+                Intent intent = new Intent(this, NotificationReceiver.class);
+                intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                // Set the alarm
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                if (alarmManager != null) {
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                }
+
+
+                tasks_adapter.notifyDataSetChanged();
+                CheckHintTasksText();
+                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+
+
+                SetCurrentActivityView();
+
+
+            }else {
+                Toast.makeText(this, "You Already Passed that Day", Toast.LENGTH_SHORT).show();
             }
-
-
-            tasks_adapter.notifyDataSetChanged();
-            CheckHintTasksText();
-            tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-
-
-            SetCurrentActivityView();
-
-
         }
     }
 
@@ -1657,6 +1692,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
 
                         if (St_time_M >= Et_time_M) {
                             Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
@@ -1868,6 +1904,9 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         calendar = Calendar.getInstance();
 
+        calendar.set(Calendar.YEAR, Days_Model.get(positionCopy).Year);
+        calendar.set(Calendar.MONTH, Days_Model.get(positionCopy).Month-1);
+        calendar.set(Calendar.DAY_OF_MONTH, GetInt(Days_Model.get(positionCopy).Date));
         calendar.set(Calendar.HOUR_OF_DAY, Task_Model.get(position).st_time_M / 60);
         calendar.set(Calendar.MINUTE, Task_Model.get(position).st_time_M % 60);
         calendar.set(Calendar.SECOND, 0);
