@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-21T16:34:48.239602400Z">
+        <DropdownSelection timestamp="2024-05-24T19:40:33.784535200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Unreal.Admin-105-7\.android\avd\Samsung_API_30.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Unreal.Admin-105-7\.android\avd\Pixel5.avd" />
             </handle>
           </Target>
         </DropdownSelection>

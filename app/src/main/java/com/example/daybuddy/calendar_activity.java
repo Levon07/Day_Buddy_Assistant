@@ -38,6 +38,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -232,6 +233,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     int NowYearNOW, NowMonthNOW, currentDateNum1;
     int height;
+    ConstraintLayout topPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +259,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         pendingTaskCount = findViewById(R.id.pendingTasksCount);
         liveUpdate = findViewById(R.id.liveUpdate);
         Month_TV = findViewById(R.id.Month_TV);
+        topPanel = findViewById(R.id.topPanel);
 
         currentDateNum1 = Integer.parseInt(new SimpleDateFormat("dd", Locale.getDefault()).format(new Date()));
 
@@ -283,7 +286,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
         }
 
-        height = liveUpdate.getMeasuredHeight();
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        height = displayMetrics.heightPixels;
 
         progressBar.setVisibility(View.VISIBLE);
         HintText.setVisibility(View.GONE);
@@ -2337,7 +2343,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
     boolean taskViewAreUp = false;
-
+    int oldHeightL;
+    int oldHeight;
+    int newHeight;
+    int oldHeightA;
 
     public void moveUp(View view) {
 
@@ -2345,13 +2354,15 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
 
-        int oldHeight = 450;
-        int newHeight = 1350;
 
-        int oldHeightL = 750;
+
+
+
+        //int oldHeightL = 750;
+
         int newHeightL = 0;
 
-        int oldHeightA = 210;
+
         int newHeightA = 0;
 
 
@@ -2363,7 +2374,13 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         if (!taskViewAreUp) {
 //            liveUpdate.setVisibility(View.GONE);
 //            AI.setVisibility(View.GONE);
+
             taskViewAreUp = true;
+            oldHeightL = liveUpdate.getHeight() - 1;
+            oldHeight = tasks_recyclerview.getHeight() - 1;
+            newHeight= height - topPanel.getHeight() - 1 - 889;//889
+            oldHeightA = AI.getHeight() - 1;
+
 
 
             ValueAnimator animator = ValueAnimator.ofInt(oldHeight, newHeight);
