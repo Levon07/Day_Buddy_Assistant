@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Configuration;
@@ -19,6 +21,8 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -34,6 +38,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -1513,6 +1518,21 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public String Task_Text_for_notify;
 
+    private static final int REQUEST_CODE_SCHEDULE_EXACT_ALARM = 1;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_SCHEDULE_EXACT_ALARM) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed to set the exact alarm
+            } else {
+                // Permission denied, gracefully degrade your app's experience
+            }
+        }
+    }
+
+
     private void Add_Task_To_Model() {
 
     boolean flag = false;
@@ -1577,15 +1597,18 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                 Task_Text_for_notify = Task_text;
 
-                Intent intent = new Intent(this, NotificationReceiver.class);
-                intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                // Set the alarm
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                if (alarmManager != null) {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                }
+
+                    Intent intent = new Intent(this, NotificationReceiver.class);
+                    intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+                    // Set the alarm
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    if (alarmManager != null) {
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+
 
 
                 tasks_adapter.notifyDataSetChanged();
