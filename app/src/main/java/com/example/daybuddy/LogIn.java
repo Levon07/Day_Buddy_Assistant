@@ -124,4 +124,32 @@ public class LogIn extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    public void sign1(View view) {
+        loginAccountInFirebase("sictst1@gmail.com", "Samsung2023");
+    }
+
+    public void sign2(View view) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseAuth.signInWithEmailAndPassword("sictst2@gmail.com", "Samsung2023").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // login is success
+                    //go to mainActivity
+                    startActivity(new Intent(LogIn.this, calendar_activity.class));
+                    finish();
+                }
+            }
+        });
+    }
+
+    public void sign3(View view) {
+        loginAccountInFirebase("sictst3@gmail.com", "Samsung2023");
+    }
+
+    public void sign4(View view) {
+        loginAccountInFirebase("sictst4@gmail.com", "Samsung2023");
+    }
 }
