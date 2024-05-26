@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_5sdp">
+
+        <TextView
+
+            android:id="@+id/Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:fontFamily="@font/alata"
+            android:textStyle="bold"
+            android:textColor="@color/Blue"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"/>
+
+        <ImageView
+            android:layout_toEndOf="@id/Time"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/place_autocomplete_powered_by_google_height"
+            android:background="@drawable/vertical_line"/>
+
+        <TextView
+            android:layout_toEndOf="@id/Time"
+            android:id="@+id/Task"
+            android:fontFamily="@font/alata"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Text"
+            android:textColor="@color/Blue"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_5sdp"/>
+
+
+</RelativeLayout>

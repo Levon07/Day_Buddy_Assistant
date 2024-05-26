@@ -1601,16 +1601,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
 
-//                    Intent intent = new Intent(this, NotificationReceiver.class);
-//                    intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
-//                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-//
-//                    // Set the alarm
-//                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//                    if (alarmManager != null) {
-//                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-//                    }
-
                 setNotificationAlarm(Task_Text_for_notify);
 
 
@@ -1657,7 +1647,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 @Override
                 public void run() {
                     int Duration = getTime(ArriveDuration);
-                    Toast.makeText(calendar_activity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
                     if (St_time_M - Task_Model.get(Task_Model.size() - 1).et_time_M > Duration) {
                         color = 0;
                         Add_Task_To_Model();
@@ -1728,7 +1717,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
                         if (longitude == null) {
-
+                            Toast.makeText(calendar_activity.this, "Select Locations", Toast.LENGTH_SHORT).show();
                         } else {
 
 
@@ -2045,7 +2034,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                 }
                             }
                             tasks_adapter.notifyDataSetChanged();
-                            Toast.makeText(calendar_activity.this, "position == 0", Toast.LENGTH_SHORT).show();
                             Task_Model.remove(position);
                             tasks_adapter.notifyItemRemoved(position);
                             CheckHintTasksText();
@@ -2066,7 +2054,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     @Override
                                     public void run() {
                                         int Duration = getTime(ArriveDuration);
-                                        Toast.makeText(calendar_activity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
                                         if (Task_Model.get(position + 1).st_time_M - Task_Model.get(position - 1).et_time_M > Duration) {
                                             Task_Model.get(position + 1).color = 0;
                                             Add_Task_To_Model();
@@ -2223,7 +2210,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         pendingIntent = PendingIntent.getBroadcast(calendar_activity.this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -2242,7 +2228,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
 
-
+    boolean flagx;
     private void Change_Task_In_Model() {
         String idNew = UUID.randomUUID().toString();
 
@@ -2252,44 +2238,70 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             @Override
             public void onSuccess(Void unused) {
 
-                Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
+
+
+                if(Days_Model.get(positionCopy).Year < NowYearNOW){
+                    flagx = true;
+                } else if (Days_Model.get(positionCopy).Year == NowYearNOW) {
+                    if (Days_Model.get(positionCopy).Month < NowMonthNOW){
+                        flagx = true;
+                    } else if (Days_Model.get(positionCopy).Month == NowMonthNOW) {
+                        if(Integer.parseInt(Days_Model.get(positionCopy).Date) < currentDateNum1){
+                            flagx = true;
+                        }
+
+                    }
+                }
+
+                if (!flagx) {
+
+
+                    Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 //                SetAlarm();
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("day_ow", Day_OW);
-                    hashMap.put("Task_text", Task_text);
-                    hashMap.put("ST_Time", St_Time);
-                    hashMap.put("ET_Time", Et_Time);
-                    hashMap.put("ET_time_M", Et_time_M);
-                    hashMap.put("ST_time_M", St_time_M);
-                    hashMap.put("address", address);
-                    hashMap.put("latitude", latitude);
-                    hashMap.put("longitude", longitude);
-                    hashMap.put("DocID", idNew);
-                    hashMap.put("Color", color);
-                    hashMap.put("CheckColor", checkColor);
-                    hashMap.put("Visibility", visibility);
-                    hashMap.put("userId", user.getUid());
-                    db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("day_ow", Day_OW);
+                        hashMap.put("Task_text", Task_text);
+                        hashMap.put("ST_Time", St_Time);
+                        hashMap.put("ET_Time", Et_Time);
+                        hashMap.put("ET_time_M", Et_time_M);
+                        hashMap.put("ST_time_M", St_time_M);
+                        hashMap.put("address", address);
+                        hashMap.put("latitude", latitude);
+                        hashMap.put("longitude", longitude);
+                        hashMap.put("DocID", idNew);
+                        hashMap.put("Color", color);
+                        hashMap.put("CheckColor", checkColor);
+                        hashMap.put("Visibility", visibility);
+                        hashMap.put("userId", user.getUid());
+                        db.collection("daysModel").document(id).collection("taskModels").document(Task_Model.get(Position_BackUp).DocID).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                    //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                        //db.collection("daysModel").document("daysModelId").collection("taskModels").add(hashMap);
+                    }
+                    tasks_adapter.notifyDataSetChanged();
+                    CheckHintTasksText();
+                    tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
+                    SetCurrentActivityView();
+
+                    Task_Text_for_notify = Task_text;
+
+
+                    setNotificationAlarm(Task_Text_for_notify);
+                }else {
+                    Toast.makeText(calendar_activity.this, "You Already Passed that Day", Toast.LENGTH_SHORT).show();
                 }
-                tasks_adapter.notifyDataSetChanged();
-                CheckHintTasksText();
-                tasks_recyclerview.smoothScrollToPosition(tasks_adapter.getItemCount());
-                SetCurrentActivityView();
 
 
             }
@@ -2327,7 +2339,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 @Override
                 public void run() {
                     int Duration = GetInt(ArriveDuration);
-                    Toast.makeText(calendar_activity.this, "Duration: " + Duration, Toast.LENGTH_SHORT).show();
                     if (St_time_M - Task_Model.get(Position_BackUp - 1).et_time_M > Duration) {
 
                         color = 0;
@@ -2678,7 +2689,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             handler.postDelayed(runnable, 500);
 
 
-            Toast.makeText(this, Month_Model.get(position).Month, Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -2896,7 +2906,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             handler.postDelayed(runnable, 500);
 
 
-            Toast.makeText(this, "" + Year_Model.get(position).Year, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -3051,7 +3060,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                             JSONObject duration = element.getJSONObject("duration");
                             durationText = duration.getString("text");
                             ArriveDuration = durationText;
-                            Toast.makeText(getApplicationContext(), durationText, Toast.LENGTH_SHORT).show();
                             //Toast.makeText(, durationText, Toast.LENGTH_SHORT).show();
                             // Use durationText as the estimated travel time
                         }
@@ -3089,7 +3097,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             long totalMinutes = hour * 60 + minute;
 
 
-            Toast.makeText(calendar_activity.this, "" + totalMinutes, Toast.LENGTH_SHORT).show();
             Log.e("BACKGROUND", "checkDuration: " + totalMinutes);
 //            LatLng origin = new LatLng(Task_Model.get(Position_BackUp - 1).latitude, Task_Model.get(Position_BackUp - 1).longitude);
 //            LatLng destination = new LatLng(latitude, longitude);
