@@ -332,6 +332,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         CheckHintTasksText();
 
 
+
+
     }
 
 
@@ -1559,7 +1561,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
                 Task_Model.add(new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                SetAlarm();
+//                SetAlarm();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -1599,15 +1601,17 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
 
-                    Intent intent = new Intent(this, NotificationReceiver.class);
-                    intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//                    Intent intent = new Intent(this, NotificationReceiver.class);
+//                    intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, Task_text);
+//                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//
+//                    // Set the alarm
+//                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//                    if (alarmManager != null) {
+//                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//                    }
 
-                    // Set the alarm
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    if (alarmManager != null) {
-                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    }
+                setNotificationAlarm(Task_Text_for_notify);
 
 
 
@@ -1723,22 +1727,28 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                     public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                        if (St_time_M >= Et_time_M) {
-                            Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
-                        } else if (Task_Model.size() > 0) {
-                            if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
-                                Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                        if (longitude == null) {
 
+                        } else {
+
+
+                            if (St_time_M >= Et_time_M) {
+                                Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                            } else if (Task_Model.size() > 0) {
+                                if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
+                                    Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    Add_Task_Final();
+                                }
                             } else {
                                 Add_Task_Final();
                             }
-                        } else {
-                            Add_Task_Final();
+
+
+                            dialogInterface.dismiss();
+
                         }
-
-
-                        dialogInterface.dismiss();
-
                     }
                 }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
@@ -2217,6 +2227,22 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     }
 
 
+    private void setNotificationAlarm(String notificationText) {
+
+        // Create an Intent to launch the BroadcastReceiver
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra(NotificationReceiver.NOTIFICATION_TEXT_KEY, notificationText);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Set the alarm
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
+
+
+
     private void Change_Task_In_Model() {
         String idNew = UUID.randomUUID().toString();
 
@@ -2227,7 +2253,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
             public void onSuccess(Void unused) {
 
                 Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
-                SetAlarm();
+//                SetAlarm();
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {

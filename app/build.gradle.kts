@@ -73,4 +73,8 @@ dependencies {
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+
+    implementation ("androidx.core:core:1.7.0")
+    implementation ("androidx.core:core-ktx:1.7.0")
+
 }

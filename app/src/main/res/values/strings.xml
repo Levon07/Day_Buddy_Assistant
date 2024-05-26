@@ -16,4 +16,7 @@
     <string name="google_api_key">"AIzaSyBa-ttElPoQgDetwieuuMp360EJeXlr5RY"</string>
     <string name="Send_a_message...">Send a message...</string>
     <string name="Task_Text">Your Task</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
 </resources>
