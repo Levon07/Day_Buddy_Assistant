@@ -239,6 +239,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     int NowYearNOW, NowMonthNOW, currentDateNum1;
     int height;
     ConstraintLayout topPanel;
+    String currentTimeM;
+    String currentTimeH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +269,11 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         topPanel = findViewById(R.id.topPanel);
 
         currentDateNum1 = Integer.parseInt(new SimpleDateFormat("dd", Locale.getDefault()).format(new Date()));
+        currentTimeH = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
+        currentTimeM = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
+        int NowTimeHour = Integer.parseInt(currentTimeH);
+        int NowTimeMinute = Integer.parseInt(currentTimeM);
+        NowTime = NowTimeHour * 60 + NowTimeMinute;
 
         Download();
 
@@ -556,6 +563,10 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
     }
+
+
+
+
 
 
     public void SetCurrentActivityView() {
@@ -915,7 +926,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
                 } else {
-                    Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For  : " + Date, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(calendar_activity.this, "You Already Created a TimeTable For  : " + Date + ", Or Passed That Day", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -1559,6 +1570,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                 String idNew = UUID.randomUUID().toString();
 
+                checkColor = 0;
+
 
                 Task_Model.add(new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 //                SetAlarm();
@@ -1714,6 +1727,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
 
 
                         if (longitude == null) {
@@ -2254,7 +2268,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                 }
 
                 if (!flagx) {
-
 
                     Task_Model.set(Position_BackUp, new Task_Model(idNew, checkColor, color, visibility, Task_text, address, St_Time, Et_Time, St_time_M, Et_time_M, latitude, longitude));
 //                SetAlarm();
