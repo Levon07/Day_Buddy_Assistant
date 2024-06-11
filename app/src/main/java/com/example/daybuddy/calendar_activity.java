@@ -1159,6 +1159,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         });
                         for (int i = 0; i < Days_Model.size(); i++) {
 
+
                             if (Objects.equals(Days_Model.get(i).id, id)) {
 
                                 positionCopy = Days_Model.indexOf(Days_Model.get(i));
