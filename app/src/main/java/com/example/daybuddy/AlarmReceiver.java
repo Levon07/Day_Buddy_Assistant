@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -17,6 +21,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent nextActivity = new Intent(context, NotificationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, nextActivity, 0);
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Day Buddy")
                 .setSmallIcon(R.drawable.baseline_notifications_24)

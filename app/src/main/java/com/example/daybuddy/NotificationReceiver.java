@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
@@ -30,6 +33,16 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (notificationText == null) {
             notificationText = "Default notification text";
         }
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(750, VibrationEffect.DEFAULT_AMPLITUDE));
+            }
+        }
+
+        // Play sound effect
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.notify_sound);
+        mediaPlayer.start();
 
         // Check if the app has permission to play sound
         boolean hasSoundPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.VIBRATE)

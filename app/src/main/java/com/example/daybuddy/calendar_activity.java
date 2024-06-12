@@ -1559,6 +1559,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
 
                 setNotificationAlarm(Task_Text_for_notify);
+                alarm(calendar);
 
 
                 tasks_adapter.notifyDataSetChanged();
@@ -1716,6 +1717,20 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 //        startActivity(intent);
         placesResultLauncher.launch(intent);
 
+    }
+
+    public void alarm(Calendar calendar){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver1.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        if (alarmManager != null) {
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    pendingIntent
+            );
+        }
     }
 
 
