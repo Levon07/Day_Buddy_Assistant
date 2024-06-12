@@ -296,7 +296,7 @@ public class ChatGPTActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<OpenAIResponseModel> call, Throwable t) {
                 // Handle network or request failure
-                addMessageToChat(new ChatMessage("API onFailure: "+t.getMessage(), false));
+                addMessageToChat(new ChatMessage("Internet connection error", false));
             }
         });
     }

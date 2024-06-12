@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="To add a new timetable for a day, click the 'Add Day' button. Press and hold on the day you wish to edit or delete. Press a day to view its tasks. Use the 'Add Task' button to include new tasks. Press and hold on a task to edit or modify it."
+        android:text="To add a new timetable for a day, click the 'Add Day' button. Press and hold on the day you wish to edit or delete. Press a day to view its tasks. Use the 'Add Task' button to include new tasks. Press and hold on a task to edit or modify it. Double click on a day to see Your rout for the day on map. Click on button completed or pending to see statistics. Click on profile picture to log out. If line between two tasks is green you will manage to get on time tp next task, if it's red you will be late. "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
