@@ -1250,6 +1250,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Toast.makeText(calendar_activity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                            SetCurrentActivityView();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -1265,6 +1266,8 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                     Task_Model.clear();
                                     tasks_adapter.notifyDataSetChanged();
                                     CheckHintTasksText();
+
+
 
                                     if (Days_Model.size() > 1) {
                                         id = Days_Model.get(Days_Model.size() - 1).id;
@@ -1285,8 +1288,24 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                             }
                                         }
 
+                                        Days_ModelY.clear();
+                                        for (Days_Model daysModelALL : Days_ModelALL) {
 
-                                        days_adapter.notifyDataSetChanged();
+                                            if (daysModelALL.Year == NowYear) {
+                                                Days_ModelY.add(new Days_Model(daysModelALL.id, daysModelALL.color, daysModelALL.Year, daysModelALL.Month, daysModelALL.Date, daysModelALL.Day_OW, daysModelALL.calendar));
+                                            }
+                                        }
+
+                                        Days_Model.clear();
+                                        for (Days_Model daysModel : Days_ModelY) {
+
+                                            if (daysModel.Month == NowMonth) {
+                                                Days_Model.add(new Days_Model(daysModel.id, daysModel.color, daysModel.Year, daysModel.Month, daysModel.Date, daysModel.Day_OW, daysModel.calendar));
+                                            }
+                                        }
+
+
+
 
                                         Collections.sort(Days_Model, new Comparator<com.example.daybuddy.Days_Model>() {
                                             @Override
@@ -1302,6 +1321,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                         }
 
                                         id = Days_Model.get(Days_Model.size() - 1).id;
+                                        idCopy = id;
                                         Days_Model.get(Days_Model.size() - 1).color = 1;
 
                                         Task_Model.clear();
@@ -1331,6 +1351,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                                                     });
                                         }
                                     }
+
 
 
                                 }
