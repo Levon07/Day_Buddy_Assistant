@@ -443,7 +443,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_30sdp"
         android:background="@drawable/rect_new_day"
-        android:elevation="@dimen/_2sdp"
+        android:elevation="@dimen/_3sdp"
+        android:outlineSpotShadowColor="@color/green_blue_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -550,7 +551,8 @@
         app:layout_constraintBottom_toTopOf="@id/YM"
         app:layout_constraintEnd_toStartOf="@id/Month_RV_Layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/YM">
+        app:layout_constraintTop_toBottomOf="@id/YM"
+        android:onClick="Open_Year">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Year_RV"
@@ -579,7 +581,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.5"
+            android:onClick="Open_Year"/>
 
         <ImageView
             android:id="@+id/YArrows"
@@ -622,7 +625,8 @@
         app:layout_constraintStart_toEndOf="@id/Year_Lay"
         app:layout_constraintTop_toTopOf="@id/YM"
 
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintVertical_bias="0.5"
+        android:onClick="Open_Month">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -651,7 +655,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.5"
+            android:onClick="Open_Month"/>
 
         <ImageView
             android:id="@+id/Arrows"

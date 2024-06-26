@@ -53,7 +53,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.daybuddy.chatgpt.ChatGPTActivity;
-import com.example.daybuddy.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -150,7 +149,6 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
     public String ArriveDuration = null;
 
-    private ActivityMainBinding binding;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private Calendar calendar1;
@@ -172,7 +170,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
     String Et_Time = "00:00";
     String St_Time = "00:00";
 
-    String Title = null;
+    String Title = "Locations";
     int visibility = 0;
     Double latitude = null;
     Double longitude = null;
@@ -1684,9 +1682,26 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
         }
     }
 
+    int abr = 0;
+
     public void Add_Task(View view) {
         if (!Days_Model.isEmpty()) {
+
             view1 = LayoutInflater.from(calendar_activity.this).inflate(R.layout.add_task, null);
+
+
+            if (abr == 1) {
+                TextView St_Time1 = view1.findViewById(R.id.Start_time_view);
+                TextView Et_Time1 = view1.findViewById(R.id.End_Time_view);
+                TextView TaskText1 = view1.findViewById(R.id.Task_text_View);
+                TextView Location1 = view1.findViewById(R.id.location);
+
+                St_Time1.setText(St_Time);
+                Et_Time1.setText(Et_Time);
+                TaskText1.setText(Task_text);
+                Location1.setText(Title);
+            }
+
             AlertDialog alertDialog = new MaterialAlertDialogBuilder(calendar_activity.this)
                     .setTitle("Add Task")
                     .setView(view1)
@@ -1697,19 +1712,32 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
 
                             if (longitude == null) {
                                 Toast.makeText(calendar_activity.this, "Select Locations", Toast.LENGTH_SHORT).show();
+                                abr = 1;
+                                Add_Task(view);
+
+
                             } else {
 
 
                                 if (St_time_M >= Et_time_M) {
                                     Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                                    abr = 1;
+                                    Add_Task(view);
+
                                 } else if (Task_Model.size() > 0) {
                                     if (Task_Model.get(Task_Model.size() - 1).et_time_M > St_time_M) {
                                         Toast.makeText(calendar_activity.this, "Wrong start and end times", Toast.LENGTH_SHORT).show();
+                                        abr = 1;
+                                        Add_Task(view);
+
 
                                     } else {
+                                        abr = 0;
                                         Add_Task_Final();
+
                                     }
                                 } else {
+                                    abr = 0;
                                     Add_Task_Final();
                                 }
 
@@ -1723,6 +1751,7 @@ public class calendar_activity extends AppCompatActivity implements RV_Interface
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
+                            abr = 0;
                         }
                     }).create();
             alertDialog.show();
