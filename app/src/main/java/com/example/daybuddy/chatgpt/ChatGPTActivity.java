@@ -89,7 +89,7 @@ public class ChatGPTActivity extends AppCompatActivity {
 
         CurrentDate = new SimpleDateFormat("YYYY-MMMM-dd", Locale.getDefault()).format(new Date());
 
-        Before = "Hello, today is " + CurrentDate + " , I have scheduled my plan for these days : ";
+        Before = "Hello, today is " + CurrentDate + " . I have scheduled my plan for these days : ";
 
 
         textToSpeech = new TextToSpeech(this, status -> {
