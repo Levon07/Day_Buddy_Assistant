@@ -29,7 +29,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -38,7 +41,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.example.daybuddy.Days_Model;
 import com.example.daybuddy.R;
+import com.example.daybuddy.Task_Model;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ChatGPTActivity extends AppCompatActivity {
 
@@ -55,6 +66,15 @@ public class ChatGPTActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SPEECH_INPUT = 100;
     private TextToSpeech textToSpeech;
 
+    ArrayList<Days_Model> Days_ModelALL = new ArrayList<>();
+
+    ArrayList<Task_Model> Task_Model = new ArrayList<>();
+
+    String Before;
+
+    String CurrentDate;
+
+    int dm = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +87,9 @@ public class ChatGPTActivity extends AppCompatActivity {
             return insets;
         });
 
+        CurrentDate = new SimpleDateFormat("YYYY-MMMM-dd", Locale.getDefault()).format(new Date());
+
+        Before = "Hello, today is " + CurrentDate + " , I have scheduled my plan for these days : ";
 
 
         textToSpeech = new TextToSpeech(this, status -> {
@@ -81,8 +104,6 @@ public class ChatGPTActivity extends AppCompatActivity {
         });
 
 
-
-
         recyclerView = findViewById(R.id.recycler_view_chat);
         chatAdapter = new ChatAdapter(new ArrayList<>());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -94,12 +115,14 @@ public class ChatGPTActivity extends AppCompatActivity {
         ImageButton sendButton = findViewById(R.id.generate_button);
         EditText inputEditText = findViewById(R.id.edit_text_input);
 
+        Download();
+
         sendButton.setOnClickListener(v -> {
             String userMessage = inputEditText.getText().toString().trim();
             if (!userMessage.isEmpty()) {
-                addMessageToChat(new ChatMessage( userMessage, true));
+                addMessageToChat(new ChatMessage(userMessage, true));
                 // ask chat gpt
-                askChatGpt(userMessage);
+                askChatGpt(Before + userMessage);
                 inputEditText.setText("");
 
             }
@@ -107,6 +130,73 @@ public class ChatGPTActivity extends AppCompatActivity {
     }
 
 
+    private void Download() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("daysModel").whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                Days_ModelALL.add(new Days_Model(queryDocumentSnapshot.getString("DocId"), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Year", int.class), queryDocumentSnapshot.get("Month", int.class), queryDocumentSnapshot.getString("date"), queryDocumentSnapshot.getString("day_ow"), queryDocumentSnapshot.get("calendar", Calendar.class)));
+
+                            }
+
+                            dm = 0;
+                            Down();
+
+
+
+                        }
+                    });
+
+        }
+
+    }
+
+
+
+    private void Down() {
+
+        if (!Days_ModelALL.isEmpty()) {
+
+
+            Before = Before + "At " + Days_ModelALL.get(dm).getYear() + " Year, at " + Days_ModelALL.get(dm).getMonth() + " Month, on " + Days_ModelALL.get(dm).getDate() + " day I have these tasks : ";
+
+
+            String id = Days_ModelALL.get(dm).getId();
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+
+
+                FirebaseFirestore.getInstance().collection("daysModel").document(id).collection("taskModels").whereEqualTo("userId", user.getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                                    int STM = queryDocumentSnapshot.get("ST_time_M", Integer.class);
+                                    int ETM = queryDocumentSnapshot.get("ET_time_M", Integer.class);
+                                    Task_Model.add(new Task_Model(queryDocumentSnapshot.getString("DocID"), queryDocumentSnapshot.get("CheckColor", int.class), queryDocumentSnapshot.get("Color", int.class), queryDocumentSnapshot.get("Visibility", int.class), queryDocumentSnapshot.getString("Task_text"), queryDocumentSnapshot.getString("address"),
+                                            queryDocumentSnapshot.getString("ST_Time"), queryDocumentSnapshot.getString("ET_Time"), STM,
+                                            ETM, queryDocumentSnapshot.getDouble("latitude"), queryDocumentSnapshot.getDouble("longitude")));
+
+                                    Before = Before + "Task is starting at " + Task_Model.get(Task_Model.size() - 1).getTime_start() + " and ending at " + Task_Model.get(Task_Model.size() - 1).getTime_end() + " it will be done at " + Task_Model.get(Task_Model.size() - 1).getLocation() + " , I will do " + Task_Model.get(Task_Model.size() - 1).getTask_text() + " ; ";
+
+                                }
+
+                                dm++;
+                                if (dm < Days_ModelALL.size()) {
+                                    Down();
+                                }
+                            }
+                        });
+            }
+        }
+    }
 
 
     private void speakResponse(String response) {
@@ -118,7 +208,6 @@ public class ChatGPTActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     public void startVoiceInput(View view) {
@@ -146,22 +235,19 @@ public class ChatGPTActivity extends AppCompatActivity {
                 if (!userVoiceInput.isEmpty()) {
                     addMessageToChat(new ChatMessage(userVoiceInput, true));
                     // Send the voice input to ChatGPT
-                    askChatGpt(userVoiceInput);
+                    askChatGpt(Before + userVoiceInput);
                 }
             }
         }
     }
 
 
-
-
-
-    public void ShowPopup(View view){
-        if (!is_popped_up){
+    public void ShowPopup(View view) {
+        if (!is_popped_up) {
             popup_menu.setVisibility(View.VISIBLE);
             blur_layout.setVisibility(View.VISIBLE);
             is_popped_up = true;
-        }else {
+        } else {
             popup_menu.setVisibility(View.GONE);
             blur_layout.setVisibility(View.GONE);
             is_popped_up = false;
@@ -169,8 +255,8 @@ public class ChatGPTActivity extends AppCompatActivity {
 
     }
 
-    public void main_layout_touch(View view){
-        if (is_popped_up){
+    public void main_layout_touch(View view) {
+        if (is_popped_up) {
             popup_menu.setVisibility(View.GONE);
             blur_layout.setVisibility(View.GONE);
             is_popped_up = false;
@@ -235,23 +321,6 @@ public class ChatGPTActivity extends AppCompatActivity {
 //    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -262,8 +331,10 @@ public class ChatGPTActivity extends AppCompatActivity {
         chatAdapter.addMessage(chatMessage);
         recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
     }
+
     // interact with chat gpt api
     List<ChatMessage> chatHistory = new ArrayList<>();
+
     private void askChatGpt(String userPrompt) {
         // Create the Retrofit client
         chatHistory.add(new ChatMessage(userPrompt, true));
@@ -293,6 +364,7 @@ public class ChatGPTActivity extends AppCompatActivity {
                     addMessageToChat(new ChatMessage("API error", false));
                 }
             }
+
             @Override
             public void onFailure(Call<OpenAIResponseModel> call, Throwable t) {
                 // Handle network or request failure
@@ -328,13 +400,11 @@ public class ChatGPTActivity extends AppCompatActivity {
     }
 
 
-
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
 
 }
